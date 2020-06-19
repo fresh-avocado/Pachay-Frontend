@@ -72,11 +72,12 @@ class _CentralPageState extends State<CentralPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
         actions: <Widget>[
           MaterialButton(
+              height: 70,
               splashColor: Colors.orangeAccent[100],
               color: Colors.deepOrange,
               onPressed: () {
@@ -124,7 +125,7 @@ class _CentralPageState extends State<CentralPage> {
               }
               if (snapshot.hasData) {
                 homePage = MaterialButton(
-                  height: 20,
+                  height: 70,
                   minWidth: 50,
                   splashColor: Colors.orangeAccent[100],
                   color: buttonColor,
@@ -148,7 +149,7 @@ class _CentralPageState extends State<CentralPage> {
             },
           ),
           MaterialButton(
-            height: 20,
+            height: 70,
             minWidth: 50,
             splashColor: Colors.orangeAccent[100],
             color: Colors.deepOrange,

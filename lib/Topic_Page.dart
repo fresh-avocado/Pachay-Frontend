@@ -41,6 +41,7 @@ class PostList extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
+        childAspectRatio: 3,
       ),
       itemCount: posts.length,
       itemBuilder: (context, index) {

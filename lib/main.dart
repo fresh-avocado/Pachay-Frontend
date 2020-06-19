@@ -15,16 +15,17 @@ class MyApp extends StatelessWidget {
     Future<String> getProperMessage() async {
       String authToken = await getSharedPref("authToken");
       String role = await getSharedPref("role");
+      String firstName = await getSharedPref("firstName");
       if (authToken == "") {
-        return "Pachay";
+        return "PACHAY";
       } else if (role == "0") {
         role = "0";
         return "Bienvenido Profesor";
       } else if (role == "1") {
         role = "1";
-        return "Bienvenido Alumno";
+        return "Bienvenido ${firstName}";
       } else {
-        return "Pachay";
+        return "PACHAY";
       }
     }
 
@@ -35,10 +36,9 @@ class MyApp extends StatelessWidget {
           primaryTextTheme: TextTheme(
               headline6: TextStyle(
                   fontFamily: 'Raleway',
-                  fontSize: 60,
+                  fontSize: 50,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic
               )
           ),
           scaffoldBackgroundColor: Colors.orangeAccent[100],
