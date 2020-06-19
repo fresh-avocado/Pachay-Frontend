@@ -24,8 +24,8 @@ class CentralPage extends StatefulWidget {
 
 class _CentralPageState extends State<CentralPage> {
 
-  final List<String> courses = <String>['Matemática', 'Física', 'Quimica', 'Biologia'];
-  final List<Color> courseColor = <Color>[Colors.red, Colors.amber, Colors.blue, Colors.green];
+  final List<String> courses = <String>['Matemática', 'Física', 'Química', 'Biología'];
+  final List<Color> courseColor = <Color>[Colors.red, Colors.blue, Colors.green, Colors.amber];
 
   String getusername(){
     getSharedPref("firstName").then(
@@ -129,18 +129,12 @@ class _CentralPageState extends State<CentralPage> {
                   splashColor: Colors.orangeAccent[100],
                   color: buttonColor,
                   onPressed: () {
-                    if (widget.isLoggedIn && widget.role == true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => NewPostPage(title: widget.title,)
                         ),
                       );
-                    } else if (widget.isLoggedIn && widget.role == false) {
-                      // nothing for now
-                    } else {
-                      // disable button
-                    }
                   },
                   child: Text(
                     snapshot.data,

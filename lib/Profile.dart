@@ -65,15 +65,19 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Expanded(
               flex: 1,
-              child: Text("Experiencia: ")),
+              child: Text(
+                  ""
+              )
+          ),
           Expanded(
             flex: 10,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, idx) => !widget.role?Text('   Post Guardado #$idx   ', textAlign: TextAlign.center,):Text('   Mi Post #$idx   ', textAlign: TextAlign.center,),
-              separatorBuilder: (a, b) => Divider(),
-              itemCount: 100,
-            ),
+            child: Text(''),
+//            ListView.separated(
+//              scrollDirection: Axis.horizontal,
+//              itemBuilder: (_, idx) => !widget.role?Text('   Post Guardado #$idx   ', textAlign: TextAlign.center,):Text('   Mi Post #$idx   ', textAlign: TextAlign.center,),
+//              separatorBuilder: (a, b) => Divider(),
+//              itemCount: 100,
+//            ),
           )
         ],
       ),

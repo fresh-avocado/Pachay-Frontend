@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         Widget homePage;
         if (snapshot.hasData) {
-          homePage = CentralPage(title: snapshot.data, isLoggedIn: (snapshot.data != "Pachay") ? true : false, rolee: _role,);
+          homePage = CentralPage(title: snapshot.data, isLoggedIn: (snapshot.data != "PACHAY") ? true : false, rolee: _role,);
 
         } else {
 //          homePage = CentralPage(title: "PACHAY", isLoggedIn: false);
