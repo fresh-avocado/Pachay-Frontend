@@ -112,7 +112,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               Divider(height: 20,),
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Container(
                   width: 150.0,
                   height: 50.0,
@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage>{
           children: [
             Expanded(
               flex: 2,
-              child: Text('Inicia Sesión', textAlign: TextAlign.center,),
+              child: Text('', textAlign: TextAlign.center,),
             ),
             Expanded(
               flex: 3,
@@ -216,7 +216,7 @@ class _LoginPageState extends State<LoginPage>{
             ),
             Expanded(
               flex: 2,
-              child: Text('Inicia Sesión', textAlign: TextAlign.center,),
+              child: Text('', textAlign: TextAlign.center,),
             )
           ],
         ),

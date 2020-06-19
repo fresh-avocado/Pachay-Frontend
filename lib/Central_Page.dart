@@ -77,8 +77,8 @@ class _CentralPageState extends State<CentralPage> {
         centerTitle: true,
         actions: <Widget>[
           MaterialButton(
-              splashColor: Colors.lightBlueAccent[100],
-              color: Colors.blue,
+              splashColor: Colors.orangeAccent[100],
+              color: Colors.deepOrange,
               onPressed: () {
                 if (widget.isLoggedIn) {
                   if (widget.role == false) { // perfil del profesor
@@ -114,43 +114,33 @@ class _CentralPageState extends State<CentralPage> {
                 style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
               )
           ),
-//          if (widget.isLoggedIn) MaterialButton(
-//              height: 20,
-//              minWidth: 50,
-//              splashColor: Colors.lightBlueAccent[100],
-//              color: Colors.blue,
-//              onPressed: () {
-//                Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => NewPostPage(title: widget.title,)
-//                  ),
-//                );
-//                // TODO: llevar al profesor a la pagina donde esta el form
-//                // TODO: para que llene los detalles del post
-//              },
-//              child: Text(
-//                widget.rolee == "1" ? "Buscar Temas" : "Crear Post",
-//                style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
-//              ),
-//            ),
           FutureBuilder<String>(
             future: getButtonMessage(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               Widget homePage;
+              var buttonColor = Colors.orange;
+              if (widget.isLoggedIn) {
+                buttonColor = Colors.deepOrange;
+              }
               if (snapshot.hasData) {
                 homePage = MaterialButton(
                   height: 20,
                   minWidth: 50,
-                  splashColor: Colors.lightBlueAccent[100],
-                  color: Colors.blue,
+                  splashColor: Colors.orangeAccent[100],
+                  color: buttonColor,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewPostPage(title: widget.title,)
-                      ),
-                    );
+                    if (widget.isLoggedIn && widget.role == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NewPostPage(title: widget.title,)
+                        ),
+                      );
+                    } else if (widget.isLoggedIn && widget.role == false) {
+                      // nothing for now
+                    } else {
+                      // disable button
+                    }
                   },
                   child: Text(
                     snapshot.data,
@@ -166,8 +156,8 @@ class _CentralPageState extends State<CentralPage> {
           MaterialButton(
             height: 20,
             minWidth: 50,
-            splashColor: Colors.lightBlueAccent[100],
-            color: Colors.blue,
+            splashColor: Colors.orangeAccent[100],
+            color: Colors.deepOrange,
             onPressed: () {
               if (widget.isLoggedIn) {
                 deleteAuthToken();
@@ -198,11 +188,13 @@ class _CentralPageState extends State<CentralPage> {
         children: [
           Expanded(
             flex: 2,
-            child: ListView.separated(
-              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-              separatorBuilder: (a, b) => Divider(),
-              itemCount: 100,
-            ),
+            child:
+//            ListView.separated(
+//              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//              separatorBuilder: (a, b) => Divider(),
+//              itemCount: 100,
+//            ),
+              Text(''),
           ),
           Expanded(
             flex: 5,
@@ -241,11 +233,13 @@ class _CentralPageState extends State<CentralPage> {
           ),
           Expanded(
             flex: 2,
-            child: ListView.separated(
-              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-              separatorBuilder: (a, b) => Divider(),
-              itemCount: 100,
-            ),
+            child:
+//            ListView.separated(
+//              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//              separatorBuilder: (a, b) => Divider(),
+//              itemCount: 100,
+//            ),
+            Text(''),
           ),
         ],
       ),

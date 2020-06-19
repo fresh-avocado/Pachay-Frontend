@@ -30,11 +30,13 @@ class _SubtopicPageState extends State<SubtopicPage>{
           children: [
             Expanded(
               flex: 2,
-              child: ListView.separated(
-                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-                separatorBuilder: (a, b) => Divider(),
-                itemCount: 100,
-              ),
+              child:
+//              ListView.separated(
+//                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//                separatorBuilder: (a, b) => Divider(),
+//                itemCount: 100,
+//              ),
+              Text(''),
             ),
             Expanded(
               flex: 5,
@@ -67,11 +69,13 @@ class _SubtopicPageState extends State<SubtopicPage>{
             ),
             Expanded(
               flex: 2,
-              child: ListView.separated(
-                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-                separatorBuilder: (a, b) => Divider(),
-                itemCount: 100,
-              ),
+              child:
+//              ListView.separated(
+//                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//                separatorBuilder: (a, b) => Divider(),
+//                itemCount: 100,
+//              ),
+              Text(''),
             ),
           ],
         ),

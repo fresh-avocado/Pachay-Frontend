@@ -1,5 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'Subtopic_Page.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+
+class Post {
+  final String title;
+  final String desc;
+  final String author;
+  final String datePublished;
+  final int rating;
+  final int ratingCount;
+  final List<String> youtubeLinks;
+
+  Post({Key key, this.title, this.desc, this.author, this.datePublished, this.rating, this.ratingCount, this.youtubeLinks});
+
+  factory Post.fromJson(Map<String, dynamic> body) {
+    String author = "${body['author']['firstName']} ${body['author']['lastName']}";
+    return Post(
+      title: body['title'],
+      desc: body['description'],
+      author:  author,
+      datePublished: body['date'],
+      rating: body['rating'],
+      ratingCount: body['ratingCount'],
+      youtubeLinks: body['videos']
+    );
+  }
+
+}
 
 class TopicPage extends StatefulWidget {
   TopicPage({Key key, this.topic}) : super(key: key);
@@ -10,6 +40,17 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
+
+  List<Post> parsePosts(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<List<Map<String, dynamic>>>();
+    List<Post> parsedPosts = parsed.map<Post>((json) => Post.fromJson(json)).toList();
+    return parsedPosts;
+  }
+
+  Future<List<Post>> fetchPosts() async {
+    final response = await http.get("http://localhost:8080/post");
+    return parsePosts(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +72,13 @@ class _TopicPageState extends State<TopicPage> {
           children: [
             Expanded(
               flex: 2,
-              child: ListView.separated(
-                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-                separatorBuilder: (a, b) => Divider(),
-                itemCount: 100,
-              ),
+              child:
+//              ListView.separated(
+//                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//                separatorBuilder: (a, b) => Divider(),
+//                itemCount: 100,
+//              ),
+              Text(''),
             ),
             Expanded(
               flex: 5,
@@ -72,11 +115,13 @@ class _TopicPageState extends State<TopicPage> {
             ),
             Expanded(
               flex: 2,
-              child: ListView.separated(
-                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-                separatorBuilder: (a, b) => Divider(),
-                itemCount: 100,
-              ),
+              child:
+//              ListView.separated(
+//                itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
+//                separatorBuilder: (a, b) => Divider(),
+//                itemCount: 100,
+//              ),
+              Text(''),
             ),
           ],
         ),
