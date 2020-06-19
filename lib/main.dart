@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       String authToken = await getSharedPref("authToken");
       String role = await getSharedPref("role");
       if (authToken == "") {
-        return "PACHAY";
+        return "Pachay";
       } else if (role == "0") {
         role = "0";
         return "Bienvenido Profesor";
@@ -24,30 +24,31 @@ class MyApp extends StatelessWidget {
         role = "1";
         return "Bienvenido Alumno";
       } else {
-        return "PACHAY";
+        return "Pachay";
       }
     }
 
     return MaterialApp(
       title: 'Log In - Pachay',
       theme: new ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.orange,
           primaryTextTheme: TextTheme(
               headline6: TextStyle(
                   fontFamily: 'Raleway',
-                  fontSize: 50,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
+                  fontSize: 60,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic
               )
           ),
-          scaffoldBackgroundColor: Colors.lightBlue[50],
+          scaffoldBackgroundColor: Colors.orangeAccent[100],
       ),
       home: FutureBuilder<String>(
       future: getProperMessage(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         Widget homePage;
         if (snapshot.hasData) {
-          homePage = CentralPage(title: snapshot.data, isLoggedIn: (snapshot.data != "PACHAY") ? true : false, rolee: _role,);
+          homePage = CentralPage(title: snapshot.data, isLoggedIn: (snapshot.data != "Pachay") ? true : false, rolee: _role,);
 
         } else {
 //          homePage = CentralPage(title: "PACHAY", isLoggedIn: false);
