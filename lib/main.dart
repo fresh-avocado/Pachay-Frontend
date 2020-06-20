@@ -1,6 +1,5 @@
 import 'register.dart';
 import 'package:flutter/material.dart';
-
 import 'Central_Page.dart';
 
 void main() => runApp(MyApp());
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
         return "Bienvenido Profesor";
       } else if (role == "1") {
         role = "1";
-        return "Bienvenido ${firstName}";
+        return "Bienvenido $firstName";
       } else {
         return "PACHAY";
       }
@@ -51,7 +50,6 @@ class MyApp extends StatelessWidget {
           homePage = CentralPage(title: snapshot.data, isLoggedIn: (snapshot.data != "PACHAY") ? true : false, rolee: _role,);
 
         } else {
-//          homePage = CentralPage(title: "PACHAY", isLoggedIn: false);
           homePage = CircularProgressIndicator();
         }
         return homePage;
@@ -60,5 +58,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

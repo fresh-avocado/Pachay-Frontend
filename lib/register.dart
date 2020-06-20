@@ -1,18 +1,11 @@
 import 'dart:convert';
-
-//import 'login.dart';
 import 'package:flutter/material.dart';
-//import 'package:json_serializable/json_serializable.dart';
 import 'package:validators/validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'utilities.dart' show showAlertDialog;
 
-/**
- * Form Class
- */
-
-// Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   MyCustomForm({Key key, this.userRole}): super(key: key);
   int userRole;
@@ -59,15 +52,7 @@ Future<String> getSharedPref(String what) async {
   return retrieved;
 }
 
-
-// Define a corresponding State class.
-// This class holds data related to the form.
 class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   final firstName = TextEditingController();
@@ -75,7 +60,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   final email = TextEditingController();
   final password = TextEditingController();
 
-  bool verifymail(String mail){
+  bool verifymail(String mail) {
     bool haveat = false;
     bool havewords = false;
     bool havedot = false;
@@ -101,7 +86,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   bool verifyPassword(String pass){
-    bool Mayus = false;
+    bool mayus = false;
     bool symb = false;
     bool num = false;
     if (pass.length < 8) return false;
@@ -113,15 +98,14 @@ class MyCustomFormState extends State<MyCustomForm> {
         symb = true;
       }
       else if (isUppercase(pass[i])){
-        Mayus = true;
+        mayus = true;
       }
 
     }
-    return num && symb && Mayus;
+    return num && symb && mayus;
   }
 
   Future<String> registrarUsuario(String firstName, String lastName, String password, String email, String role) async {
-
     final http.Response response = await http.post(
       'http://localhost:8080/usuarios',
       headers: <String, String>{
@@ -146,12 +130,12 @@ class MyCustomFormState extends State<MyCustomForm> {
     } else if (response.statusCode == 500) {
       print("Uexpected exception in backend.");
       print("");
+      return "";
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
     return Form(
         key: _formKey,
         child: Column(
@@ -267,9 +251,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                               Navigator.pop(context, () {
                                 setState(() {});
                               }); // regresar al main page
-
+                              // TODO: regresar al main page y recargarla
                             } else {
-                              // TODO: mostrarle al ususario que ese email ya esta en uso o ocurrio un error
+                              showAlertDialog(context, "No te pudimos registrar", "Inténtalo de nuevo más tarde.");
                               print("Error: no se pudo registrar al usuario.");
                             }
                           }
@@ -286,10 +270,6 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 }
-
-/**
- * Register Class
- */
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key, this.title}) : super(key: key);
@@ -309,9 +289,6 @@ class _RegisterPageState extends State<RegisterPage>{
   final password = TextEditingController();
   int userRole = 0;
 
-//  Future<bool> _registrarUsuario;
-  bool _registrarUsuario = false;
-
   void dispose() {
     // Clean up the controller when the widget is disposed.
     name.dispose();
@@ -326,11 +303,6 @@ class _RegisterPageState extends State<RegisterPage>{
       _isVisible = !_isVisible;
     });
   }
-
-  Future<String> _calculation = Future<String>.delayed(
-    Duration(seconds: 10),
-        () => 'Data Loaded',
-  );
 
   @override
   Widget build(BuildContext context) {

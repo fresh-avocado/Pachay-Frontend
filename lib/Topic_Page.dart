@@ -1,10 +1,71 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Subtopic_Page.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+//import 'package:Pachay/Subtopic_Page.dart' show SubtopicPage; en breves lo necesitaremos
+
+class TopicPage extends StatefulWidget {
+  TopicPage({Key key, this.topic, this.appBarColor}) : super(key: key);
+  final String topic;
+  final Color appBarColor;
+
+  @override
+  _TopicPageState createState() => _TopicPageState();
+}
+
+class _TopicPageState extends State<TopicPage> {
+
+  List<Post> parsePosts(String responseBody) {
+    List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
+    print(jsonPostList);
+    List<Post> parsedPosts = List<Post>();
+    jsonPostList.forEach((post) {
+      print(post);
+      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
+    });
+    return parsedPosts;
+  }
+
+  Future<List<Post>> fetchPosts() async {
+    final response = await http.get("http://localhost:8080/post");
+    return parsePosts(response.body);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+            backgroundColor: widget.appBarColor,
+            title: Text(widget.topic),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(flex: 1, child: Text(''),),
+            Expanded(
+              flex: 4,
+              child: FutureBuilder<List<Post>>(
+                future: fetchPosts(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData ? PostList(posts: snapshot.data) : Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+            Expanded(flex: 1, child: Text(''),),
+          ],
+        )
+    );
+  }
+}
 
 class Post {
   final String title;
@@ -38,6 +99,44 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//    return GridView.builder(
+//      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//        crossAxisCount: 2,
+//        childAspectRatio: 3,
+//      ),
+//      itemCount: posts.length,
+//      itemBuilder: (context, index) {
+//        Post post = posts[index];
+//        return Card(
+//          child: ListTile(
+//            leading: Icon(Icons.note),
+//            title: Text(post.title),
+//            subtitle: Text("Autor: ${post.author}"),
+//          ),
+//          color: Colors.white70,
+//          elevation: 2,
+//          margin: EdgeInsets.all(30.0),
+//        );
+//          Column(
+//            mainAxisSize: MainAxisSize.min,
+//            children: [
+//              ListTile(
+//                leading: Icon(Icons.note),
+//                title: Text(post.title),
+//                subtitle: Text("Autor: ${post.author}"),
+//              ),
+//              Text(post.desc),
+//              Text(post.datePublished),
+//              Text("${post.rating}/${post.ratingCount}"),
+//              ListView.separated(
+//                itemCount: post.youtubeLinks.length,
+//                itemBuilder: (_, idx) => Text(post.youtubeLinks[idx], textAlign: TextAlign.center,),
+//                separatorBuilder: (a, b) => Divider(),
+//              ),
+//            ],
+//          );
+//      },
+//    );
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -47,17 +146,37 @@ class PostList extends StatelessWidget {
       itemBuilder: (context, index) {
         Post post = posts[index];
         return Card(
-          child: ListTile(
+          child:
+          ListTile(
             leading: Icon(Icons.note),
             title: Text(post.title),
             subtitle: Text("Autor: ${post.author}"),
           ),
+//          GridTile(
+//            child: Expanded(
+//              child: Column(
+//                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                children: [
+//                  Text(post.title),
+//                  Text(post.desc),
+//                  Text(post.datePublished),
+//                  Text("${post.rating}/${post.ratingCount}"),
+////                  ListView.separated(
+////                    itemCount: post.youtubeLinks.length,
+////                    itemBuilder: (_, idx) => Text(post.youtubeLinks[idx], textAlign: TextAlign.center,),
+////                    separatorBuilder: (a, b) => Divider(),
+////                  ),
+//                  Text("Autor: ${post.author}"),
+//                ],
+//              ),
+//            )
+//          ),
           color: Colors.white70,
           elevation: 2,
           margin: EdgeInsets.all(30.0),
         );
-          ListView(
-            shrinkWrap: true,
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: Icon(Icons.note),
@@ -77,66 +196,4 @@ class PostList extends StatelessWidget {
       },
     );
   }
-}
-
-class TopicPage extends StatefulWidget {
-  TopicPage({Key key, this.topic}) : super(key: key);
-  final String topic;
-
-  @override
-  _TopicPageState createState() => _TopicPageState();
-}
-
-class _TopicPageState extends State<TopicPage> {
-
-  List<Post> parsePosts(String responseBody) {
-    List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
-    print(jsonPostList);
-    List<Post> parsedPosts = List<Post>();
-    jsonPostList.forEach((post) {
-      print(post);
-      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
-    });
-    print(parsedPosts);
-    return parsedPosts;
-  }
-
-  Future<List<Post>> fetchPosts() async {
-    final response = await http.get("http://localhost:8080/post");
-    return parsePosts(response.body);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.topic),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(flex: 1, child: Text(''),),
-          Expanded(
-            flex: 4,
-            child: FutureBuilder<List<Post>>(
-              future: fetchPosts(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
-                return snapshot.hasData ? PostList(posts: snapshot.data) : Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
-          Expanded(flex: 1, child: Text(''),),
-        ],
-      )
-    );
-  }
-
 }

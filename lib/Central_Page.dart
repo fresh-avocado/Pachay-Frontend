@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'register.dart';
 import 'Topic_Page.dart';
 import 'login.dart';
@@ -25,16 +24,8 @@ class CentralPage extends StatefulWidget {
 class _CentralPageState extends State<CentralPage> {
 
   final List<String> courses = <String>['Matemática', 'Física', 'Química', 'Biología'];
+  final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.child_care)];
   final List<Color> courseColor = <Color>[Colors.red, Colors.blue, Colors.green, Colors.amber];
-
-  String getusername(){
-    getSharedPref("firstName").then(
-        (value){
-          print(value);
-          return value;
-        }
-    );
-  }
 
   void render(bool ak) {
     widget.isLoggedIn = ak;
@@ -83,22 +74,20 @@ class _CentralPageState extends State<CentralPage> {
               onPressed: () {
                 if (widget.isLoggedIn) {
                   if (widget.role == false) { // perfil del profesor
-                    // TODO: mandar al profesor a su perfil
                     print("El profesor quiere ver su perfil");
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfilePage(title: widget.title, role: widget.role,),
+                            builder: (context) => ProfilePage(title: "Perfil", role: widget.role,),
                         ),
                     );
 
                   } else if (widget.role == true) { // perfil del alumno
-                    // TODO: mandar al alumno a su perfil
                     print("El alumno quiere ver su perfil");
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfilePage(title: widget.title, role: widget.role,),
+                        builder: (context) => ProfilePage(title: "Perfil", role: widget.role,),
                       ),
                     );
                   }
@@ -130,12 +119,16 @@ class _CentralPageState extends State<CentralPage> {
                   splashColor: Colors.orangeAccent[100],
                   color: buttonColor,
                   onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NewPostPage(title: widget.title,)
-                        ),
-                      );
+                      if (buttonColor == Colors.deepOrange && widget.role == false) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NewPostPage(title: widget.title, topicList: courses,)
+                          ),
+                        );
+                      } else if (buttonColor == Colors.deepOrange && widget.role == true) {
+                        // TODO: mandarl al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
+                      }
                   },
                   child: Text(
                     snapshot.data,
@@ -143,7 +136,7 @@ class _CentralPageState extends State<CentralPage> {
                   ),
                 );
               } else {
-                homePage = CircularProgressIndicator();
+                homePage = Text("");
               }
               return homePage;
             },
@@ -184,11 +177,6 @@ class _CentralPageState extends State<CentralPage> {
           Expanded(
             flex: 2,
             child:
-//            ListView.separated(
-//              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-//              separatorBuilder: (a, b) => Divider(),
-//              itemCount: 100,
-//            ),
               Text(''),
           ),
           Expanded(
@@ -200,6 +188,38 @@ class _CentralPageState extends State<CentralPage> {
                 itemCount: courses.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
+                    margin: EdgeInsets.all(15.0),
+                    elevation: 5,
+                    color: courseColor[index],
+                    child: InkWell(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: courseIcons[index],
+                            title: Text(
+                              courses[index],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            subtitle: Text("Subtítulo"),
+                          ),
+                          Text(""),
+                        ],
+                      ),
+                      onTap: () {
+                        print(courses[index]);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], appBarColor: courseColor[index])),
+                        );
+                      },
+                    ),
+                  );
+
+                    Card(
+                    // TODO: embellecer los cards
                     child: InkWell(
                       splashColor: Colors.blue.withAlpha(30),
                       onTap: () {
@@ -229,16 +249,10 @@ class _CentralPageState extends State<CentralPage> {
           Expanded(
             flex: 2,
             child:
-//            ListView.separated(
-//              itemBuilder: (_, idx) => Text('Item $idx', textAlign: TextAlign.center,),
-//              separatorBuilder: (a, b) => Divider(),
-//              itemCount: 100,
-//            ),
             Text(''),
           ),
         ],
       ),
     );
   }
-
 }

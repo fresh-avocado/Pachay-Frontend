@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'Central_Page.dart';
 import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken;
+import 'utilities.dart' show showAlertDialog;
 
-// Define a custom Form widget.
 class MyCustomForm extends StatefulWidget {
   @override
   MyCustomFormState createState() {
@@ -12,14 +11,7 @@ class MyCustomForm extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   final firstName = TextEditingController();
@@ -39,13 +31,8 @@ class MyCustomFormState extends State<MyCustomForm> {
       }),
     );
     if (response.statusCode == 200) {
-      // TODO: mostrarle al usuario algo bonito que indique
-      // que sí se pudo registrar
-      // TODO: redirreccionarlo
-      // al login o logearlo defrente
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String authToken = responseBody['jwt'];
-      print("PRINTING RESPONSE BODY");
 
       print(responseBody);
 
@@ -131,14 +118,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                               print("User just logged in!");
                               print("$authToken");
                               saveToken(authToken);
-                              // TODO: guardar datos del user
                               saveEmail(_email);
                               Navigator.pop(context);
                               // TODO: renderizar de nuevo el main page
                             } else if (authToken == "e") {
-                              // TODO: indicar al usuario que su email o contrasena son invalidos
+                              showAlertDialog(context, "No se pudo iniciar sesión", "La contraseña y/o el correo es inválido.");
                             } else {
                               // FIXME: decirle al usuario que ocurrio un error inesperado y que lo intente mas tarde
+                              showAlertDialog(context, "Oops", "Ocurrió un error. Inténtelo de nuevo más tarde.");
                             }
                           }
                         );
@@ -165,11 +152,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage>{
-
-  Future<String> _calculation = Future<String>.delayed(
-    Duration(seconds: 2),
-        () => 'Data Loaded',
-  );
 
   var widthsize = 400.0;
 

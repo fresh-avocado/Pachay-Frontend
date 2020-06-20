@@ -4,7 +4,6 @@ import 'register.dart';
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key, this.title, this.role}) : super(key: key);
   final String title;
-//  final String username;
   final bool role;
 
   @override
@@ -13,13 +12,14 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
-  Future<String> getFirstName() async {
+  Future<String> getNames() async {
     String firstName = await getSharedPref("firstName");
+    String lastName = await getSharedPref("lastName");
     if (firstName != null) {
-      return firstName;
+      return "$firstName $lastName";
     } else {
       // nunca deber'ia llegar a este else KERNEL_PANIC()
-      return "Error jajaja";
+      return "no se puedo obtener el firstName del key-value pair";
     }
   }
 
@@ -36,50 +36,39 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         )
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: <Widget>[
-                FutureBuilder<String>(
-                  future: getFirstName(),
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    Widget homePage;
-                    if (snapshot.hasData) {
-                      homePage = Text(
-                        widget.role == false ? "Bienvenido Profesor ${snapshot.data}" : "Bienvenido Alumno ${snapshot.data}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                        ),
-                      );
-                    } else {
-                      homePage = CircularProgressIndicator();
-                    }
-                    return homePage;
-                  },
-                ),
-              ],
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              flex: 3,
+              child: FutureBuilder<String>(
+                future: getNames(),
+                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  Widget homePage;
+                  if (snapshot.hasData) {
+                    homePage = Text(
+                      widget.role == false ? "Profesor ${snapshot.data}" : "Alumno ${snapshot.data}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),
+                    );
+                  } else {
+                    homePage = CircularProgressIndicator();
+                  }
+                  return homePage;
+                },
+              ),
             ),
-          ),
-          Expanded(
-              flex: 1,
-              child: Text(
-                  ""
-              )
-          ),
-          Expanded(
-            flex: 10,
-            child: Text(''),
-//            ListView.separated(
-//              scrollDirection: Axis.horizontal,
-//              itemBuilder: (_, idx) => !widget.role?Text('   Post Guardado #$idx   ', textAlign: TextAlign.center,):Text('   Mi Post #$idx   ', textAlign: TextAlign.center,),
-//              separatorBuilder: (a, b) => Divider(),
-//              itemCount: 100,
-//            ),
-          )
-        ],
+            Expanded(
+              flex: 2,
+              child: Text("Acá saldrán los videos que Pachay le sugiere al alumno."),
+            ),
+          ],
+        ),
       ),
     );
   }
