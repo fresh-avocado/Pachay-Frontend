@@ -5,7 +5,6 @@ import 'login.dart';
 import 'New_Post.dart';
 import 'Profile.dart';
 
-// TODO: llamar setSate en CentralPage, cuando se llama a Navigator.pop en register.dart y en login.dart
 // TODO: resolver TODO's
 
 class CentralPage extends StatefulWidget {
@@ -60,6 +59,27 @@ class _CentralPageState extends State<CentralPage> {
     }
   }
 
+  _navigateAndDisplaySelection(BuildContext context, String title, String where) async {
+    // a little bit of repeated code
+    if (where == "login") {
+      final didLogIn = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage(title: title,)),
+      );
+      if (didLogIn) {
+        render(true);
+      }
+    } else if (where == "register") {
+      final didRegister = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterPage(title: title,)),
+      );
+      if (didRegister) {
+        render(true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,11 +112,7 @@ class _CentralPageState extends State<CentralPage> {
                     );
                   }
                 } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginPage(title: widget.title,)),
-                  );
+                  _navigateAndDisplaySelection(context, widget.title, "login");
                 }
               },
               child: Text(
@@ -127,7 +143,7 @@ class _CentralPageState extends State<CentralPage> {
                           ),
                         );
                       } else if (buttonColor == Colors.deepOrange && widget.role == true) {
-                        // TODO: mandarl al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
+                        // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
                       }
                   },
                   child: Text(
@@ -155,12 +171,7 @@ class _CentralPageState extends State<CentralPage> {
                 saveEmail("");
                 render(false);
               } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RegisterPage(title: widget.title,)
-                  ),
-                );
+                _navigateAndDisplaySelection(context, widget.title, "register");
               }
             },
             child: Text(
@@ -215,30 +226,6 @@ class _CentralPageState extends State<CentralPage> {
                           MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], appBarColor: courseColor[index])),
                         );
                       },
-                    ),
-                  );
-
-                    Card(
-                    // TODO: embellecer los cards
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                        print(courses[index]);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) =>
-                              TopicPage(topic: courses[index],)),
-                        );
-                      },
-                      child: Container(
-                        color: courseColor[index],
-                        width: 300,
-                        height: 100,
-                        child: Center(
-                          child: Text(courses[index], style: TextStyle(
-                              fontSize: 20.0, fontWeight: FontWeight.bold)),
-                        ),
-                      ),
                     ),
                   );
                 },

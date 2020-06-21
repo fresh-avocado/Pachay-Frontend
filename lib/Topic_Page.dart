@@ -72,8 +72,8 @@ class Post {
   final String desc;
   final String author;
   final String datePublished;
-  final int rating;
-  final int ratingCount;
+  int rating;
+  int ratingCount;
   final List<String> youtubeLinks;
 
   Post({Key key, this.title, this.desc, this.author, this.datePublished, this.rating, this.ratingCount, this.youtubeLinks});
@@ -92,107 +92,66 @@ class Post {
   }
 }
 
-class PostList extends StatelessWidget {
+class PostList extends StatefulWidget {
   final List<Post> posts;
 
   PostList({Key key, this.posts}) : super(key: key);
 
   @override
+  _PostListState createState() => _PostListState();
+}
+
+class _PostListState extends State<PostList> {
+  @override
   Widget build(BuildContext context) {
-//    return GridView.builder(
-//      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//        crossAxisCount: 2,
-//        childAspectRatio: 3,
-//      ),
-//      itemCount: posts.length,
-//      itemBuilder: (context, index) {
-//        Post post = posts[index];
-//        return Card(
-//          child: ListTile(
-//            leading: Icon(Icons.note),
-//            title: Text(post.title),
-//            subtitle: Text("Autor: ${post.author}"),
-//          ),
-//          color: Colors.white70,
-//          elevation: 2,
-//          margin: EdgeInsets.all(30.0),
-//        );
-//          Column(
-//            mainAxisSize: MainAxisSize.min,
-//            children: [
-//              ListTile(
-//                leading: Icon(Icons.note),
-//                title: Text(post.title),
-//                subtitle: Text("Autor: ${post.author}"),
-//              ),
-//              Text(post.desc),
-//              Text(post.datePublished),
-//              Text("${post.rating}/${post.ratingCount}"),
-//              ListView.separated(
-//                itemCount: post.youtubeLinks.length,
-//                itemBuilder: (_, idx) => Text(post.youtubeLinks[idx], textAlign: TextAlign.center,),
-//                separatorBuilder: (a, b) => Divider(),
-//              ),
-//            ],
-//          );
-//      },
-//    );
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3,
-      ),
-      itemCount: posts.length,
+    return ListView.builder(
+      itemCount: widget.posts.length,
       itemBuilder: (context, index) {
-        Post post = posts[index];
-        return Card(
-          child:
-          ListTile(
-            leading: Icon(Icons.note),
-            title: Text(post.title),
-            subtitle: Text("Autor: ${post.author}"),
+        Post post = widget.posts[index];
+        return Expanded(
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.note),
+                  title: Text(post.title),
+                  trailing: IconButton(
+                      icon: Icon(Icons.thumb_up),
+                      onPressed: () {
+                        setState(() {
+                            widget.posts[index].ratingCount++;
+                            widget.posts[index].rating++;
+                        });
+                        // TODO: send new rating to server
+                      }),
+                ),
+                ListTile(
+                  subtitle: Text(post.desc),
+                  trailing: IconButton(
+                      icon: Icon(Icons.thumb_down),
+                      onPressed: () {
+                        setState(() {
+                            widget.posts[index].ratingCount++;
+                            widget.posts[index].rating--;
+                        });
+                        // TODO: send new rating to server
+                      }),
+                ),
+                ListTile(
+                  leading: Text("${post.rating}/${post.ratingCount}"),
+                  subtitle: Text("Autor: ${post.author}"),
+                  trailing: Text(post.datePublished),
+                ),
+              ],
+            ),
+            // TODO: when user clicks on a post, send the user to a detail post page, there, the links and files will be visible
+            color: Colors.white70,
+            elevation: 3,
+            margin: EdgeInsets.all(30.0),
           ),
-//          GridTile(
-//            child: Expanded(
-//              child: Column(
-//                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                children: [
-//                  Text(post.title),
-//                  Text(post.desc),
-//                  Text(post.datePublished),
-//                  Text("${post.rating}/${post.ratingCount}"),
-////                  ListView.separated(
-////                    itemCount: post.youtubeLinks.length,
-////                    itemBuilder: (_, idx) => Text(post.youtubeLinks[idx], textAlign: TextAlign.center,),
-////                    separatorBuilder: (a, b) => Divider(),
-////                  ),
-//                  Text("Autor: ${post.author}"),
-//                ],
-//              ),
-//            )
-//          ),
-          color: Colors.white70,
-          elevation: 2,
-          margin: EdgeInsets.all(30.0),
         );
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.note),
-                title: Text(post.title),
-                subtitle: Text("Autor: ${post.author}"),
-              ),
-              Text(post.desc),
-              Text(post.datePublished),
-              Text("${post.rating}/${post.ratingCount}"),
-              ListView.separated(
-                itemCount: post.youtubeLinks.length,
-                itemBuilder: (_, idx) => Text(post.youtubeLinks[idx], textAlign: TextAlign.center,),
-                separatorBuilder: (a, b) => Divider(),
-              ),
-            ],
-          );
       },
     );
   }

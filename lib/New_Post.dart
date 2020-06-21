@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 import 'register.dart' show getSharedPref;
 import 'utilities.dart' show showAlertDialog;
 
-class Link extends StatelessWidget {
+// TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
+// TODO: añadir un dropdown que le deje al profesor elegir un subtema
 
+class Link extends StatelessWidget {
   var _controller = TextEditingController();
 
   @override

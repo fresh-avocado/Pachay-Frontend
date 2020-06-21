@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'register.dart';
 
+// TODO: embellecer y mostrarle información relevante al usuario
+
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key, this.title, this.role}) : super(key: key);
   final String title;

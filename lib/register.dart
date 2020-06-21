@@ -248,10 +248,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                               saveFirstName(_firstName);
                               saveLastName(_lastName);
                               saveRole(_role);
-                              Navigator.pop(context, () {
-                                setState(() {});
-                              }); // regresar al main page
-                              // TODO: regresar al main page y recargarla
+                              Navigator.pop(context, true); // regresar al main page
                             } else {
                               showAlertDialog(context, "No te pudimos registrar", "Inténtalo de nuevo más tarde.");
                               print("Error: no se pudo registrar al usuario.");
@@ -318,9 +315,6 @@ class _RegisterPageState extends State<RegisterPage>{
             )
         ),
         body: Center(
-          // FIXME: falta validar que sea un correo válido
-          // FIXME: falta validar que sea una contraseña lo suficientemente segura
-          // TODO: al final de la validación, mandarle la data al servidor y esperar response del servidor
             child: Visibility(
               visible: !_isVisible,
               child: Row(

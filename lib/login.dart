@@ -53,7 +53,6 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
     return Form(
         key: _formKey,
         child: Column(
@@ -119,12 +118,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                               print("$authToken");
                               saveToken(authToken);
                               saveEmail(_email);
-                              Navigator.pop(context);
-                              // TODO: renderizar de nuevo el main page
+                              Navigator.pop(context, true);
                             } else if (authToken == "e") {
                               showAlertDialog(context, "No se pudo iniciar sesión", "La contraseña y/o el correo es inválido.");
                             } else {
-                              // FIXME: decirle al usuario que ocurrio un error inesperado y que lo intente mas tarde
                               showAlertDialog(context, "Oops", "Ocurrió un error. Inténtelo de nuevo más tarde.");
                             }
                           }
