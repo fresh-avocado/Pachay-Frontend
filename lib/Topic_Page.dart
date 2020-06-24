@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Pachay/PostDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -56,7 +57,7 @@ class _TopicPageState extends State<TopicPage> {
                 future: fetchPosts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data) : Center(child: CircularProgressIndicator());
+                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor) : Center(child: CircularProgressIndicator());
                 },
               ),
             ),
@@ -75,6 +76,7 @@ class Post {
   int rating;
   int ratingCount;
   final List<String> youtubeLinks;
+//TODO:  final List<File> files;
 
   Post({Key key, this.title, this.desc, this.author, this.datePublished, this.rating, this.ratingCount, this.youtubeLinks});
 
@@ -94,8 +96,9 @@ class Post {
 
 class PostList extends StatefulWidget {
   final List<Post> posts;
+  final Color appBarColor;
 
-  PostList({Key key, this.posts}) : super(key: key);
+  PostList({Key key, this.posts, this.appBarColor}) : super(key: key);
 
   @override
   _PostListState createState() => _PostListState();
@@ -117,36 +120,31 @@ class _PostListState extends State<PostList> {
                 ListTile(
                   leading: Icon(Icons.note),
                   title: Text(post.title),
-                  trailing: IconButton(
-                      icon: Icon(Icons.thumb_up),
-                      onPressed: () {
-                        setState(() {
-                            widget.posts[index].ratingCount++;
-                            widget.posts[index].rating++;
-                        });
-                        // TODO: send new rating to server
-                      }),
                 ),
                 ListTile(
-                  subtitle: Text(post.desc),
-                  trailing: IconButton(
-                      icon: Icon(Icons.thumb_down),
-                      onPressed: () {
-                        setState(() {
-                            widget.posts[index].ratingCount++;
-                            widget.posts[index].rating--;
-                        });
-                        // TODO: send new rating to server
-                      }),
+                  title: Text(post.desc),
                 ),
                 ListTile(
-                  leading: Text("${post.rating}/${post.ratingCount}"),
-                  subtitle: Text("Autor: ${post.author}"),
-                  trailing: Text(post.datePublished),
+                  title: Text("Autor: ${post.author}"),
+                  subtitle: Text("Publicado en: ${post.datePublished}"),
+                  trailing: Column(
+                    children: [
+                      RaisedButton(
+                        child: Text("Ver más"),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PostDetail(post: post, appBarColor: widget.appBarColor),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            // TODO: when user clicks on a post, send the user to a detail post page, there, the links and files will be visible
             color: Colors.white70,
             elevation: 3,
             margin: EdgeInsets.all(30.0),

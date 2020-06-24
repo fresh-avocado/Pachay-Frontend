@@ -36,9 +36,10 @@ class Link extends StatelessWidget {
 }
 
 class NewPostPage extends StatefulWidget {
-  NewPostPage({Key key, this.title, this.topicList}) : super(key: key);
   final String title;
-  final List<String> topicList;
+  final Map<String, List<String>> topicsAndSubtopics;
+
+  NewPostPage({Key key, this.title, this.topicsAndSubtopics}) : super(key: key);
 
   @override
   _NewPostPageState createState() => _NewPostPageState();
@@ -50,9 +51,17 @@ class _NewPostPageState extends State<NewPostPage> {
   final postDesc = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _topic = "Matemática";
+  bool subtopicDropDownVisible = false;
+  // TODO: get subtopics from backend
   List<Widget> linkWidgets = List<Widget>();
 
-  Future<bool> postPost(String postTitle, String postDesc, List<String> links) async {
+  void toggleSubtopicDropdown() {
+    setState(() {
+      subtopicDropDownVisible = true;
+    });
+  }
+
+  Future<bool> postPost(String postTitle, String postDesc, List<String> links, String subtopic) async {
     String token = await getSharedPref("authToken");
 
     // TODO: subir varios archivos, subir topic y subtopic
@@ -67,6 +76,9 @@ class _NewPostPageState extends State<NewPostPage> {
         "title": postTitle,
         "description": postDesc,
         "videos": links,
+//        "topic": _topic,
+//        "subtopic": _subtopic,
+//        "files": files,
       }),
     );
 
@@ -81,7 +93,8 @@ class _NewPostPageState extends State<NewPostPage> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
+    String _subtopic = widget.topicsAndSubtopics[_topic].first;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -111,7 +124,7 @@ class _NewPostPageState extends State<NewPostPage> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
-                          maxLength: 50,
+                          maxLength: 40,
                           decoration: InputDecoration(
                             labelText: 'Título de Post',
                           ),
@@ -141,7 +154,7 @@ class _NewPostPageState extends State<NewPostPage> {
                       Expanded(
                         flex: 5,
                         child: TextFormField(
-                          maxLength: 500,
+                          maxLength: 100,
                           controller: postDesc,
                           decoration: InputDecoration(
                             labelText: 'Descripción del Post',
@@ -220,15 +233,39 @@ class _NewPostPageState extends State<NewPostPage> {
                         onChanged: (String newValue) {
                           setState(() {
                             _topic = newValue;
+                            toggleSubtopicDropdown();
                           });
                         },
-                        items: widget.topicList.map<DropdownMenuItem<String>>((String value) {
+                        items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
                           );
                         }).toList(),
-                      )
+                      ),
+                      Divider(),
+                      DropdownButton<String>(
+                        value: _subtopic,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _subtopic = newValue;
+                          });
+                        },
+                        items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
                     ],
                   ),
                   Align(
@@ -246,13 +283,13 @@ class _NewPostPageState extends State<NewPostPage> {
                                   String _postDesc = postDesc.text;
                                   List<String> youtubeLinks = List<String>();
                                   String _link;
-                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\n");
+                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
                                   for (int i = 0; i < linkWidgets.length; i++) {
                                     _link = (linkWidgets[i] as Link)._controller.text;
                                     print("Link ${i+1}: $_link");
                                     youtubeLinks.add(_link);
                                   }
-                                  postPost(_postTitle, _postDesc, youtubeLinks).then((success) {
+                                  postPost(_postTitle, _postDesc, youtubeLinks, _subtopic).then((success) {
                                     if (success) {
                                       showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.");
                                     } else {

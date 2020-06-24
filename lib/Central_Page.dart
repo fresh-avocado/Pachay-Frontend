@@ -22,7 +22,13 @@ class CentralPage extends StatefulWidget {
 
 class _CentralPageState extends State<CentralPage> {
 
-  final List<String> courses = <String>['Matemática', 'Física', 'Química', 'Biología'];
+  final Map<String, List<String>> topicsAndSubtopics = {
+    "Matemática" : ["Ecuaciones", "Geometría"],
+    "Física": ["MRU", "Leyes de Newton"],
+    "Química": ["Estequiometría", "Ácidos y Bases"],
+    "Biología": ["Células", "Genética Mendeliana"]
+  };
+  final List<String> courses = ["Matemática", "Física", "Química", "Biología"];
   final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.child_care)];
   final List<Color> courseColor = <Color>[Colors.red, Colors.blue, Colors.green, Colors.amber];
 
@@ -139,7 +145,7 @@ class _CentralPageState extends State<CentralPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NewPostPage(title: widget.title, topicList: courses,)
+                              builder: (context) => NewPostPage(title: widget.title, topicsAndSubtopics: topicsAndSubtopics)
                           ),
                         );
                       } else if (buttonColor == Colors.deepOrange && widget.role == true) {
@@ -196,7 +202,7 @@ class _CentralPageState extends State<CentralPage> {
               padding: EdgeInsets.all(30.0),
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
-                itemCount: courses.length,
+                itemCount: topicsAndSubtopics.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
                     margin: EdgeInsets.all(15.0),
@@ -220,7 +226,6 @@ class _CentralPageState extends State<CentralPage> {
                         ],
                       ),
                       onTap: () {
-                        print(courses[index]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], appBarColor: courseColor[index])),
