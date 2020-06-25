@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'register.dart' show getSharedPref;
 import 'utilities.dart' show showAlertDialog;
+import 'dart:io';
+import 'dart:html' as html;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
 // TODO: añadir un dropdown que le deje al profesor elegir un subtema
@@ -14,7 +16,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(right: 24.0),
       child: TextFormField(
         controller: _controller,
         decoration: InputDecoration(
@@ -50,21 +52,64 @@ class _NewPostPageState extends State<NewPostPage> {
   final postTitle = TextEditingController();
   final postDesc = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool hasChosenSubtopic = false;
   String _topic = "Matemática";
-  bool subtopicDropDownVisible = false;
-  // TODO: get subtopics from backend
+  String _subtopic = "Ecuaciones";
   List<Widget> linkWidgets = List<Widget>();
+  List<int> ejercicios = List<int>();
+  List<int> materialDeSoporte = List<int>();
+  List<int> solucionarios = List<int>();
 
-  void toggleSubtopicDropdown() {
-    setState(() {
-      subtopicDropDownVisible = true;
+
+  Future<void> chooseFiles(String tipo) async {
+    html.InputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.multiple = true;
+    uploadInput.draggable = true;
+    uploadInput.click();
+    uploadInput.onChange.listen((e) {
+      final files = uploadInput.files;
+      final file = files[0];
+      final reader = new html.FileReader();
+      reader.onLoadEnd.listen((event) {
+        handleUploadedFile(reader.result, tipo);
+      });
+      reader.readAsDataUrl(file);
     });
   }
 
-  Future<bool> postPost(String postTitle, String postDesc, List<String> links, String subtopic) async {
+  void handleUploadedFile(Object result, String tipo) {
+    List<int> fileAsBytes = Base64Decoder().convert(result.toString().split(",").last);
+    // TODO: Base64 o multi part?
+    if (tipo == "ejercicio") {
+      ejercicios = fileAsBytes;
+    } else if (tipo == "material") {
+      solucionarios = fileAsBytes;
+    } else if (tipo == "solucionario") {
+      materialDeSoporte = fileAsBytes;
+    }
+    setState(() {});
+  }
+
+  Future<bool> postPost(String postTitle, String postDesc, List<String> links) async {
     String token = await getSharedPref("authToken");
 
-    // TODO: subir varios archivos, subir topic y subtopic
+    // TODO: hago un multipart? o lo mando en Base64?
+
+    List<String> _ejercicios = List<String>();
+    List<String> _solucionarios = List<String>();
+    List<String> _materialDeSoporte = List<String>();
+
+    ejercicios.map( (file) {
+
+    });
+
+    solucionarios.map( (file) {
+
+    });
+
+    materialDeSoporte.map( (file) {
+
+    });
 
     final http.Response response = await http.post(
       'http://localhost:8080/post',
@@ -76,11 +121,16 @@ class _NewPostPageState extends State<NewPostPage> {
         "title": postTitle,
         "description": postDesc,
         "videos": links,
-//        "topic": _topic,
-//        "subtopic": _subtopic,
-//        "files": files,
+        "topic": _topic,
+        "subtopic": _subtopic,
+        "ejercicios": _ejercicios,
+        "materialDeSoporte": _materialDeSoporte,
+        'solucionarios': _solucionarios
       }),
     );
+
+    print("REQUEST");
+    print(response.request);
 
     if (response.statusCode == 200) {
       // post uploaded successfully
@@ -89,12 +139,16 @@ class _NewPostPageState extends State<NewPostPage> {
       // bad request
       return false;
     }
+  }
 
+  void updateDropDown(String __topic, String __subtopic) {
+    _topic = __topic;
+    _subtopic = __subtopic;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    String _subtopic = widget.topicsAndSubtopics[_topic].first;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -124,7 +178,7 @@ class _NewPostPageState extends State<NewPostPage> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
-                          maxLength: 40,
+                          maxLength: 50,
                           decoration: InputDecoration(
                             labelText: 'Título de Post',
                           ),
@@ -154,7 +208,7 @@ class _NewPostPageState extends State<NewPostPage> {
                       Expanded(
                         flex: 5,
                         child: TextFormField(
-                          maxLength: 100,
+                          maxLength: 80,
                           controller: postDesc,
                           decoration: InputDecoration(
                             labelText: 'Descripción del Post',
@@ -217,7 +271,9 @@ class _NewPostPageState extends State<NewPostPage> {
                       ),
                     ],
                   ),
-                  Row(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DropdownButton<String>(
                         // TODO: validar que se seleccione un tema
@@ -232,8 +288,7 @@ class _NewPostPageState extends State<NewPostPage> {
                         ),
                         onChanged: (String newValue) {
                           setState(() {
-                            _topic = newValue;
-                            toggleSubtopicDropdown();
+                            updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
                           });
                         },
                         items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
@@ -243,7 +298,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           );
                         }).toList(),
                       ),
-                      Divider(),
+                      Divider(thickness: 0,),
                       DropdownButton<String>(
                         value: _subtopic,
                         icon: Icon(Icons.arrow_downward),
@@ -256,7 +311,7 @@ class _NewPostPageState extends State<NewPostPage> {
                         ),
                         onChanged: (String newValue) {
                           setState(() {
-                            _subtopic = newValue;
+                            updateDropDown(_topic, newValue);
                           });
                         },
                         items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
@@ -268,6 +323,38 @@ class _NewPostPageState extends State<NewPostPage> {
                       ),
                     ],
                   ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MaterialButton(
+                        color: Colors.orange,
+                        elevation: 8,
+                        highlightElevation: 2,
+                        child: Text('Seleccionar Ejercicio'),
+                        onPressed: () {
+                          chooseFiles("ejercicio");
+                        },
+                      ),
+                      MaterialButton(
+                        color: Colors.orange,
+                        elevation: 8,
+                        highlightElevation: 2,
+                        child: Text('Seleccionar Solucionario'),
+                        onPressed: () {
+                          chooseFiles("solucionario");
+                        },
+                      ),
+                      MaterialButton(
+                        color: Colors.orange,
+                        elevation: 8,
+                        highlightElevation: 2,
+                        child: Text('Seleccionar Material de Soporte'),
+                        onPressed: () {
+                          chooseFiles("material");
+                        },
+                      ),
+                    ],
+                  ),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
@@ -275,6 +362,8 @@ class _NewPostPageState extends State<NewPostPage> {
                       child: Row(
                         children: [
                           MaterialButton(
+                              elevation: 8,
+                              highlightElevation: 2,
                               child: Text("Publicar Post"),
                               color: Colors.blue,
                               onPressed: () {
@@ -283,17 +372,17 @@ class _NewPostPageState extends State<NewPostPage> {
                                   String _postDesc = postDesc.text;
                                   List<String> youtubeLinks = List<String>();
                                   String _link;
-                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
+                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic}");
                                   for (int i = 0; i < linkWidgets.length; i++) {
                                     _link = (linkWidgets[i] as Link)._controller.text;
                                     print("Link ${i+1}: $_link");
                                     youtubeLinks.add(_link);
                                   }
-                                  postPost(_postTitle, _postDesc, youtubeLinks, _subtopic).then((success) {
+                                  postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
                                     if (success) {
-                                      showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.");
+                                      showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.", true);
                                     } else {
-                                      showAlertDialog(context, "Uy No", "El Post no pudo ser subido.");
+                                      showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
                                     }
                                   });
                                 }

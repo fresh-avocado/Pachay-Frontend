@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'register.dart';
+import 'register.dart' show getSharedPref;
+import 'package:Pachay/Post.dart';
+import 'dart:convert' show jsonDecode;
+import 'package:http/http.dart' as http;
 
 // TODO: embellecer y mostrarle información relevante al usuario
 
@@ -13,6 +16,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  List<Post> parsePosts(String responseBody) {
+    List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
+    print(jsonPostList);
+    List<Post> parsedPosts = List<Post>();
+    jsonPostList.forEach((post) {
+      print(post);
+      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
+    });
+    return parsedPosts;
+  }
+
+  Future<List<Post>> fetchPosts() async {
+    // TODO: fetch only this author's posts
+    final response = await http.get("http://localhost:8080/post");
+    return parsePosts(response.body);
+  }
 
   Future<String> getNames() async {
     String firstName = await getSharedPref("firstName");
@@ -65,9 +85,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
             ),
-            Expanded(
+            if (widget.role) Expanded(
               flex: 2,
-              child: Text("Acá saldrán los videos que Pachay le sugiere al alumno."),
+              child: Text("Videos de YouTube que Pachay recomienda.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),),
+            ),
+            if (!widget.role) Expanded(
+              flex: 2,
+              child: Text("FutureBuilder que agarra los posts de este profesor"),
             ),
           ],
         ),

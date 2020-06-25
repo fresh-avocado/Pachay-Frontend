@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:js' as js;
-import 'Topic_Page.dart' show Post;
+import 'Post.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostDetail extends StatefulWidget {
   PostDetail({Key key, this.post, this.appBarColor}) : super(key: key);
@@ -47,8 +47,8 @@ class _PostDetailState extends State<PostDetail> {
                     trailing: IconButton(
                         icon: Icon(Icons.thumb_up),
                         onPressed: () {
-                          rated(true);
                           // TODO: mandar el PUT al servidor
+                          rated(true);
                         }),
                   ),
                   ListTile(
@@ -57,8 +57,8 @@ class _PostDetailState extends State<PostDetail> {
                     trailing: IconButton(
                         icon: Icon(Icons.thumb_down),
                         onPressed: () {
-                          rated(false);
                           // TODO: mandar el PUT al servidor
+                          rated(false);
                         }),
                   ),
                   ListTile(
@@ -91,7 +91,7 @@ class _PostDetailState extends State<PostDetail> {
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           // TODO: hacer el embed de los videos de youtube
-                                          js.context.callMethod("open", ["${widget.post.youtubeLinks[idx]}"]);
+                                          launch(widget.post.youtubeLinks[idx]).then((value) => {});
                                         }
                                   ),
                                 ),
@@ -113,9 +113,9 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
+                                    // TODO: abrir el archivo en otra ventana del browser?
                                     text: "Archivo $idx",
                                     style: TextStyle(color: Colors.blueAccent),
-                                    // TODO: hacer el embed del file aca
                                   ),
                                 ),
                               ],

@@ -120,9 +120,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                               saveEmail(_email);
                               Navigator.pop(context, true);
                             } else if (authToken == "e") {
-                              showAlertDialog(context, "No se pudo iniciar sesión", "La contraseña y/o el correo es inválido.");
+                              showAlertDialog(context, "No se pudo iniciar sesión", "La contraseña y/o el correo es inválido.", false);
                             } else {
-                              showAlertDialog(context, "Oops", "Ocurrió un error. Inténtelo de nuevo más tarde.");
+                              showAlertDialog(context, "Oops", "Ocurrió un error. Inténtelo de nuevo más tarde.", false);
                             }
                           }
                         );

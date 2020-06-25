@@ -250,7 +250,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                               saveRole(_role);
                               Navigator.pop(context, true); // regresar al main page
                             } else {
-                              showAlertDialog(context, "No te pudimos registrar", "Inténtalo de nuevo más tarde.");
+                              showAlertDialog(context, "No te pudimos registrar", "Inténtalo de nuevo más tarde.", false);
                               print("Error: no se pudo registrar al usuario.");
                             }
                           }
