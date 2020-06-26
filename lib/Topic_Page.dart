@@ -1,37 +1,18 @@
-import 'dart:convert';
+import 'package:Pachay/Subtopic_Page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:Pachay/Post.dart';
-//import 'package:Pachay/Subtopic_Page.dart' show SubtopicPage; en breves lo necesitaremos
 
 class TopicPage extends StatefulWidget {
-  TopicPage({Key key, this.topic, this.appBarColor}) : super(key: key);
+  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor}) : super(key: key);
   final String topic;
   final Color appBarColor;
+  final List<String> subtopics;
 
   @override
   _TopicPageState createState() => _TopicPageState();
 }
 
 class _TopicPageState extends State<TopicPage> {
-
-  List<Post> parsePosts(String responseBody) {
-    List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
-    print(jsonPostList);
-    List<Post> parsedPosts = List<Post>();
-    jsonPostList.forEach((post) {
-      print(post);
-      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
-    });
-    return parsedPosts;
-  }
-
-  Future<List<Post>> fetchPosts() async {
-    final response = await http.get("http://localhost:8080/post");
-    return parsePosts(response.body);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +34,44 @@ class _TopicPageState extends State<TopicPage> {
             Expanded(flex: 1, child: Text(''),),
             Expanded(
               flex: 4,
-              child: FutureBuilder<List<Post>>(
-                future: fetchPosts(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor) : Center(child: CircularProgressIndicator());
-                },
+              child: Padding(
+                padding: EdgeInsets.all(30.0),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: widget.subtopics.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      margin: EdgeInsets.all(15.0),
+                      elevation: 5,
+                      // FIXME: cambiar mi color
+                      color: Colors.amberAccent,
+                      child: InkWell(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                widget.subtopics[index],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              subtitle: Text(""),
+                            ),
+                            Text(""),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SubtopicPage(topic: widget.topic, subtopic: widget.subtopics[index], appBarColor: widget.appBarColor,)),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  scrollDirection: Axis.vertical,
+                ),
               ),
             ),
             Expanded(flex: 1, child: Text(''),),

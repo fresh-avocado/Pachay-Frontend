@@ -4,11 +4,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'register.dart' show getSharedPref;
 import 'utilities.dart' show showAlertDialog;
-import 'dart:io';
 import 'dart:html' as html;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
-// TODO: añadir un dropdown que le deje al profesor elegir un subtema
 
 class Link extends StatelessWidget {
   var _controller = TextEditingController();
@@ -79,7 +77,7 @@ class _NewPostPageState extends State<NewPostPage> {
 
   void handleUploadedFile(Object result, String tipo) {
     List<int> fileAsBytes = Base64Decoder().convert(result.toString().split(",").last);
-    // TODO: Base64 o multi part?
+    // FIXME: dejarlo en Base64
     if (tipo == "ejercicio") {
       ejercicios = fileAsBytes;
     } else if (tipo == "material") {
@@ -93,23 +91,23 @@ class _NewPostPageState extends State<NewPostPage> {
   Future<bool> postPost(String postTitle, String postDesc, List<String> links) async {
     String token = await getSharedPref("authToken");
 
-    // TODO: hago un multipart? o lo mando en Base64?
+    // TODO: mandar los archivos en Base64
 
-    List<String> _ejercicios = List<String>();
-    List<String> _solucionarios = List<String>();
-    List<String> _materialDeSoporte = List<String>();
+//    List<String> _ejercicios = List<String>();
+//    List<String> _solucionarios = List<String>();
+//    List<String> _materialDeSoporte = List<String>();
 
-    ejercicios.map( (file) {
-
-    });
-
-    solucionarios.map( (file) {
-
-    });
-
-    materialDeSoporte.map( (file) {
-
-    });
+//    ejercicios.map( (file) {
+//
+//    });
+//
+//    solucionarios.map( (file) {
+//
+//    });
+//
+//    materialDeSoporte.map( (file) {
+//
+//    });
 
     final http.Response response = await http.post(
       'http://localhost:8080/post',
@@ -120,12 +118,12 @@ class _NewPostPageState extends State<NewPostPage> {
       body: jsonEncode(<String, dynamic>{
         "title": postTitle,
         "description": postDesc,
-        "videos": links,
         "topic": _topic,
         "subtopic": _subtopic,
-        "ejercicios": _ejercicios,
-        "materialDeSoporte": _materialDeSoporte,
-        'solucionarios': _solucionarios
+        "videos": links,
+//        "ejercicios": _ejercicios,
+//        "materialDeSoporte": _materialDeSoporte,
+//        'solucionarios': _solucionarios
       }),
     );
 
@@ -372,10 +370,9 @@ class _NewPostPageState extends State<NewPostPage> {
                                   String _postDesc = postDesc.text;
                                   List<String> youtubeLinks = List<String>();
                                   String _link;
-                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic}");
+                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
                                   for (int i = 0; i < linkWidgets.length; i++) {
                                     _link = (linkWidgets[i] as Link)._controller.text;
-                                    print("Link ${i+1}: $_link");
                                     youtubeLinks.add(_link);
                                   }
                                   postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {

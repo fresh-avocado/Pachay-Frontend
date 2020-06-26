@@ -228,7 +228,7 @@ class _CentralPageState extends State<CentralPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], appBarColor: courseColor[index])),
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: courseColor[index])),
                         );
                       },
                     ),

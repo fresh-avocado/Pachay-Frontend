@@ -28,9 +28,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return parsedPosts;
   }
 
-  Future<List<Post>> fetchPosts() async {
-    // TODO: fetch only this author's posts
-    final response = await http.get("http://localhost:8080/post");
+  Future<List<Post>> fetchPostsByAuthor() async {
+    final token = await getSharedPref("authToken");
+    final response = await http.get("http://localhost:8080/post/author", headers: {"Authorization": "Bearer $token"});
     return parsePosts(response.body);
   }
 
@@ -63,6 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            Expanded(flex: 2, child: Text(''),),
             Expanded(
               flex: 3,
               child: FutureBuilder<String>(
@@ -71,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Widget homePage;
                   if (snapshot.hasData) {
                     homePage = Text(
-                      widget.role == false ? "Profesor ${snapshot.data}" : "Alumno ${snapshot.data}",
+                      widget.role == false ? "Profesor(a) ${snapshot.data}" : "Alumno ${snapshot.data}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -91,8 +92,19 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             if (!widget.role) Expanded(
               flex: 2,
-              child: Text("FutureBuilder que agarra los posts de este profesor"),
+              // TODO: ademas de agarrar todos los fields relevantes del post, tambien agarrar el "postId"
+              child: Expanded(
+                flex: 4,
+                child: FutureBuilder<List<Post>>(
+                  future: fetchPostsByAuthor(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) print(snapshot.error);
+                    return snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true) : Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ),
             ),
+            Expanded(flex: 2, child: Text(''),),
           ],
         ),
       ),
