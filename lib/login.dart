@@ -183,7 +183,7 @@ class _LoginPageState extends State<LoginPage>{
                       flex: 2,
                       child: Text(
                         "Iniciar Sesión",
-                        style: TextStyle(color: Colors.blue[900], fontSize: 50, fontFamily: 'Raleway'),
+                        style: TextStyle(color: Colors.brown[900], fontSize: 50, fontFamily: 'Raleway'),
                       ),
                     ),
                     Expanded(

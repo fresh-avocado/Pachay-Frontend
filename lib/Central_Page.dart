@@ -30,7 +30,8 @@ class _CentralPageState extends State<CentralPage> {
   };
   final List<String> courses = ["Matemática", "Física", "Química", "Biología"];
   final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.child_care)];
-  final List<Color> courseColor = <Color>[Colors.red, Colors.blue, Colors.green, Colors.amber];
+  //final List<Color> courseColor = <Color>[Colors.purple[400], Colors.blue[400], Colors.lightGreen[400], Colors.amber[400]];
+  final List<int> hexcourseColor = <int>[0xFFFF4C2E, 0xFF17BFEB, 0xFFFF0CFF, 0xFF94EB17 ]; //lila, celeste. verdelima, amarillo
 
   void render(bool ak) {
     widget.isLoggedIn = ak;
@@ -96,7 +97,8 @@ class _CentralPageState extends State<CentralPage> {
           MaterialButton(
               height: 70,
               splashColor: Colors.orangeAccent[100],
-              color: Colors.deepOrange,
+              color: Colors.orange,
+              elevation: 0.0,
               onPressed: () {
                 if (widget.isLoggedIn) {
                   if (widget.role == false) { // perfil del profesor
@@ -123,7 +125,7 @@ class _CentralPageState extends State<CentralPage> {
               },
               child: Text(
                 widget.isLoggedIn ? "Mi Perfil" : "Inicia Sesión",
-                style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
+                style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
               )
           ),
           FutureBuilder<String>(
@@ -132,7 +134,7 @@ class _CentralPageState extends State<CentralPage> {
               Widget homePage;
               var buttonColor = Colors.orange;
               if (widget.isLoggedIn) {
-                buttonColor = Colors.deepOrange;
+                buttonColor = Colors.orange;
               }
               if (snapshot.hasData) {
                 homePage = MaterialButton(
@@ -140,21 +142,22 @@ class _CentralPageState extends State<CentralPage> {
                   minWidth: 50,
                   splashColor: Colors.orangeAccent[100],
                   color: buttonColor,
+                  elevation: 0.0,
                   onPressed: () {
-                      if (buttonColor == Colors.deepOrange && widget.role == false) {
+                      if (buttonColor == Colors.orange && widget.role == false) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => NewPostPage(title: widget.title, topicsAndSubtopics: topicsAndSubtopics)
                           ),
                         );
-                      } else if (buttonColor == Colors.deepOrange && widget.role == true) {
+                      } else if (buttonColor == Colors.orange && widget.role == true) {
                         // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
                       }
                   },
                   child: Text(
                     snapshot.data,
-                    style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
+                    style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
                   ),
                 );
               } else {
@@ -167,7 +170,8 @@ class _CentralPageState extends State<CentralPage> {
             height: 70,
             minWidth: 50,
             splashColor: Colors.orangeAccent[100],
-            color: Colors.deepOrange,
+            color: Colors.orange,
+            elevation: 0.0,
             onPressed: () {
               if (widget.isLoggedIn) {
                 deleteAuthToken();
@@ -182,7 +186,7 @@ class _CentralPageState extends State<CentralPage> {
             },
             child: Text(
               widget.isLoggedIn ? "Cerrar Sesión" : "Regístrate",
-              style: TextStyle(color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
+              style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
             ),
           ),
 
@@ -207,7 +211,7 @@ class _CentralPageState extends State<CentralPage> {
                   return Card(
                     margin: EdgeInsets.all(15.0),
                     elevation: 5,
-                    color: courseColor[index],
+                    color: Color(hexcourseColor[index]),
                     child: InkWell(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -228,7 +232,7 @@ class _CentralPageState extends State<CentralPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: courseColor[index])),
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]))),
                         );
                       },
                     ),

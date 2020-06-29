@@ -44,7 +44,7 @@ class _TopicPageState extends State<TopicPage> {
                       margin: EdgeInsets.all(15.0),
                       elevation: 5,
                       // FIXME: cambiar mi color
-                      color: Colors.amberAccent,
+                      color: widget.appBarColor,
                       child: InkWell(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,

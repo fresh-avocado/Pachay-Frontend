@@ -149,7 +149,8 @@ class _NewPostPageState extends State<NewPostPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
+          resizeToAvoidBottomPadding: false,
+          appBar: AppBar(
             title: Text(widget.title),
             centerTitle: true,
             leading: IconButton(
@@ -158,245 +159,250 @@ class _NewPostPageState extends State<NewPostPage> {
                 Navigator.pop(context);
               },
             )
-        ),
-        body: Center(
-          child: Form(
-            autovalidate: true,
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, left: 28),
-              child: Column(
-                children: <Widget>[
-                  Divider(height: 20),
-                  Row(
+          ),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Form(
+                autovalidate: true,
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16.0, left: 28),
+                  child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(30.0),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          maxLength: 50,
-                          decoration: InputDecoration(
-                            labelText: 'Título de Post',
-                          ),
-                          controller: postTitle,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'El Post debe tener título.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Padding(
-                          padding: EdgeInsets.all(30.0),
-                        ),
-                      )
-                    ],
-                  ),
-                  Divider(height: 20),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(30.0),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: TextFormField(
-                          maxLength: 80,
-                          controller: postDesc,
-                          decoration: InputDecoration(
-                            labelText: 'Descripción del Post',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'El Post debe tener una breve descripción.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(30.0),
-                        ),
-                      )
-                    ],
-                  ),
-                  Divider(height: 20),
-                  Column(
-                    children: List.generate(linkWidgets.length, (i) {
-                      return linkWidgets[i];
-                    }),
-                  ),
-                  Divider(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: FloatingActionButton(
-                          heroTag: 1,
-                          child: Text(
-                            '+',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              linkWidgets.add(Link());
-                            });
-                          },
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: FloatingActionButton(
-                          heroTag: 2,
-                          child: Text(
-                            '-',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              linkWidgets.removeLast();
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DropdownButton<String>(
-                        // TODO: validar que se seleccione un tema
-                        value: _topic,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.deepPurple),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
-                          });
-                        },
-                        items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                      Divider(thickness: 0,),
-                      DropdownButton<String>(
-                        value: _subtopic,
-                        icon: Icon(Icons.arrow_downward),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: TextStyle(color: Colors.deepPurple),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            updateDropDown(_topic, newValue);
-                          });
-                        },
-                        items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      MaterialButton(
-                        color: Colors.orange,
-                        elevation: 8,
-                        highlightElevation: 2,
-                        child: Text('Seleccionar Ejercicio'),
-                        onPressed: () {
-                          chooseFiles("ejercicio");
-                        },
-                      ),
-                      MaterialButton(
-                        color: Colors.orange,
-                        elevation: 8,
-                        highlightElevation: 2,
-                        child: Text('Seleccionar Solucionario'),
-                        onPressed: () {
-                          chooseFiles("solucionario");
-                        },
-                      ),
-                      MaterialButton(
-                        color: Colors.orange,
-                        elevation: 8,
-                        highlightElevation: 2,
-                        child: Text('Seleccionar Material de Soporte'),
-                        onPressed: () {
-                          chooseFiles("material");
-                        },
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      width: 200,
-                      child: Row(
-                        children: [
-                          MaterialButton(
-                              elevation: 8,
-                              highlightElevation: 2,
-                              child: Text("Publicar Post"),
-                              color: Colors.blue,
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  String _postTitle = postTitle.text;
-                                  String _postDesc = postDesc.text;
-                                  List<String> youtubeLinks = List<String>();
-                                  String _link;
-                                  print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
-                                  for (int i = 0; i < linkWidgets.length; i++) {
-                                    _link = (linkWidgets[i] as Link)._controller.text;
-                                    youtubeLinks.add(_link);
-                                  }
-                                  postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
-                                    if (success) {
-                                      showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.", true);
-                                    } else {
-                                      showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
-                                    }
-                                  });
-                                }
-                              }
-                          ),
+                      Divider(height: 20),
+                      Row(
+                        children: <Widget>[
                           Padding(
                             padding: EdgeInsets.all(30.0),
                           ),
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              maxLength: 50,
+                              decoration: InputDecoration(
+                                labelText: 'Título de Post',
+                              ),
+                              controller: postTitle,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'El Post debe tener título.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Padding(
+                              padding: EdgeInsets.all(30.0),
+                            ),
+                          )
                         ],
                       ),
-                    ),
+                      Divider(height: 20),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(30.0),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: TextFormField(
+                              maxLength: 80,
+                              controller: postDesc,
+                              decoration: InputDecoration(
+                                labelText: 'Descripción del Post',
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'El Post debe tener una breve descripción.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: EdgeInsets.all(30.0),
+                            ),
+                          )
+                        ],
+                      ),
+                      Divider(height: 20),
+                      Column(
+                        children: List.generate(linkWidgets.length, (i) {
+                          return linkWidgets[i];
+                        }),
+                      ),
+                      Divider(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: FloatingActionButton(
+                              heroTag: 1,
+                              child: Text(
+                                '+',
+                                style: TextStyle(fontSize: 20.0),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  linkWidgets.add(Link());
+                                });
+                              },
+                            ),
+                          ),
+                          Text("Links a video de Youtube",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: FloatingActionButton(
+                              heroTag: 2,
+                              child: Text(
+                                '-',
+                                style: TextStyle(fontSize: 20.0),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  linkWidgets.removeLast();
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DropdownButton<String>(
+                            // TODO: validar que se seleccione un tema
+                            value: _topic,
+                            icon: Icon(Icons.arrow_downward),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
+                              });
+                            },
+                            items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                          Divider(thickness: 0,),
+                          DropdownButton<String>(
+                            value: _subtopic,
+                            icon: Icon(Icons.arrow_downward),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                updateDropDown(_topic, newValue);
+                              });
+                            },
+                            items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          MaterialButton(
+                            color: Colors.orange,
+                            elevation: 8,
+                            highlightElevation: 2,
+                            child: Text('Seleccionar Ejercicio'),
+                            onPressed: () {
+                              chooseFiles("ejercicio");
+                            },
+                          ),
+                          MaterialButton(
+                            color: Colors.orange,
+                            elevation: 8,
+                            highlightElevation: 2,
+                            child: Text('Seleccionar Solucionario'),
+                            onPressed: () {
+                              chooseFiles("solucionario");
+                            },
+                          ),
+                          MaterialButton(
+                            color: Colors.orange,
+                            elevation: 8,
+                            highlightElevation: 2,
+                            child: Text('Seleccionar Material de Soporte'),
+                            onPressed: () {
+                              chooseFiles("material");
+                            },
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          width: 200,
+                          child: Row(
+                            children: [
+                              MaterialButton(
+                                  elevation: 8,
+                                  highlightElevation: 2,
+                                  child: Text("Publicar Post"),
+                                  color: Colors.blue,
+                                  onPressed: () {
+                                    if (_formKey.currentState.validate()) {
+                                      String _postTitle = postTitle.text;
+                                      String _postDesc = postDesc.text;
+                                      List<String> youtubeLinks = List<String>();
+                                      String _link;
+                                      print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic}");
+                                      for (int i = 0; i < linkWidgets.length; i++) {
+                                        _link = (linkWidgets[i] as Link)._controller.text;
+                                        youtubeLinks.add(_link);
+                                      }
+                                      postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
+                                        if (success) {
+                                          showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.", true);
+                                        } else {
+                                          showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
+                                        }
+                                      });
+                                    }
+                                  }
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(30.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
       ),
     );
   }
