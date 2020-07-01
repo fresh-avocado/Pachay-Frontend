@@ -7,6 +7,7 @@ import 'utilities.dart' show showAlertDialog;
 import 'dart:html' as html;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
+// TODO: BASE 64
 
 class Link extends StatelessWidget {
   var _controller = TextEditingController();
@@ -54,9 +55,9 @@ class _NewPostPageState extends State<NewPostPage> {
   String _topic = "Matemática";
   String _subtopic = "Ecuaciones";
   List<Widget> linkWidgets = List<Widget>();
-  List<int> ejercicios = List<int>();
-  List<int> materialDeSoporte = List<int>();
-  List<int> solucionarios = List<int>();
+  List<String> ejercicios = List<String>();
+  List<String> materialDeSoporte = List<String>();
+  List<String> solucionarios = List<String>();
 
 
   Future<void> chooseFiles(String tipo) async {
@@ -66,24 +67,20 @@ class _NewPostPageState extends State<NewPostPage> {
     uploadInput.click();
     uploadInput.onChange.listen((e) {
       final files = uploadInput.files;
-      final file = files[0];
-      final reader = new html.FileReader();
-      reader.onLoadEnd.listen((event) {
-        handleUploadedFile(reader.result, tipo);
-      });
-      reader.readAsDataUrl(file);
+      // TODO: validate file type?
     });
   }
 
   void handleUploadedFile(Object result, String tipo) {
-    List<int> fileAsBytes = Base64Decoder().convert(result.toString().split(",").last);
+    String base64EncodedFiles = result.toString().split(",").last;
+    print("CHOSEN FILES:\n$base64EncodedFiles");
     // FIXME: dejarlo en Base64
     if (tipo == "ejercicio") {
-      ejercicios = fileAsBytes;
+//      ejercicios = base64EncodedFiles;
     } else if (tipo == "material") {
-      solucionarios = fileAsBytes;
+//      solucionarios = base64EncodedFiles;
     } else if (tipo == "solucionario") {
-      materialDeSoporte = fileAsBytes;
+//      materialDeSoporte = base64EncodedFiles;
     }
     setState(() {});
   }
@@ -208,7 +205,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           Expanded(
                             flex: 5,
                             child: TextFormField(
-                              maxLength: 80,
+                              maxLength: 100,
                               controller: postDesc,
                               decoration: InputDecoration(
                                 labelText: 'Descripción del Post',

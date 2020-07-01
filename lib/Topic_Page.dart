@@ -43,7 +43,6 @@ class _TopicPageState extends State<TopicPage> {
                     return Card(
                       margin: EdgeInsets.all(15.0),
                       elevation: 5,
-                      // FIXME: cambiar mi color
                       color: widget.appBarColor,
                       child: InkWell(
                         child: Column(

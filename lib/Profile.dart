@@ -17,21 +17,22 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
-  List<Post> parsePosts(String responseBody) {
+  List<Post> parsePosts(String responseBody, String userId) {
     List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
     print(jsonPostList);
     List<Post> parsedPosts = List<Post>();
     jsonPostList.forEach((post) {
       print(post);
-      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
+      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>, userId));
     });
     return parsedPosts;
   }
 
   Future<List<Post>> fetchPostsByAuthor() async {
+    final String userId = await getSharedPref("userId");
     final token = await getSharedPref("authToken");
     final response = await http.get("http://localhost:8080/post/author", headers: {"Authorization": "Bearer $token"});
-    return parsePosts(response.body);
+    return parsePosts(response.body, userId);
   }
 
   Future<String> getNames() async {
@@ -63,9 +64,8 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Expanded(flex: 2, child: Text(''),),
             Expanded(
-              flex: 3,
+              flex: 1,
               child: FutureBuilder<String>(
                 future: getNames(),
                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -104,7 +104,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            Expanded(flex: 2, child: Text(''),),
           ],
         ),
       ),

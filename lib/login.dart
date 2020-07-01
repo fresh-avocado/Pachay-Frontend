@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken;
+import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken, saveUserId;
 import 'utilities.dart' show showAlertDialog;
 
 class MyCustomForm extends StatefulWidget {
@@ -39,6 +39,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       saveFirstName(responseBody['firstName']);
       saveLastName(responseBody['lastName']);
       saveRole(responseBody['role']);
+      saveUserId(responseBody['userId']);
 
       return authToken;
     } else if (response.statusCode == 400) {

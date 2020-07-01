@@ -46,6 +46,11 @@ Future<void> saveRole(String role) async {
   await prefs.setString("role", role);
 }
 
+Future<void> saveUserId(String id) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("userId", id);
+}
+
 Future<String> getSharedPref(String what) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String retrieved = prefs.getString("$what");
@@ -119,9 +124,11 @@ class MyCustomFormState extends State<MyCustomForm> {
         'role': role
       }),
     );
+    // TODO: save user id
     if (response.statusCode == 200) {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String authToken = responseBody['jwt'];
+      saveUserId(responseBody['userId']);
       print(responseBody);
       return authToken;
     } else if (response.statusCode == 400) {

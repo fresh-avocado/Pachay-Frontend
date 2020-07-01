@@ -1,3 +1,4 @@
+import 'package:Pachay/register.dart';
 import 'package:flutter/material.dart';
 import 'package:Pachay/Post.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ class SubtopicPage extends StatefulWidget {
   final String topic;
   final String subtopic;
   final Color appBarColor;
+  String cachedUserId = "";
 
   @override
   _SubtopicPageState createState() => _SubtopicPageState();
@@ -15,31 +17,31 @@ class SubtopicPage extends StatefulWidget {
 
 class _SubtopicPageState extends State<SubtopicPage>{
 
-  List<Post> parsePosts(String responseBody) {
+  List<Post> parsePosts(String responseBody, String userId) {
     print(responseBody);
     List<dynamic> jsonPostList = jsonDecode(responseBody) as List<dynamic>;
     List<Post> parsedPosts = List<Post>();
     jsonPostList.forEach((post) {
       print(post);
-      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>));
+      parsedPosts.add(Post.fromJson(post as Map<String, dynamic>, userId));
     });
     return parsedPosts;
   }
 
   Future<List<Post>> fetchPostsByTopicAndSubtopic() async {
-
+    if (widget.cachedUserId.isEmpty) {
+      widget.cachedUserId = await getSharedPref("userId");
+    }
     final http.Response response = await http.post(
       'http://localhost:8080/post/topic/subtopic',
       headers: <String, String>{
         "Content-Type": "application/json",
       },
       body: jsonEncode(<String, String>{
-        "topic": widget.topic,
         "subtopic": widget.subtopic,
       }),
     );
-
-    return parsePosts(response.body);
+    return parsePosts(response.body, widget.cachedUserId);
   }
 
   @override

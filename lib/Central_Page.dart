@@ -29,7 +29,7 @@ class _CentralPageState extends State<CentralPage> {
     "Biología": ["Células", "Genética Mendeliana"]
   };
   final List<String> courses = ["Matemática", "Física", "Química", "Biología"];
-  final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.child_care)];
+  final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.face)];
   //final List<Color> courseColor = <Color>[Colors.purple[400], Colors.blue[400], Colors.lightGreen[400], Colors.amber[400]];
   final List<int> hexcourseColor = <int>[0xFFFF4C2E, 0xFF17BFEB, 0xFFFF0CFF, 0xFF94EB17 ]; //lila, celeste. verdelima, amarillo
 
@@ -179,6 +179,7 @@ class _CentralPageState extends State<CentralPage> {
                 saveLastName("");
                 saveFirstName("");
                 saveEmail("");
+                saveUserId("");
                 render(false);
               } else {
                 _navigateAndDisplaySelection(context, widget.title, "register");

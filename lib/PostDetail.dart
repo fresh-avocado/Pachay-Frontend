@@ -2,11 +2,34 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'Post.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'register.dart' show getSharedPref;
+import 'package:http/http.dart' as http;
+import 'dart:convert' show jsonDecode;
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.appBarColor}) : super(key: key);
+  PostDetail({Key key, this.post, this.appBarColor}) : super(key: key) {
+    // FIXME: bug que pone el dislike en azul cuando no ha dislikeado
+    if (post.hasRated) {
+      if (post.hasLiked) {
+        postLiked = true;
+        postDisliked = false;
+      } else if (post.hasDisliked) {
+        postLiked = false;
+        postDisliked = true;
+      } else {
+        postLiked = false;
+        postDisliked = false;
+      }
+    } else {
+      postLiked = false;
+      postDisliked = false;
+    }
+  }
   final Post post;
   final Color appBarColor;
+  bool postLiked;
+  bool postDisliked;
+  String cachedToken = "";
 
   @override
   _PostDetailState createState() => _PostDetailState();
@@ -14,12 +37,53 @@ class PostDetail extends StatefulWidget {
 
 class _PostDetailState extends State<PostDetail> {
 
-  void rated(bool like) {
-    widget.post.ratingCount++;
+  void rated(bool like, String newRating) {
     if (like) {
-      widget.post.rating++;
+      if (widget.postLiked) {
+        widget.postLiked = false;
+        widget.postDisliked = false;
+        widget.post.hasRated = false;
+        widget.post.hasLiked = false;
+      } else {
+        widget.postLiked = true;
+        widget.postDisliked = false;
+        widget.post.hasLiked = true;
+        widget.post.hasRated = true;
+      }
+    } else {
+      if (widget.postDisliked) {
+        widget.postLiked = false;
+        widget.postDisliked = false;
+        widget.post.hasRated = false;
+        widget.post.hasLiked = false;
+      } else {
+        widget.postDisliked = true;
+        widget.postLiked = false;
+        widget.post.hasLiked = false;
+        widget.post.hasRated = true;
+      }
     }
+    widget.post.rating = int.parse(newRating);
     setState(() {});
+  }
+
+  Future<String> ratePost(String id, String action) async {
+    if (widget.cachedToken == "") {
+      widget.cachedToken = await getSharedPref("authToken");
+    }
+    final http.Response response = await http.post(
+        'http://localhost:8080/post/$action/$id',
+        headers: <String, String>{
+          "Authorization": "Bearer ${widget.cachedToken}",
+        });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      return responseBody['rating'].toString();
+    } else {
+      print("Bad request");
+      return "error";
+    }
   }
 
   @override
@@ -46,23 +110,31 @@ class _PostDetailState extends State<PostDetail> {
                     subtitle: Text(widget.post.desc),
                     trailing: IconButton(
                         icon: Icon(Icons.thumb_up),
+                        color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
                         onPressed: () {
-                          // TODO: mandar el PUT al servidor
-                          rated(true);
+                          ratePost(widget.post.postId, "like").then( (newRating) {
+                            if (newRating != "error") {
+                              rated(true, newRating);
+                            }
+                          });
                         }),
                   ),
                   ListTile(
                     leading: Text(widget.post.author),
                     subtitle: Text(widget.post.datePublished),
                     trailing: IconButton(
+                        color: widget.post.hasRated && !widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
                         icon: Icon(Icons.thumb_down),
                         onPressed: () {
-                          // TODO: mandar el PUT al servidor
-                          rated(false);
+                          ratePost(widget.post.postId, "dislike").then( (newRating) {
+                            if (newRating != "error") {
+                              rated(false, newRating);
+                            }
+                          });
                         }),
                   ),
                   ListTile(
-                    trailing: Text("Likes: ${widget.post.rating} | Dislikes: ${widget.post.ratingCount - widget.post.rating}"),
+                    trailing: Text("Rating: ${widget.post.rating}"),
                   ),
                 ],
               ),
