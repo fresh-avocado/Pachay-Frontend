@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 showAlertDialog(BuildContext context, String title, String message, bool shouldPopTwice) {
   // set up the button
   Widget okButton = FlatButton(
-    child: Text("Ok"),
+    child: Text("OK"),
     onPressed: () {
       Navigator.of(context).pop();
       if (shouldPopTwice) {

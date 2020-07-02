@@ -41,9 +41,9 @@ class Post {
         hasRated: hasRated,
         hasLiked: hasLiked,
         hasDisliked: hasDisliked,
-        ejercicios: body['ejercicios'],
-        solucionario: body['solucionario'],
-        material: body['material']
+        ejercicios: (body['ejercicios'] == null) ? [] : body['ejercicios'].cast<String>(),
+        solucionario: (body['solucionario'] == null) ? [] : body['solucionario'].cast<String>(),
+        material: (body['soporte'] == null) ? [] : body['soporte'].cast<String>(),
     );
   }
 }
@@ -52,8 +52,9 @@ class PostList extends StatefulWidget {
   final List<Post> posts;
   final Color appBarColor;
   final bool inTeacherProfilePage;
+  final context;
 
-  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage}) : super(key: key);
+  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context}) : super(key: key);
 
   @override
   _PostListState createState() => _PostListState();
@@ -131,9 +132,10 @@ class _PostListState extends State<PostList> {
                           deletePost(widget.posts[index].postId).then( (success) {
                             widget.posts.removeWhere( (post) => post.postId == widget.posts[index].postId);
                             if (success) {
-                              showAlertDialog(context, "Éxito", "El Post fue borrado exitósamente.", false);
+                              // FIXME: bug, este dialogo no puede ser dismissed
+                              showAlertDialog(widget.context, "Éxito", "El Post fue borrado exitósamente.", false);
                             } else {
-                              showAlertDialog(context, "Oh no", "El Post no pudo ser borrado.\nInténtalo de nuevo más tarde.", false);
+                              showAlertDialog(widget.context, "Oh no", "El Post no pudo ser borrado.\nInténtalo de nuevo más tarde.", false);
                             }
                             setState(() {});
                           });
@@ -176,17 +178,31 @@ class _PostListState extends State<PostList> {
         },
       );
     } else {
-      return Padding(
-        padding: EdgeInsets.all(20),
-        child: Text(
-          "Por el momento, no hay posts con este subtopic.",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+      if (widget.inTeacherProfilePage) {
+        return Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+            "Hasta ahora usted no tiene posts.",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      );
+        );
+      } else {
+        return Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(
+            "Por el momento, no hay posts con este subtopic.",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
     }
   }
 }

@@ -6,6 +6,8 @@ import 'register.dart' show getSharedPref;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show jsonDecode;
 
+// TODO: no highlightea bien el like y dislike
+
 class PostDetail extends StatefulWidget {
   PostDetail({Key key, this.post, this.appBarColor}) : super(key: key) {
     // FIXME: bug que pone el dislike en azul cuando no ha dislikeado
@@ -88,10 +90,12 @@ class _PostDetailState extends State<PostDetail> {
 
   Future<bool> downloadFile(String filename) async {
     final http.Response response = await http.get(
-      'http://localhost:8080/file/download/$filename'
+      'http://localhost:8080/files/download/$filename'
     );
 
     if (response.statusCode == 200) {
+      // TODO: download file with dio
+      // response.body
       return true;
     } else {
       print("$filename could not be downloaded");
@@ -221,11 +225,13 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: "${widget.post.material[idx]}",
+                                    text: "Material de Soporte $idx",
                                     style: TextStyle(color: Colors.blueAccent),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        downloadFile(widget.post.material[idx]);
+                                        launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
+//                                        downloadFile(widget.post.material[idx]);
+                                        print("Descargar material");
                                       }
                                   ),
                                 ),
@@ -258,11 +264,13 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: "${widget.post.ejercicios[idx]}",
+                                    text: "Ejercicio $idx",
                                     style: TextStyle(color: Colors.blueAccent),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        downloadFile(widget.post.material[idx]);
+//                                        downloadFile(widget.post.material[idx]);
+                                        launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
+                                        print("Descargar ejercicio");
                                       }
                                   ),
                                 ),
@@ -295,11 +303,13 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: "${widget.post.solucionario[idx]}",
+                                    text: "Solucionario $idx",
                                     style: TextStyle(color: Colors.blueAccent),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        downloadFile(widget.post.material[idx]);
+                                        launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
+//                                        downloadFile(widget.post.material[idx]);
+                                        print("Descargar solucionario");
                                       }
                                   ),
                                 ),

@@ -65,7 +65,7 @@ class _NewPostPageState extends State<NewPostPage> {
 
   Future<void> chooseFiles(String tipo) async {
     html.InputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.multiple = true;
+    // FIXME: does this allow a single file to be uploaded?
     uploadInput.draggable = true;
     uploadInput.click();
     uploadInput.onChange.listen((e) {
@@ -148,6 +148,8 @@ class _NewPostPageState extends State<NewPostPage> {
       return true;
     } else if (response.statusCode == 500) {
       // bad request
+      return false;
+    } else {
       return false;
     }
   }
@@ -302,6 +304,7 @@ class _NewPostPageState extends State<NewPostPage> {
                               color: Colors.deepPurpleAccent,
                             ),
                             onChanged: (String newValue) {
+                              print("Topic: $newValue");
                               setState(() {
                                 updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
                               });
@@ -325,6 +328,7 @@ class _NewPostPageState extends State<NewPostPage> {
                               color: Colors.deepPurpleAccent,
                             ),
                             onChanged: (String newValue) {
+                              print("Subtopic: $newValue");
                               setState(() {
                                 updateDropDown(_topic, newValue);
                               });
@@ -338,6 +342,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           ),
                         ],
                       ),
+                      // TODO: agregar boton que permite borrar el archivo seleccionado para seleccionar otra vez
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -394,12 +399,13 @@ class _NewPostPageState extends State<NewPostPage> {
                                   child: Text("Publicar Post"),
                                   color: Colors.blue,
                                   onPressed: () {
+                                    print("Topic: $_topic\nSubtopic: $_subtopic");
                                     if (_formKey.currentState.validate()) {
                                       String _postTitle = postTitle.text;
                                       String _postDesc = postDesc.text;
                                       List<String> youtubeLinks = List<String>();
                                       String _link;
-                                      print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic}");
+                                      print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
                                       for (int i = 0; i < linkWidgets.length; i++) {
                                         _link = (linkWidgets[i] as Link)._controller.text;
                                         youtubeLinks.add(_link);

@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (snapshot.hasError) print(snapshot.error);
                     return Padding(
                       padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
-                      child: snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true) : Center(child: CircularProgressIndicator()),
+                      child: snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true, context: context,) : Center(child: CircularProgressIndicator()),
                     );
                   },
                 ),
