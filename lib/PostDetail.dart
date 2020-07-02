@@ -46,11 +46,13 @@ class _PostDetailState extends State<PostDetail> {
         widget.postDisliked = false;
         widget.post.hasRated = false;
         widget.post.hasLiked = false;
+        widget.post.hasDisliked = false;
       } else {
         widget.postLiked = true;
         widget.postDisliked = false;
         widget.post.hasLiked = true;
         widget.post.hasRated = true;
+        widget.post.hasDisliked = false;
       }
     } else {
       if (widget.postDisliked) {
@@ -58,10 +60,12 @@ class _PostDetailState extends State<PostDetail> {
         widget.postDisliked = false;
         widget.post.hasRated = false;
         widget.post.hasLiked = false;
+        widget.post.hasDisliked = false;
       } else {
         widget.postDisliked = true;
         widget.postLiked = false;
         widget.post.hasLiked = false;
+        widget.post.hasDisliked = true;
         widget.post.hasRated = true;
       }
     }
@@ -105,6 +109,7 @@ class _PostDetailState extends State<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
+    print("${widget.post.hasRated ? "Post has been rated." : "Post has not been rated"}");
     return Scaffold(
       appBar: AppBar(
           title: Text(widget.post.title),
@@ -141,7 +146,7 @@ class _PostDetailState extends State<PostDetail> {
                     title: Text(widget.post.author),
                     subtitle: Text(widget.post.datePublished),
                     trailing: IconButton(
-                        color: widget.post.hasRated && !widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
+                        color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
                         icon: Icon(Icons.arrow_downward),
                         onPressed: () {
                           ratePost(widget.post.postId, "dislike").then( (newRating) {
@@ -230,8 +235,6 @@ class _PostDetailState extends State<PostDetail> {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
-//                                        downloadFile(widget.post.material[idx]);
-                                        print("Descargar material");
                                       }
                                   ),
                                 ),
@@ -268,9 +271,7 @@ class _PostDetailState extends State<PostDetail> {
                                     style: TextStyle(color: Colors.blueAccent),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-//                                        downloadFile(widget.post.material[idx]);
                                         launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
-                                        print("Descargar ejercicio");
                                       }
                                   ),
                                 ),
@@ -308,8 +309,6 @@ class _PostDetailState extends State<PostDetail> {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
-//                                        downloadFile(widget.post.material[idx]);
-                                        print("Descargar solucionario");
                                       }
                                   ),
                                 ),

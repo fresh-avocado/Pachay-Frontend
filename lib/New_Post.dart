@@ -223,7 +223,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           Expanded(
                             flex: 5,
                             child: TextFormField(
-                              maxLength: 100,
+                              maxLength: 150,
                               controller: postDesc,
                               decoration: InputDecoration(
                                 labelText: 'Descripción del Post',
@@ -410,6 +410,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                         _link = (linkWidgets[i] as Link)._controller.text;
                                         youtubeLinks.add(_link);
                                       }
+                                      // FIXME: se demora cuando los archivos son muy grandes, mostrar un CircularProgressIndicator() mientras cargan
                                       postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
                                         if (success) {
                                           showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.", true);

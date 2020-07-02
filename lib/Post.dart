@@ -23,7 +23,9 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> body, String userId) {
     String author = "${body['author']['firstName']} ${body['author']['lastName']}";
-    bool hasRated = body['likes']['$userId'] != null ? true : false;
+    bool hasRated = body['likes']['$userId'] != null;
+    print("USER ID: ${userId}");
+    print("LIKES: ${body['likes']['$userId']}");
     bool hasLiked = false;
     bool hasDisliked = false;
     if (hasRated) {
