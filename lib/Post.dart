@@ -15,9 +15,11 @@ class Post {
   bool hasRated = false;
   bool hasLiked = false;
   bool hasDisliked = false;
-//TODO:  final List<File> files;
+  final List<String> ejercicios;
+  final List<String> solucionario;
+  final List<String> material;
 
-  Post({Key key, this.title, this.desc, this.postId, this.author, this.datePublished, this.rating, this.youtubeLinks, this.hasRated, this.hasLiked, this.hasDisliked});
+  Post({Key key, this.title, this.desc, this.postId, this.author, this.datePublished, this.rating, this.youtubeLinks, this.hasRated, this.hasLiked, this.hasDisliked, this.ejercicios, this.solucionario, this.material});
 
   factory Post.fromJson(Map<String, dynamic> body, String userId) {
     String author = "${body['author']['firstName']} ${body['author']['lastName']}";
@@ -38,7 +40,10 @@ class Post {
         youtubeLinks: body['videos'].cast<String>(),
         hasRated: hasRated,
         hasLiked: hasLiked,
-        hasDisliked: hasDisliked
+        hasDisliked: hasDisliked,
+        ejercicios: body['ejercicios'],
+        solucionario: body['solucionario'],
+        material: body['material']
     );
   }
 }

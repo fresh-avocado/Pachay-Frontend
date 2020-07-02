@@ -101,38 +101,22 @@ class _NewPostPageState extends State<NewPostPage> {
   Future<bool> postPost(String postTitle, String postDesc, List<String> links) async {
     String token = await getSharedPref("authToken");
 
-    // TODO: mandar los archivos en Base64
-
-//    List<String> _ejercicios = List<String>();
-//    List<String> _solucionarios = List<String>();
-//    List<String> _materialDeSoporte = List<String>();
-
-//    ejercicios.map( (file) {
-//
-//    });
-//
-//    solucionarios.map( (file) {
-//
-//    });
-//
-//    materialDeSoporte.map( (file) {
-//
-//    });
-
     final http.Response preloadFilesResponse = await http.post(
-      'http://localhost:8080/',
+      'http://localhost:8080/files/upload',
       headers: <String, String> {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
-
+        "ejercicios": ejercicios,
+        "solucionario": solucionarios,
+        "soporte": materialDeSoporte
       })
     );
 
+    Map<String, dynamic> files;
     if (preloadFilesResponse.statusCode == 200) {
-
-      // do not return
+        files = jsonDecode(preloadFilesResponse.body) as Map<String, dynamic>;
     } else {
       print('Preloading file request failed.');
       return false;
@@ -150,6 +134,9 @@ class _NewPostPageState extends State<NewPostPage> {
         "topic": _topic,
         "subtopic": _subtopic,
         "videos": links,
+        "ejercicios": files['ejercicios'],
+        "solucionario": files['solucionario'],
+        "soporte": files['soporte']
       }),
     );
 

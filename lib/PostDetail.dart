@@ -86,6 +86,19 @@ class _PostDetailState extends State<PostDetail> {
     }
   }
 
+  Future<bool> downloadFile(String filename) async {
+    final http.Response response = await http.get(
+      'http://localhost:8080/file/download/$filename'
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print("$filename could not be downloaded");
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,7 +172,7 @@ class _PostDetailState extends State<PostDetail> {
                       ),
                     ),
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Center(
                         child: ListView.separated(
                           itemCount: widget.post.youtubeLinks.length,
@@ -185,8 +198,8 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
+                    Expanded(
+                      flex: 1,
                       child: Text(
                         "Material de Soporte",
                         style: TextStyle(
@@ -196,11 +209,11 @@ class _PostDetailState extends State<PostDetail> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
+                    if (widget.post.material != null && widget.post.material.length > 0) Expanded(
+                      flex: 3,
                       child: Center(
                         child: ListView.separated(
-                          itemCount: widget.post.youtubeLinks.length,
+                          itemCount: widget.post.material.length,
                           separatorBuilder: (BuildContext context, int index) => Divider(),
                           itemBuilder: (BuildContext ctx, int idx) {
                             return Column(
@@ -208,9 +221,12 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    // TODO: abrir el archivo en otra ventana del browser?
-                                    text: "Archivo $idx",
+                                    text: "${widget.post.material[idx]}",
                                     style: TextStyle(color: Colors.blueAccent),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        downloadFile(widget.post.material[idx]);
+                                      }
                                   ),
                                 ),
                               ],
@@ -219,8 +235,8 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
+                    Expanded(
+                      flex: 1,
                       child: Text(
                         "Ejercicios",
                         style: TextStyle(
@@ -230,11 +246,11 @@ class _PostDetailState extends State<PostDetail> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
+                    if (widget.post.ejercicios != null && widget.post.ejercicios.length > 0) Expanded(
+                      flex: 3,
                       child: Center(
                         child: ListView.separated(
-                          itemCount: widget.post.youtubeLinks.length,
+                          itemCount: widget.post.ejercicios.length,
                           separatorBuilder: (BuildContext context, int index) => Divider(),
                           itemBuilder: (BuildContext ctx, int idx) {
                             return Column(
@@ -242,9 +258,12 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    // TODO: abrir el archivo en otra ventana del browser?
-                                    text: "Archivo $idx",
+                                    text: "${widget.post.ejercicios[idx]}",
                                     style: TextStyle(color: Colors.blueAccent),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        downloadFile(widget.post.material[idx]);
+                                      }
                                   ),
                                 ),
                               ],
@@ -253,8 +272,8 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
+                    Expanded(
+                      flex: 1,
                       child: Text(
                         "Solucionarios",
                         style: TextStyle(
@@ -264,11 +283,11 @@ class _PostDetailState extends State<PostDetail> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
+                    if (widget.post.solucionario != null && widget.post.solucionario.length > 0) Expanded(
+                      flex: 3,
                       child: Center(
                         child: ListView.separated(
-                          itemCount: widget.post.youtubeLinks.length,
+                          itemCount: widget.post.solucionario.length,
                           separatorBuilder: (BuildContext context, int index) => Divider(),
                           itemBuilder: (BuildContext ctx, int idx) {
                             return Column(
@@ -276,9 +295,12 @@ class _PostDetailState extends State<PostDetail> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    // TODO: abrir el archivo en otra ventana del browser?
-                                    text: "Archivo $idx",
+                                    text: "${widget.post.solucionario[idx]}",
                                     style: TextStyle(color: Colors.blueAccent),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        downloadFile(widget.post.material[idx]);
+                                      }
                                   ),
                                 ),
                               ],
