@@ -58,6 +58,9 @@ class _NewPostPageState extends State<NewPostPage> {
   List<String> ejercicios = List<String>();
   List<String> materialDeSoporte = List<String>();
   List<String> solucionarios = List<String>();
+  bool ejerciciosButtonDisabled = false;
+  bool materialButtonDisabled = false;
+  bool solucionariosButtonDisabled = false;
 
 
   Future<void> chooseFiles(String tipo) async {
@@ -67,20 +70,30 @@ class _NewPostPageState extends State<NewPostPage> {
     uploadInput.click();
     uploadInput.onChange.listen((e) {
       final files = uploadInput.files;
+      final file = files[0];
+      final reader = new html.FileReader();
+      reader.onLoadEnd.listen( (e) {
+        handleUploadedFile(reader.result, tipo);
+      });
+      reader.readAsDataUrl(file);
       // TODO: validate file type?
     });
   }
 
   void handleUploadedFile(Object result, String tipo) {
-    String base64EncodedFiles = result.toString().split(",").last;
-    print("CHOSEN FILES:\n$base64EncodedFiles");
-    // FIXME: dejarlo en Base64
+    // TODO: mostrar el nombre del archivo seleccionado y dar la opcion de borrar el archivo subido
+    // TODO: permitir subida de ciertos tipos de archivos
+    String base64EncodedFile = result.toString().split(",").last;
+    print("BASE 64 $tipo FILE: <$base64EncodedFile>");
     if (tipo == "ejercicio") {
-//      ejercicios = base64EncodedFiles;
+      ejercicios.add(base64EncodedFile);
+      ejerciciosButtonDisabled = true;
     } else if (tipo == "material") {
-//      solucionarios = base64EncodedFiles;
+      materialDeSoporte.add(base64EncodedFile);
+      materialButtonDisabled = true;
     } else if (tipo == "solucionario") {
-//      materialDeSoporte = base64EncodedFiles;
+      solucionarios.add(base64EncodedFile);
+      solucionariosButtonDisabled = true;
     }
     setState(() {});
   }
@@ -106,11 +119,30 @@ class _NewPostPageState extends State<NewPostPage> {
 //
 //    });
 
+    final http.Response preloadFilesResponse = await http.post(
+      'http://localhost:8080/',
+      headers: <String, String> {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+
+      })
+    );
+
+    if (preloadFilesResponse.statusCode == 200) {
+
+      // do not return
+    } else {
+      print('Preloading file request failed.');
+      return false;
+    }
+
     final http.Response response = await http.post(
       'http://localhost:8080/post',
       headers: <String, String>{
         "Content-Type": "application/json",
-        "Authorization": "Bearer $token",
+        "Authorization": "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
         "title": postTitle,
@@ -118,9 +150,6 @@ class _NewPostPageState extends State<NewPostPage> {
         "topic": _topic,
         "subtopic": _subtopic,
         "videos": links,
-//        "ejercicios": _ejercicios,
-//        "materialDeSoporte": _materialDeSoporte,
-//        'solucionarios': _solucionarios
       }),
     );
 
@@ -276,7 +305,6 @@ class _NewPostPageState extends State<NewPostPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DropdownButton<String>(
-                            // TODO: validar que se seleccione un tema
                             value: _topic,
                             icon: Icon(Icons.arrow_downward),
                             iconSize: 24,
@@ -332,7 +360,11 @@ class _NewPostPageState extends State<NewPostPage> {
                             highlightElevation: 2,
                             child: Text('Seleccionar Ejercicio'),
                             onPressed: () {
-                              chooseFiles("ejercicio");
+                              if (!ejerciciosButtonDisabled) {
+                                chooseFiles("ejercicio");
+                              } else {
+                                return null;
+                              }
                             },
                           ),
                           MaterialButton(
@@ -341,7 +373,11 @@ class _NewPostPageState extends State<NewPostPage> {
                             highlightElevation: 2,
                             child: Text('Seleccionar Solucionario'),
                             onPressed: () {
-                              chooseFiles("solucionario");
+                              if (!solucionariosButtonDisabled) {
+                                chooseFiles("solucionario");
+                              } else {
+                                return null;
+                              }
                             },
                           ),
                           MaterialButton(
@@ -350,7 +386,11 @@ class _NewPostPageState extends State<NewPostPage> {
                             highlightElevation: 2,
                             child: Text('Seleccionar Material de Soporte'),
                             onPressed: () {
-                              chooseFiles("material");
+                              if (!materialButtonDisabled) {
+                                chooseFiles("material");
+                              } else {
+                                return null;
+                              }
                             },
                           ),
                         ],

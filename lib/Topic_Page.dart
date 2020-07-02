@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TopicPage extends StatefulWidget {
-  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor}) : super(key: key);
+  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor, this.subtopicIcons}) : super(key: key);
   final String topic;
   final Color appBarColor;
   final List<String> subtopics;
+  final List<Icon> subtopicIcons;
 
   @override
   _TopicPageState createState() => _TopicPageState();
@@ -48,14 +49,16 @@ class _TopicPageState extends State<TopicPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            Text(""),
                             ListTile(
+                              leading: widget.subtopicIcons[index],
                               title: Text(
                                 widget.subtopics[index],
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold
                                 ),
                               ),
-                              subtitle: Text(""),
+                              trailing: Icon(Icons.arrow_forward_ios),
                             ),
                             Text(""),
                           ],

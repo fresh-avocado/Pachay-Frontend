@@ -105,11 +105,12 @@ class _PostDetailState extends State<PostDetail> {
           children: [
             Expanded(
               child: Column(
+                // TODO: poner el rating en el medio de los arrows, que solo muestre el numero y no "Rating: "
                 children: [
                   ListTile(
                     subtitle: Text(widget.post.desc),
                     trailing: IconButton(
-                        icon: Icon(Icons.thumb_up),
+                        icon: Icon(Icons.arrow_upward),
                         color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
                         onPressed: () {
                           ratePost(widget.post.postId, "like").then( (newRating) {
@@ -120,11 +121,11 @@ class _PostDetailState extends State<PostDetail> {
                         }),
                   ),
                   ListTile(
-                    leading: Text(widget.post.author),
+                    title: Text(widget.post.author),
                     subtitle: Text(widget.post.datePublished),
                     trailing: IconButton(
                         color: widget.post.hasRated && !widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
-                        icon: Icon(Icons.thumb_down),
+                        icon: Icon(Icons.arrow_downward),
                         onPressed: () {
                           ratePost(widget.post.postId, "dislike").then( (newRating) {
                             if (newRating != "error") {
@@ -146,8 +147,19 @@ class _PostDetailState extends State<PostDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Links a Videos",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Center(
                         child: ListView.separated(
                           itemCount: widget.post.youtubeLinks.length,
@@ -173,8 +185,87 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Material de Soporte",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                     Expanded(
-                      flex: 3,
+                      flex: 2,
+                      child: Center(
+                        child: ListView.separated(
+                          itemCount: widget.post.youtubeLinks.length,
+                          separatorBuilder: (BuildContext context, int index) => Divider(),
+                          itemBuilder: (BuildContext ctx, int idx) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    // TODO: abrir el archivo en otra ventana del browser?
+                                    text: "Archivo $idx",
+                                    style: TextStyle(color: Colors.blueAccent),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Ejercicios",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: ListView.separated(
+                          itemCount: widget.post.youtubeLinks.length,
+                          separatorBuilder: (BuildContext context, int index) => Divider(),
+                          itemBuilder: (BuildContext ctx, int idx) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    // TODO: abrir el archivo en otra ventana del browser?
+                                    text: "Archivo $idx",
+                                    style: TextStyle(color: Colors.blueAccent),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Solucionarios",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
                       child: Center(
                         child: ListView.separated(
                           itemCount: widget.post.youtubeLinks.length,

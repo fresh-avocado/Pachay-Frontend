@@ -6,6 +6,11 @@ import 'New_Post.dart';
 import 'Profile.dart';
 
 // TODO: resolver TODO's
+// TODO: mencionar que tambien funciona en iOS y Android
+// TODO: mencionar que lo hicimos desde cero sin ningun template
+
+/// IMPORTANTE:
+// TODO: mostar el logo de pachay en la top-left corner en el Main Page.
 
 class CentralPage extends StatefulWidget {
 
@@ -32,6 +37,12 @@ class _CentralPageState extends State<CentralPage> {
   final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.face)];
   //final List<Color> courseColor = <Color>[Colors.purple[400], Colors.blue[400], Colors.lightGreen[400], Colors.amber[400]];
   final List<int> hexcourseColor = <int>[0xFFFF4C2E, 0xFF17BFEB, 0xFFFF0CFF, 0xFF94EB17 ]; //lila, celeste. verdelima, amarillo
+  final Map<String, List<Icon>> subtopicIcons = {
+    "Matemática" : [Icon(Icons.add), Icon(IconData(58740))],
+    "Física": [Icon(Icons.directions_car), Icon(Icons.compare_arrows)],
+    "Química": [Icon(Icons.print), Icon(Icons.title)],
+    "Biología": [Icon(Icons.announcement), Icon(Icons.android)]
+  };
 
   void render(bool ak) {
     widget.isLoggedIn = ak;
@@ -217,6 +228,7 @@ class _CentralPageState extends State<CentralPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Text(""),
                           ListTile(
                             leading: courseIcons[index],
                             title: Text(
@@ -225,15 +237,15 @@ class _CentralPageState extends State<CentralPage> {
                                   fontWeight: FontWeight.bold
                               ),
                             ),
-                            subtitle: Text("Subtítulo"),
+                            trailing: Icon(Icons.arrow_forward_ios),
                           ),
-                          Text(""),
+                          Text("")
                         ],
                       ),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]))),
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]), subtopicIcons: subtopicIcons[courses[index]])),
                         );
                       },
                     ),

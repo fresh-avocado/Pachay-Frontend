@@ -71,12 +71,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                   Widget homePage;
                   if (snapshot.hasData) {
-                    homePage = Text(
-                      widget.role == false ? "Profesor(a) ${snapshot.data}" : "Alumno ${snapshot.data}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
+                    homePage = Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        widget.role == false ? "Profesor(a) ${snapshot.data}" : "Alumno ${snapshot.data}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
                       ),
                     );
                   } else {
@@ -99,7 +102,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   future: fetchPostsByAuthor(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) print(snapshot.error);
-                    return snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true) : Center(child: CircularProgressIndicator());
+                    return Padding(
+                      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+                      child: snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true) : Center(child: CircularProgressIndicator()),
+                    );
                   },
                 ),
               ),

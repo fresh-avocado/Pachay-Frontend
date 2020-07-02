@@ -81,92 +81,107 @@ class _PostListState extends State<PostList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.posts.length,
-      itemBuilder: (context, index) {
-        Post post = widget.posts[index];
-        return Expanded(
-          child: Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ListTile(
-                  leading: Icon(Icons.note),
-                  title: Text(post.title),
-                ),
-                ListTile(
-                  title: Text(post.desc),
-                  trailing: Text("Rating: ${post.rating}"),
-                ),
-                ListTile(
-                  title: Text("Autor: ${post.author}"),
-                  subtitle: Text("Publicado en: ${post.datePublished}"),
-                  trailing: Column(
-                    children: [
-                      RaisedButton(
-                        child: Text("Ver más"),
-                        onPressed: () {
-                          _navigateAndDisplaySelection(context, post);
-                        },
-                      ),
-                    ],
+    if (widget.posts.length > 0) {
+      return ListView.builder(
+        itemCount: widget.posts.length,
+        itemBuilder: (context, index) {
+          Post post = widget.posts[index];
+          return Expanded(
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.note),
+                    title: Text(post.title),
                   ),
-                ),
-                if (widget.inTeacherProfilePage) IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    // set up the button
-                    Widget siButton = FlatButton(
-                      child: Text("Sí"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        deletePost(widget.posts[index].postId).then( (success) {
-                          widget.posts.removeWhere( (post) => post.postId == widget.posts[index].postId);
-                          if (success) {
-                            showAlertDialog(context, "Éxito", "El Post fue borrado exitósamente.", false);
-                          } else {
-                            showAlertDialog(context, "Oh no", "El Post no pudo ser borrado.\nInténtalo de nuevo más tarde.", false);
-                          }
-                          setState(() {});
-                        });
-                      },
-                    );
-
-                    Widget noButton = FlatButton(
-                      child: Text("No"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    );
-
-                    // set up the AlertDialog
-                    AlertDialog alert = AlertDialog(
-                      title: Text("Estás seguro(a) que quieres borrar el Post?"),
-                      content: Text("Esta acción es irreversible."),
-                      actions: [
-                        siButton,
-                        noButton
+                  ListTile(
+                    title: Text(post.desc),
+                    trailing: Text("Rating: ${post.rating}"),
+                  ),
+                  ListTile(
+                    title: Text("Autor: ${post.author}"),
+                    subtitle: Text("Publicado en: ${post.datePublished}"),
+                    trailing: Column(
+                      children: [
+                        RaisedButton(
+                          child: Text("Ver más"),
+                          onPressed: () {
+                            _navigateAndDisplaySelection(context, post);
+                          },
+                        ),
                       ],
-                    );
+                    ),
+                  ),
+                  if (widget.inTeacherProfilePage) IconButton(
+                    icon: Icon(Icons.delete),
+                    color: Colors.redAccent,
+                    onPressed: () {
+                      // set up the button
+                      Widget siButton = FlatButton(
+                        child: Text("Sí"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          deletePost(widget.posts[index].postId).then( (success) {
+                            widget.posts.removeWhere( (post) => post.postId == widget.posts[index].postId);
+                            if (success) {
+                              showAlertDialog(context, "Éxito", "El Post fue borrado exitósamente.", false);
+                            } else {
+                              showAlertDialog(context, "Oh no", "El Post no pudo ser borrado.\nInténtalo de nuevo más tarde.", false);
+                            }
+                            setState(() {});
+                          });
+                        },
+                      );
 
-                    // show the dialog
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return alert;
-                      },
-                    );
-                  },
-                ),
-              ],
+                      Widget noButton = FlatButton(
+                        child: Text("No"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      );
+
+                      // set up the AlertDialog
+                      AlertDialog alert = AlertDialog(
+                        title: Text("Estás seguro(a) que quieres borrar el Post?"),
+                        content: Text("Esta acción es irreversible."),
+                        actions: [
+                          siButton,
+                          noButton
+                        ],
+                      );
+
+                      // show the dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alert;
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              color: Colors.white70,
+              elevation: 3,
+              margin: EdgeInsets.all(30.0),
             ),
-            color: Colors.white70,
-            elevation: 3,
-            margin: EdgeInsets.all(30.0),
+          );
+        },
+      );
+    } else {
+      return Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          "Por el momento, no hay posts con este subtopic.",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
-        );
-      },
-    );
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
   }
 }
