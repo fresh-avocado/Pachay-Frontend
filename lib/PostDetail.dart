@@ -6,11 +6,8 @@ import 'register.dart' show getSharedPref;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show jsonDecode;
 
-// TODO: no highlightea bien el like y dislike
-
 class PostDetail extends StatefulWidget {
   PostDetail({Key key, this.post, this.appBarColor}) : super(key: key) {
-    // FIXME: bug que pone el dislike en azul cuando no ha dislikeado
     if (post.hasRated) {
       if (post.hasLiked) {
         postLiked = true;
@@ -89,21 +86,6 @@ class _PostDetailState extends State<PostDetail> {
     } else {
       print("Bad request");
       return "error";
-    }
-  }
-
-  Future<bool> downloadFile(String filename) async {
-    final http.Response response = await http.get(
-      'http://localhost:8080/files/download/$filename'
-    );
-
-    if (response.statusCode == 200) {
-      // TODO: download file with dio
-      // response.body
-      return true;
-    } else {
-      print("$filename could not be downloaded");
-      return false;
     }
   }
 

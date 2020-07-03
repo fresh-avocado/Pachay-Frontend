@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'utilities.dart' show showAlertDialog;
 import 'register.dart' show getSharedPref;
 
+/// FIXME:
+/// to avoid
+
 class Post {
   final String title;
   final String desc;
@@ -24,8 +27,6 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> body, String userId) {
     String author = "${body['author']['firstName']} ${body['author']['lastName']}";
     bool hasRated = body['likes']['$userId'] != null;
-    print("USER ID: ${userId}");
-    print("LIKES: ${body['likes']['$userId']}");
     bool hasLiked = false;
     bool hasDisliked = false;
     if (hasRated) {
@@ -134,7 +135,6 @@ class _PostListState extends State<PostList> {
                           deletePost(widget.posts[index].postId).then( (success) {
                             widget.posts.removeWhere( (post) => post.postId == widget.posts[index].postId);
                             if (success) {
-                              // FIXME: bug, este dialogo no puede ser dismissed
                               showAlertDialog(widget.context, "Éxito", "El Post fue borrado exitósamente.", false);
                             } else {
                               showAlertDialog(widget.context, "Oh no", "El Post no pudo ser borrado.\nInténtalo de nuevo más tarde.", false);

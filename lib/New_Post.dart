@@ -84,7 +84,7 @@ class _NewPostPageState extends State<NewPostPage> {
     // TODO: mostrar el nombre del archivo seleccionado y dar la opcion de borrar el archivo subido
     // TODO: permitir subida de ciertos tipos de archivos
     String base64EncodedFile = result.toString().split(",").last;
-    print("BASE 64 $tipo FILE: <$base64EncodedFile>");
+//    print("BASE 64 $tipo FILE: <$base64EncodedFile>");
     if (tipo == "ejercicio") {
       ejercicios.add(base64EncodedFile);
       ejerciciosButtonDisabled = true;

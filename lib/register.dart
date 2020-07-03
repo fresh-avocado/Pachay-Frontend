@@ -138,6 +138,8 @@ class MyCustomFormState extends State<MyCustomForm> {
       print("Uexpected exception in backend.");
       print("");
       return "";
+    } else {
+      return "";
     }
   }
 
