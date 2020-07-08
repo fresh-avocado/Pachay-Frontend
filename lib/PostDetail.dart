@@ -94,7 +94,7 @@ class _PostDetailState extends State<PostDetail> {
     print("${widget.post.hasRated ? "Post has been rated." : "Post has not been rated"}");
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.post.title),
+          title: Text(widget.post.subtopic),
           backgroundColor: widget.appBarColor,
           centerTitle: true,
           leading: IconButton(
@@ -104,67 +104,109 @@ class _PostDetailState extends State<PostDetail> {
             },
           )
       ),
-      body: Center(
-        child: Row(
+      body: Column(
           children: [
             Expanded(
-              child: Column(
-                // TODO: poner el rating en el medio de los arrows, que solo muestre el numero y no "Rating: "
+              flex: 8,
+              child: Row(
                 children: [
-                  ListTile(
-                    subtitle: Text(widget.post.desc),
-                    trailing: IconButton(
-                        icon: Icon(Icons.arrow_upward),
-                        color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
-                        onPressed: () {
-                          ratePost(widget.post.postId, "like").then( (newRating) {
-                            if (newRating != "error") {
-                              rated(true, newRating);
-                            }
-                          });
-                        }),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(""),
+                          ),
+                          Text(widget.post.author),
+                          Text(widget.post.datePublished),
+                          Expanded(
+                            flex: 1,
+                            child: Text(""),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  ListTile(
-                    title: Text(widget.post.author),
-                    subtitle: Text(widget.post.datePublished),
-                    trailing: IconButton(
-                        color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
-                        icon: Icon(Icons.arrow_downward),
-                        onPressed: () {
-                          ratePost(widget.post.postId, "dislike").then( (newRating) {
-                            if (newRating != "error") {
-                              rated(false, newRating);
-                            }
-                          });
-                        }),
-                  ),
-                  ListTile(
-                    trailing: Text("Rating: ${widget.post.rating}"),
+                  Expanded(
+                    flex: 9,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(widget.post.title,
+                                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left
+                              ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(""),
+                          ),
+                          Expanded(
+                            flex: 7,
+                            child: Text(widget.post.desc,
+                                style: TextStyle(fontSize: 14),
+                                textAlign: TextAlign.justify
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Row(
+                                  children: [
+                                    Text("Nos gustaria saber tu opinión de este post :   "),
+                                    IconButton(
+                                        icon: Icon(Icons.tag_faces),
+                                        color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
+                                        onPressed: () {
+                                          ratePost(widget.post.postId, "like").then( (newRating) {
+                                            if (newRating != "error") {
+                                              rated(true, newRating);
+                                            }
+                                          });
+                                        }),
+                                    Text("${widget.post.rating}"),
+                                    IconButton(
+                                        color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
+                                        icon: Icon(Icons.face),
+                                        onPressed: () {
+                                          ratePost(widget.post.postId, "dislike").then( (newRating) {
+                                            if (newRating != "error") {
+                                              rated(false, newRating);
+                                            }
+                                          });
+                                        }),
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        "Links a Videos",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Center(
+              flex: 1,
+              child: Text(""),
+            ),
+            Expanded(
+              flex: 12,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Center(
                         child: ListView.separated(
                           itemCount: widget.post.youtubeLinks.length,
                           separatorBuilder: (BuildContext context, int index) => Divider(),
@@ -189,124 +231,129 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Material de Soporte",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            "Material de Soporte",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (widget.post.material != null && widget.post.material.length > 0) Expanded(
-                      flex: 3,
-                      child: Center(
-                        child: ListView.separated(
-                          itemCount: widget.post.material.length,
-                          separatorBuilder: (BuildContext context, int index) => Divider(),
-                          itemBuilder: (BuildContext ctx, int idx) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "Material de Soporte $idx",
-                                    style: TextStyle(color: Colors.blueAccent),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
-                                      }
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                        if (widget.post.material != null && widget.post.material.length > 0) Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: ListView.separated(
+                              itemCount: widget.post.material.length,
+                              separatorBuilder: (BuildContext context, int index) => Divider(),
+                              itemBuilder: (BuildContext ctx, int idx) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "Material de Soporte $idx",
+                                          style: TextStyle(color: Colors.blueAccent),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
+                                            }
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Ejercicios",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            "Ejercicios",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (widget.post.ejercicios != null && widget.post.ejercicios.length > 0) Expanded(
-                      flex: 3,
-                      child: Center(
-                        child: ListView.separated(
-                          itemCount: widget.post.ejercicios.length,
-                          separatorBuilder: (BuildContext context, int index) => Divider(),
-                          itemBuilder: (BuildContext ctx, int idx) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "Ejercicio $idx",
-                                    style: TextStyle(color: Colors.blueAccent),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
-                                      }
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                        if (widget.post.ejercicios != null && widget.post.ejercicios.length > 0) Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: ListView.separated(
+                              itemCount: widget.post.ejercicios.length,
+                              separatorBuilder: (BuildContext context, int index) => Divider(),
+                              itemBuilder: (BuildContext ctx, int idx) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "Ejercicio $idx",
+                                          style: TextStyle(color: Colors.blueAccent),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
+                                            }
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Solucionarios",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            "Solucionarios",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (widget.post.solucionario != null && widget.post.solucionario.length > 0) Expanded(
-                      flex: 3,
-                      child: Center(
-                        child: ListView.separated(
-                          itemCount: widget.post.solucionario.length,
-                          separatorBuilder: (BuildContext context, int index) => Divider(),
-                          itemBuilder: (BuildContext ctx, int idx) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "Solucionario $idx",
-                                    style: TextStyle(color: Colors.blueAccent),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
-                                      }
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                        if (widget.post.solucionario != null && widget.post.solucionario.length > 0) Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: ListView.separated(
+                              itemCount: widget.post.solucionario.length,
+                              separatorBuilder: (BuildContext context, int index) => Divider(),
+                              itemBuilder: (BuildContext ctx, int idx) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "Solucionario $idx",
+                                          style: TextStyle(color: Colors.blueAccent),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
+                                            }
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
+            )
           ],
         ),
-      ),
     );
   }
 

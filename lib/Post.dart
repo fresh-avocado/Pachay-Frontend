@@ -12,6 +12,8 @@ class Post {
   final String desc;
   final String author;
   final String datePublished;
+  final String topic;
+  final String subtopic;
   int rating;
   final List<String> youtubeLinks;
   final String postId;
@@ -22,7 +24,7 @@ class Post {
   final List<String> solucionario;
   final List<String> material;
 
-  Post({Key key, this.title, this.desc, this.postId, this.author, this.datePublished, this.rating, this.youtubeLinks, this.hasRated, this.hasLiked, this.hasDisliked, this.ejercicios, this.solucionario, this.material});
+  Post({Key key, this.title, this.desc, this.postId, this.author, this.datePublished, this.topic, this.subtopic, this.rating, this.youtubeLinks, this.hasRated, this.hasLiked, this.hasDisliked, this.ejercicios, this.solucionario, this.material});
 
   factory Post.fromJson(Map<String, dynamic> body, String userId) {
     String author = "${body['author']['firstName']} ${body['author']['lastName']}";
@@ -38,6 +40,8 @@ class Post {
         desc: body['description'],
         author: author,
         datePublished: body['date'].toString().substring(0, 10),
+        topic: body['subtopic']['subtopic'],
+        subtopic: body['subtopic']['subtopic'],
         rating: body['rating'],
         postId: body['postId'],
         youtubeLinks: body['videos'].cast<String>(),

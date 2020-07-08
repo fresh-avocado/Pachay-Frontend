@@ -54,6 +54,7 @@ class _NewPostPageState extends State<NewPostPage> {
   bool hasChosenSubtopic = false;
   String _topic = "Matemática";
   String _subtopic = "Ecuaciones";
+  String _level = "Facil";
   List<Widget> linkWidgets = List<Widget>();
   List<String> ejercicios = List<String>();
   List<String> materialDeSoporte = List<String>();
@@ -61,9 +62,12 @@ class _NewPostPageState extends State<NewPostPage> {
   bool ejerciciosButtonDisabled = false;
   bool materialButtonDisabled = false;
   bool solucionariosButtonDisabled = false;
+  String ejercicios_name = "";
+  String solucinario_name = "";
+  String material_name = "";
 
 
-  Future<void> chooseFiles(String tipo) async {
+  Future<String> chooseFiles(String tipo) async {
     html.InputElement uploadInput = html.FileUploadInputElement();
     // FIXME: does this allow a single file to be uploaded?
     uploadInput.draggable = true;
@@ -76,6 +80,10 @@ class _NewPostPageState extends State<NewPostPage> {
         handleUploadedFile(reader.result, tipo);
       });
       reader.readAsDataUrl(file);
+      print(file.name + " 1");
+      return file.name;
+
+
       // TODO: validate file type?
     });
   }
@@ -84,6 +92,7 @@ class _NewPostPageState extends State<NewPostPage> {
     // TODO: mostrar el nombre del archivo seleccionado y dar la opcion de borrar el archivo subido
     // TODO: permitir subida de ciertos tipos de archivos
     String base64EncodedFile = result.toString().split(",").last;
+    //print(base64EncodedFile);
 //    print("BASE 64 $tipo FILE: <$base64EncodedFile>");
     if (tipo == "ejercicio") {
       ejercicios.add(base64EncodedFile);
@@ -157,6 +166,7 @@ class _NewPostPageState extends State<NewPostPage> {
   void updateDropDown(String __topic, String __subtopic) {
     _topic = __topic;
     _subtopic = __subtopic;
+
     setState(() {});
   }
 
@@ -223,7 +233,8 @@ class _NewPostPageState extends State<NewPostPage> {
                           Expanded(
                             flex: 5,
                             child: TextFormField(
-                              maxLength: 150,
+                              maxLines: 5,
+                              maxLength: 1000,
                               controller: postDesc,
                               decoration: InputDecoration(
                                 labelText: 'Descripción del Post',
@@ -289,7 +300,8 @@ class _NewPostPageState extends State<NewPostPage> {
                           ),
                         ],
                       ),
-                      Column(
+                      Divider(height: 20),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -340,50 +352,126 @@ class _NewPostPageState extends State<NewPostPage> {
                               );
                             }).toList(),
                           ),
+                          Divider(thickness: 0,),
+                          DropdownButton<String>(
+                            value: _level,
+                            icon: Icon(Icons.arrow_downward),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String newValue) {
+                              print("Level: $newValue");
+                              setState(() {
+                                _level = newValue;
+                              });
+                            },
+                            items: <String> ["Facil", "Intermedio", "Dificil"]
+                                .map<DropdownMenuItem<String>> ((String value) {
+                                  return DropdownMenuItem<String> (
+                                    value: value,
+                                    child: Text(value)
+                                  );
+                            }).toList(),
+                          ),
                         ],
                       ),
+                      Divider(height: 20),
                       // TODO: agregar boton que permite borrar el archivo seleccionado para seleccionar otra vez
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          MaterialButton(
-                            color: Colors.orange,
-                            elevation: 8,
-                            highlightElevation: 2,
-                            child: Text('Seleccionar Ejercicio'),
-                            onPressed: () {
-                              if (!ejerciciosButtonDisabled) {
-                                chooseFiles("ejercicio");
-                              } else {
-                                return null;
-                              }
-                            },
+                          Row(
+                            children: [
+                              MaterialButton(
+                                color: Colors.orange,
+                                elevation: 8,
+                                highlightElevation: 2,
+                                child: Text('Seleccionar Ejercicio'),
+                                enableFeedback: !ejerciciosButtonDisabled,
+                                onPressed: () {
+                                  if (!ejerciciosButtonDisabled) {
+                                    chooseFiles("ejercicio").then((value) {
+                                      ejercicios_name = value;
+                                      print(ejercicios_name);
+                                      setState(() {
+
+                                      });
+                                    });
+
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(ejerciciosButtonDisabled) IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  ejerciciosButtonDisabled = false;
+                                  setState(() {
+
+                                  });
+                                },
+                              )
+                            ],
                           ),
-                          MaterialButton(
-                            color: Colors.orange,
-                            elevation: 8,
-                            highlightElevation: 2,
-                            child: Text('Seleccionar Solucionario'),
-                            onPressed: () {
-                              if (!solucionariosButtonDisabled) {
-                                chooseFiles("solucionario");
-                              } else {
-                                return null;
-                              }
-                            },
+                          Row(
+                            children: [
+                              MaterialButton(
+                                color: Colors.orange,
+                                elevation: 8,
+                                highlightElevation: 2,
+                                child: Text('Seleccionar Solucionario'),
+                                onPressed: () {
+                                  if (!solucionariosButtonDisabled) {
+                                    chooseFiles("solucionario");
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(solucionariosButtonDisabled) IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  solucionariosButtonDisabled = false;
+                                  setState(() {
+
+                                  });
+                                },
+                              )
+                            ],
                           ),
-                          MaterialButton(
-                            color: Colors.orange,
-                            elevation: 8,
-                            highlightElevation: 2,
-                            child: Text('Seleccionar Material de Soporte'),
-                            onPressed: () {
-                              if (!materialButtonDisabled) {
-                                chooseFiles("material");
-                              } else {
-                                return null;
-                              }
-                            },
+                          Row(
+                            children: [
+                              MaterialButton(
+                                color: Colors.orange,
+                                elevation: 8,
+                                highlightElevation: 2,
+                                child: Text('Seleccionar Material de Soporte'),
+                                onPressed: () {
+                                  if (!materialButtonDisabled) {
+                                    chooseFiles("material");
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(materialButtonDisabled) IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  materialButtonDisabled = false;
+                                  setState(() {
+
+                                  });
+                                },
+                              )
+                            ],
                           ),
                         ],
                       ),
