@@ -193,6 +193,10 @@ class _PostDetailState extends State<PostDetail> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("")
+                  )
                 ],
               ),
             ),

@@ -62,12 +62,12 @@ class _NewPostPageState extends State<NewPostPage> {
   bool ejerciciosButtonDisabled = false;
   bool materialButtonDisabled = false;
   bool solucionariosButtonDisabled = false;
-  String ejercicios_name = "";
-  String solucinario_name = "";
-  String material_name = "";
+  String ejerciciosName = "";
+  String solucionarioName = "";
+  String materialName = "";
 
 
-  Future<String> chooseFiles(String tipo) async {
+  Future<void> chooseFiles(String tipo) async {
     html.InputElement uploadInput = html.FileUploadInputElement();
     // FIXME: does this allow a single file to be uploaded?
     uploadInput.draggable = true;
@@ -77,18 +77,15 @@ class _NewPostPageState extends State<NewPostPage> {
       final file = files[0];
       final reader = new html.FileReader();
       reader.onLoadEnd.listen( (e) {
-        handleUploadedFile(reader.result, tipo);
+        handleUploadedFile(reader.result, tipo, file.name);
       });
       reader.readAsDataUrl(file);
-      print(file.name + " 1");
-      return file.name;
-
 
       // TODO: validate file type?
     });
   }
 
-  void handleUploadedFile(Object result, String tipo) {
+  void handleUploadedFile(Object result, String tipo, String filename) {
     // TODO: mostrar el nombre del archivo seleccionado y dar la opcion de borrar el archivo subido
     // TODO: permitir subida de ciertos tipos de archivos
     String base64EncodedFile = result.toString().split(",").last;
@@ -97,12 +94,15 @@ class _NewPostPageState extends State<NewPostPage> {
     if (tipo == "ejercicio") {
       ejercicios.add(base64EncodedFile);
       ejerciciosButtonDisabled = true;
+      ejerciciosName = filename;
     } else if (tipo == "material") {
       materialDeSoporte.add(base64EncodedFile);
       materialButtonDisabled = true;
+      materialName = filename;
     } else if (tipo == "solucionario") {
       solucionarios.add(base64EncodedFile);
       solucionariosButtonDisabled = true;
+      solucionarioName = filename;
     }
     setState(() {});
   }
@@ -394,24 +394,18 @@ class _NewPostPageState extends State<NewPostPage> {
                                 enableFeedback: !ejerciciosButtonDisabled,
                                 onPressed: () {
                                   if (!ejerciciosButtonDisabled) {
-                                    chooseFiles("ejercicio").then((value) {
-                                      ejercicios_name = value;
-                                      print(ejercicios_name);
-                                      setState(() {
-
-                                      });
-                                    });
-
+                                    chooseFiles("ejercicio");
                                   } else {
                                     return null;
                                   }
                                 },
                               ),
-                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(ejerciciosButtonDisabled) Text("  $ejerciciosName"),
                               if(ejerciciosButtonDisabled) IconButton(
                                 icon: Icon(Icons.close),
                                 onPressed: () {
                                   ejerciciosButtonDisabled = false;
+                                  ejercicios.clear();
                                   setState(() {
 
                                   });
@@ -434,11 +428,12 @@ class _NewPostPageState extends State<NewPostPage> {
                                   }
                                 },
                               ),
-                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(solucionariosButtonDisabled) Text("  $solucionarioName"),
                               if(solucionariosButtonDisabled) IconButton(
                                 icon: Icon(Icons.close),
                                 onPressed: () {
                                   solucionariosButtonDisabled = false;
+                                  solucionarios.clear();
                                   setState(() {
 
                                   });
@@ -461,11 +456,12 @@ class _NewPostPageState extends State<NewPostPage> {
                                   }
                                 },
                               ),
-                              //if(ejerciciosButtonDisabled) Text(ejercicios_name),
+                              if(materialButtonDisabled) Text("  $materialName"),
                               if(materialButtonDisabled) IconButton(
                                 icon: Icon(Icons.close),
                                 onPressed: () {
                                   materialButtonDisabled = false;
+                                  materialDeSoporte.clear();
                                   setState(() {
 
                                   });
