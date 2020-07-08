@@ -7,7 +7,6 @@ import 'utilities.dart' show showAlertDialog;
 import 'dart:html' as html;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
-// TODO: BASE 64
 
 class Link extends StatelessWidget {
   var _controller = TextEditingController();
@@ -39,8 +38,9 @@ class Link extends StatelessWidget {
 class NewPostPage extends StatefulWidget {
   final String title;
   final Map<String, List<String>> topicsAndSubtopics;
+  Color backgroundColor;
 
-  NewPostPage({Key key, this.title, this.topicsAndSubtopics}) : super(key: key);
+  NewPostPage({Key key, this.title, this.topicsAndSubtopics, this.backgroundColor}) : super(key: key);
 
   @override
   _NewPostPageState createState() => _NewPostPageState();
@@ -69,7 +69,6 @@ class _NewPostPageState extends State<NewPostPage> {
 
   Future<void> chooseFiles(String tipo) async {
     html.InputElement uploadInput = html.FileUploadInputElement();
-    // FIXME: does this allow a single file to be uploaded?
     uploadInput.draggable = true;
     uploadInput.click();
     uploadInput.onChange.listen((e) {
@@ -80,17 +79,13 @@ class _NewPostPageState extends State<NewPostPage> {
         handleUploadedFile(reader.result, tipo, file.name);
       });
       reader.readAsDataUrl(file);
-
-      // TODO: validate file type?
+      // TODO: validate file type
     });
   }
 
   void handleUploadedFile(Object result, String tipo, String filename) {
-    // TODO: mostrar el nombre del archivo seleccionado y dar la opcion de borrar el archivo subido
     // TODO: permitir subida de ciertos tipos de archivos
     String base64EncodedFile = result.toString().split(",").last;
-    //print(base64EncodedFile);
-//    print("BASE 64 $tipo FILE: <$base64EncodedFile>");
     if (tipo == "ejercicio") {
       ejercicios.add(base64EncodedFile);
       ejerciciosButtonDisabled = true;
@@ -166,7 +161,6 @@ class _NewPostPageState extends State<NewPostPage> {
   void updateDropDown(String __topic, String __subtopic) {
     _topic = __topic;
     _subtopic = __subtopic;
-
     setState(() {});
   }
 
@@ -174,6 +168,7 @@ class _NewPostPageState extends State<NewPostPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: widget.backgroundColor,
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text(widget.title),
@@ -191,288 +186,379 @@ class _NewPostPageState extends State<NewPostPage> {
                 autovalidate: true,
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0, left: 28),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     children: <Widget>[
-                      Divider(height: 20),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(30.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              maxLength: 50,
-                              decoration: InputDecoration(
-                                labelText: 'Título de Post',
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 2,
+                                    child: TextFormField(
+                                      maxLength: 50,
+                                      decoration: InputDecoration(
+                                          labelText: "Título de Post",
+                                          fillColor: Colors.white
+                                      ),
+                                      controller: postTitle,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'El Post debe tener título.';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(30.0),
+                                    ),
+                                  )
+                                ],
                               ),
-                              controller: postTitle,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'El Post debe tener título.';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: EdgeInsets.all(30.0),
-                            ),
-                          )
-                        ],
-                      ),
-                      Divider(height: 20),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(30.0),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: TextFormField(
-                              maxLines: 5,
-                              maxLength: 1000,
-                              controller: postDesc,
-                              decoration: InputDecoration(
-                                labelText: 'Descripción del Post',
+                              Divider(height: 20),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 40),
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: TextFormField(
+                                      maxLines: 5,
+                                      maxLength: 1000,
+                                      controller: postDesc,
+                                      decoration: InputDecoration(
+                                        labelText: 'Descripción del Post',
+                                      ),
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'El Post debe tener una breve descripción.';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(30.0),
+                                    ),
+                                  )
+                                ],
                               ),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'El Post debe tener una breve descripción.';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: EdgeInsets.all(30.0),
-                            ),
-                          )
-                        ],
-                      ),
-                      Divider(height: 20),
-                      Column(
-                        children: List.generate(linkWidgets.length, (i) {
-                          return linkWidgets[i];
-                        }),
-                      ),
-                      Divider(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: FloatingActionButton(
-                              heroTag: 1,
-                              child: Text(
-                                '+',
-                                style: TextStyle(fontSize: 20.0),
+                              Divider(height: 20),
+                              Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text("Links a videos de YouTube",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  linkWidgets.add(Link());
-                                });
-                              },
-                            ),
-                          ),
-                          Text("Links a video de Youtube",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: FloatingActionButton(
-                              heroTag: 2,
-                              child: Text(
-                                '-',
-                                style: TextStyle(fontSize: 20.0),
+                              Column(
+                                children: List.generate(linkWidgets.length, (i) {
+                                  return linkWidgets[i];
+                                }),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  linkWidgets.removeLast();
-                                });
-                              },
-                            ),
+                              Divider(height: 20, color: Colors.transparent,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text("Añadir Link",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: FloatingActionButton(
+                                      heroTag: 1,
+                                      child: Text(
+                                        '+',
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          linkWidgets.add(Link());
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: FloatingActionButton(
+                                      heroTag: 2,
+                                      child: Text(
+                                        '-',
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          linkWidgets.removeLast();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Text("Eliminar Link",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                      Divider(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DropdownButton<String>(
-                            value: _topic,
-                            icon: Icon(Icons.arrow_downward),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            onChanged: (String newValue) {
-                              print("Topic: $newValue");
-                              setState(() {
-                                updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
-                              });
-                            },
-                            items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
                           ),
-                          Divider(thickness: 0,),
-                          DropdownButton<String>(
-                            value: _subtopic,
-                            icon: Icon(Icons.arrow_downward),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
                             ),
-                            onChanged: (String newValue) {
-                              print("Subtopic: $newValue");
-                              setState(() {
-                                updateDropDown(_topic, newValue);
-                              });
-                            },
-                            items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                          Divider(thickness: 0,),
-                          DropdownButton<String>(
-                            value: _level,
-                            icon: Icon(Icons.arrow_downward),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            onChanged: (String newValue) {
-                              print("Level: $newValue");
-                              setState(() {
-                                _level = newValue;
-                              });
-                            },
-                            items: <String> ["Facil", "Intermedio", "Dificil"]
-                                .map<DropdownMenuItem<String>> ((String value) {
-                                  return DropdownMenuItem<String> (
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Topic:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                              DropdownButton<String>(
+                                value: _topic,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                onChanged: (String newValue) {
+                                  print("Topic: $newValue");
+                                  setState(() {
+                                    updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
+                                  });
+                                },
+                                items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
                                     value: value,
-                                    child: Text(value)
+                                    child: Text(value),
                                   );
-                            }).toList(),
+                                }).toList(),
+                              ),
+                              Divider(thickness: 0,),
+                              Text("Subtopic:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                              DropdownButton<String>(
+                                value: _subtopic,
+                                icon: Icon(Icons.arrow_downward),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                onChanged: (String newValue) {
+                                  print("Subtopic: $newValue");
+                                  setState(() {
+                                    updateDropDown(_topic, newValue);
+                                  });
+                                },
+                                items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+//                          Divider(thickness: 0,),
+//                          Text("Dificultad:  "),
+//                          DropdownButton<String>(
+//                            value: _level,
+//                            icon: Icon(Icons.arrow_downward),
+//                            iconSize: 24,
+//                            elevation: 16,
+//                            style: TextStyle(color: Colors.deepPurple),
+//                            underline: Container(
+//                              height: 2,
+//                              color: Colors.deepPurpleAccent,
+//                            ),
+//                            onChanged: (String newValue) {
+//                              print("Level: $newValue");
+//                              setState(() {
+//                                _level = newValue;
+//                              });
+//                            },
+//                            items: <String> ["Facil", "Intermedio", "Dificil"]
+//                                .map<DropdownMenuItem<String>> ((String value) {
+//                                  return DropdownMenuItem<String> (
+//                                    value: value,
+//                                    child: Text(value)
+//                                  );
+//                            }).toList(),
+//                          ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                      Divider(height: 20),
-                      // TODO: agregar boton que permite borrar el archivo seleccionado para seleccionar otra vez
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              MaterialButton(
-                                color: Colors.orange,
-                                elevation: 8,
-                                highlightElevation: 2,
-                                child: Text('Seleccionar Ejercicio'),
-                                enableFeedback: !ejerciciosButtonDisabled,
-                                onPressed: () {
-                                  if (!ejerciciosButtonDisabled) {
-                                    chooseFiles("ejercicio");
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              if(ejerciciosButtonDisabled) Text("  $ejerciciosName"),
-                              if(ejerciciosButtonDisabled) IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  ejerciciosButtonDisabled = false;
-                                  ejercicios.clear();
-                                  setState(() {
+                              Row(
+                                children: [
+                                  MaterialButton(
+                                    color: Colors.orange,
+                                    elevation: 8,
+                                    highlightElevation: 2,
+                                    child: Text('Seleccionar Ejercicio'),
+                                    enableFeedback: !ejerciciosButtonDisabled,
+                                    onPressed: () {
+                                      if (!ejerciciosButtonDisabled) {
+                                        chooseFiles("ejercicio");
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                  if(ejerciciosButtonDisabled) Text("  $ejerciciosName"),
+                                  if(ejerciciosButtonDisabled) IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      ejerciciosButtonDisabled = false;
+                                      ejercicios.clear();
+                                      setState(() {
 
-                                  });
-                                },
-                              )
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  MaterialButton(
+                                    color: Colors.orange,
+                                    elevation: 8,
+                                    highlightElevation: 2,
+                                    child: Text('Seleccionar Solucionario'),
+                                    onPressed: () {
+                                      if (!solucionariosButtonDisabled) {
+                                        chooseFiles("solucionario");
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                  if(solucionariosButtonDisabled) Text("  $solucionarioName"),
+                                  if(solucionariosButtonDisabled) IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      solucionariosButtonDisabled = false;
+                                      solucionarios.clear();
+                                      setState(() {
+
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  MaterialButton(
+                                    color: Colors.orange,
+                                    elevation: 8,
+                                    highlightElevation: 2,
+                                    child: Text('Seleccionar Material de Soporte'),
+                                    onPressed: () {
+                                      if (!materialButtonDisabled) {
+                                        chooseFiles("material");
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                  if(materialButtonDisabled) Text("  $materialName"),
+                                  if(materialButtonDisabled) IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      materialButtonDisabled = false;
+                                      materialDeSoporte.clear();
+                                      setState(() {
+
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              MaterialButton(
-                                color: Colors.orange,
-                                elevation: 8,
-                                highlightElevation: 2,
-                                child: Text('Seleccionar Solucionario'),
-                                onPressed: () {
-                                  if (!solucionariosButtonDisabled) {
-                                    chooseFiles("solucionario");
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              if(solucionariosButtonDisabled) Text("  $solucionarioName"),
-                              if(solucionariosButtonDisabled) IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  solucionariosButtonDisabled = false;
-                                  solucionarios.clear();
-                                  setState(() {
-
-                                  });
-                                },
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              MaterialButton(
-                                color: Colors.orange,
-                                elevation: 8,
-                                highlightElevation: 2,
-                                child: Text('Seleccionar Material de Soporte'),
-                                onPressed: () {
-                                  if (!materialButtonDisabled) {
-                                    chooseFiles("material");
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              if(materialButtonDisabled) Text("  $materialName"),
-                              if(materialButtonDisabled) IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  materialButtonDisabled = false;
-                                  materialDeSoporte.clear();
-                                  setState(() {
-
-                                  });
-                                },
-                              )
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                       Align(
-                        alignment: Alignment.bottomRight,
+                        alignment: Alignment.centerRight,
                         child: Container(
                           width: 200,
                           child: Row(
@@ -481,7 +567,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                   elevation: 8,
                                   highlightElevation: 2,
                                   child: Text("Publicar Post"),
-                                  color: Colors.blue,
+                                  color: Colors.orange,
                                   onPressed: () {
                                     print("Topic: $_topic\nSubtopic: $_subtopic");
                                     if (_formKey.currentState.validate()) {

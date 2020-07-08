@@ -60,8 +60,9 @@ class PostList extends StatefulWidget {
   final Color appBarColor;
   final bool inTeacherProfilePage;
   final context;
+  Color backgroundColor;
 
-  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context}) : super(key: key);
+  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context, this.backgroundColor}) : super(key: key);
 
   @override
   _PostListState createState() => _PostListState();
@@ -72,7 +73,7 @@ class _PostListState extends State<PostList> {
   _navigateAndDisplaySelection(BuildContext context, Post post) async {
     final _ = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PostDetail(post: post, appBarColor: widget.appBarColor)),
+      MaterialPageRoute(builder: (context) => PostDetail(post: post, appBarColor: widget.appBarColor, backgroundColor: widget.backgroundColor)),
     );
     setState(() {});
   }
@@ -98,7 +99,7 @@ class _PostListState extends State<PostList> {
       return ListView.builder(
         itemCount: widget.posts.length,
         itemBuilder: (context, index) {
-          Post post = widget.posts[index];
+        Post post = widget.posts[index];
           return Expanded(
             child: Card(
               child: Column(
@@ -119,6 +120,7 @@ class _PostListState extends State<PostList> {
                     trailing: Column(
                       children: [
                         RaisedButton(
+                          color: widget.appBarColor,
                           child: Text("Ver más"),
                           onPressed: () {
                             _navigateAndDisplaySelection(context, post);
@@ -176,7 +178,7 @@ class _PostListState extends State<PostList> {
                   ),
                 ],
               ),
-              color: Colors.white70,
+              color: Colors.white,
               elevation: 3,
               margin: EdgeInsets.all(30.0),
             ),

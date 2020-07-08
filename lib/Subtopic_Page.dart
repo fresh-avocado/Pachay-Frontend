@@ -5,11 +5,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SubtopicPage extends StatefulWidget {
-  SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor}) : super(key: key);
+  SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor, this.backgroundColor}) : super(key: key);
   final String topic;
   final String subtopic;
   final Color appBarColor;
   String cachedUserId = "";
+  Color backgroundColor;
 
   @override
   _SubtopicPageState createState() => _SubtopicPageState();
@@ -47,6 +48,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
         appBar: AppBar(
             backgroundColor: widget.appBarColor,
             title: Text(widget.subtopic),
@@ -68,7 +70,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
                 future: fetchPostsByTopicAndSubtopic(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false,) : Center(child: CircularProgressIndicator());
+                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor) : Center(child: CircularProgressIndicator());
                 },
               ),
             ),

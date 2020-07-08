@@ -7,9 +7,11 @@ import 'package:http/http.dart' as http;
 // TODO: embellecer y mostrarle información relevante al usuario
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.title, this.role}) : super(key: key);
+  ProfilePage({Key key, this.title, this.role, this.backgroundColor, this.appBarColor}) : super(key: key);
   final String title;
   final bool role;
+  Color backgroundColor;
+  Color appBarColor;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -49,8 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title,),
+        backgroundColor: widget.appBarColor,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -78,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                           fontSize: 40,
                         ),
                       ),
@@ -94,8 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text("Videos de YouTube que Pachay recomienda.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),),
             ),
             if (!widget.role) Expanded(
-              flex: 2,
-              // TODO: ademas de agarrar todos los fields relevantes del post, tambien agarrar el "postId"
+              flex: 3,
               child: Expanded(
                 flex: 4,
                 child: FutureBuilder<List<Post>>(

@@ -27,6 +27,10 @@ class CentralPage extends StatefulWidget {
 
 class _CentralPageState extends State<CentralPage> {
 
+  /// PACHAY'S BACKGROUND COLOR
+  Color _backgroundColor = Colors.lightBlue[50];
+  Color _appBarColor = Colors.indigoAccent;
+
   final Map<String, List<String>> topicsAndSubtopics = {
     "Matemática" : ["Ecuaciones", "Geometría"],
     "Física": ["MRU", "Leyes de Newton"],
@@ -101,23 +105,26 @@ class _CentralPageState extends State<CentralPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: _backgroundColor,
         appBar: AppBar(
+        backgroundColor: _appBarColor,
         title: Text(widget.title),
         centerTitle: true,
         actions: <Widget>[
           MaterialButton(
               height: 70,
               splashColor: Colors.orangeAccent[100],
-              color: Colors.orange,
+              color: _appBarColor,
               elevation: 0.0,
               onPressed: () {
                 if (widget.isLoggedIn) {
+                  // FIXME: repeated code
                   if (widget.role == false) { // perfil del profesor
                     print("El profesor quiere ver su perfil");
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfilePage(title: "Perfil", role: widget.role,),
+                            builder: (context) => ProfilePage(title: "Perfil", role: widget.role, backgroundColor: _backgroundColor, appBarColor: _appBarColor),
                         ),
                     );
 
@@ -126,7 +133,7 @@ class _CentralPageState extends State<CentralPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfilePage(title: "Perfil", role: widget.role,),
+                        builder: (context) => ProfilePage(title: "Perfil", role: widget.role, backgroundColor: _backgroundColor, appBarColor: _appBarColor),
                       ),
                     );
                   }
@@ -143,9 +150,9 @@ class _CentralPageState extends State<CentralPage> {
             future: getButtonMessage(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               Widget homePage;
-              var buttonColor = Colors.orange;
+              var buttonColor = _appBarColor;
               if (widget.isLoggedIn) {
-                buttonColor = Colors.orange;
+                buttonColor = _appBarColor;
               }
               if (snapshot.hasData) {
                 homePage = MaterialButton(
@@ -155,14 +162,14 @@ class _CentralPageState extends State<CentralPage> {
                   color: buttonColor,
                   elevation: 0.0,
                   onPressed: () {
-                      if (buttonColor == Colors.orange && widget.role == false) {
+                      if (buttonColor == _appBarColor && widget.role == false) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NewPostPage(title: widget.title, topicsAndSubtopics: topicsAndSubtopics)
+                              builder: (context) => NewPostPage(title: widget.title, topicsAndSubtopics: topicsAndSubtopics, backgroundColor: _backgroundColor)
                           ),
                         );
-                      } else if (buttonColor == Colors.orange && widget.role == true) {
+                      } else if (buttonColor == _appBarColor && widget.role == true) {
                         // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
                       }
                   },
@@ -181,7 +188,7 @@ class _CentralPageState extends State<CentralPage> {
             height: 70,
             minWidth: 50,
             splashColor: Colors.orangeAccent[100],
-            color: Colors.orange,
+            color: _appBarColor,
             elevation: 0.0,
             onPressed: () {
               if (widget.isLoggedIn) {
@@ -245,7 +252,7 @@ class _CentralPageState extends State<CentralPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]), subtopicIcons: subtopicIcons[courses[index]])),
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]), subtopicIcons: subtopicIcons[courses[index]], backgroundColor: _backgroundColor)),
                         );
                       },
                     ),

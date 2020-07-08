@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TopicPage extends StatefulWidget {
-  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor, this.subtopicIcons}) : super(key: key);
+  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor, this.subtopicIcons, this.backgroundColor}) : super(key: key);
   final String topic;
   final Color appBarColor;
   final List<String> subtopics;
   final List<Icon> subtopicIcons;
+  Color backgroundColor;
 
   @override
   _TopicPageState createState() => _TopicPageState();
@@ -18,6 +19,7 @@ class _TopicPageState extends State<TopicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: widget.backgroundColor,
         appBar: AppBar(
             backgroundColor: widget.appBarColor,
             title: Text(widget.topic),
@@ -66,7 +68,7 @@ class _TopicPageState extends State<TopicPage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SubtopicPage(topic: widget.topic, subtopic: widget.subtopics[index], appBarColor: widget.appBarColor,)),
+                            MaterialPageRoute(builder: (context) => SubtopicPage(topic: widget.topic, subtopic: widget.subtopics[index], appBarColor: widget.appBarColor, backgroundColor: widget.backgroundColor)),
                           );
                         },
                       ),
