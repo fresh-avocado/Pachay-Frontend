@@ -51,10 +51,10 @@ class _CentralPageState extends State<CentralPage> {
 
   //final List<Color> courseColor = <Color>[Colors.purple[400], Colors.blue[400], Colors.lightGreen[400], Colors.amber[400]];
   final List<int> hexcourseColor = <int>[
-    0xFFB00C37,
-    0xFF5F8FB9,
-    0xFF885DB1,
-    0xFF76B242
+    0xFFD13F37,
+    0xFF63CAEC,
+    0xFFC564D2,
+    0xFFBEE131
   ]; //rojo, celeste, lila, verdelimon
   final Map<String, List<Icon>> subtopicIcons = {
     "Matemática": [Icon(Icons.add), Icon(IconData(58740))],
