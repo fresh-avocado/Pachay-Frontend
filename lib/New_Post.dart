@@ -38,9 +38,10 @@ class Link extends StatelessWidget {
 class NewPostPage extends StatefulWidget {
   final String title;
   final Map<String, List<String>> topicsAndSubtopics;
+  final Color appBarColor;
   Color backgroundColor;
 
-  NewPostPage({Key key, this.title, this.topicsAndSubtopics, this.backgroundColor}) : super(key: key);
+  NewPostPage({Key key, this.title, this.topicsAndSubtopics, this.backgroundColor, this.appBarColor}) : super(key: key);
 
   @override
   _NewPostPageState createState() => _NewPostPageState();
@@ -54,7 +55,7 @@ class _NewPostPageState extends State<NewPostPage> {
   bool hasChosenSubtopic = false;
   String _topic = "Matemática";
   String _subtopic = "Ecuaciones";
-  String _level = "Facil";
+  //String _level = "Facil";
   List<Widget> linkWidgets = List<Widget>();
   List<String> ejercicios = List<String>();
   List<String> materialDeSoporte = List<String>();
@@ -173,6 +174,7 @@ class _NewPostPageState extends State<NewPostPage> {
           appBar: AppBar(
             title: Text(widget.title),
             centerTitle: true,
+            backgroundColor: widget.appBarColor,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {

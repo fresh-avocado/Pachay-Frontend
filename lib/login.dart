@@ -141,9 +141,11 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-
+  LoginPage({Key key, this.title, this.appBarColor, this.backgroudColor, this.appLogo}) : super(key: key);
+  final Color appBarColor;
+  final Color backgroudColor;
   final String title;
+  final Image appLogo;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -156,9 +158,11 @@ class _LoginPageState extends State<LoginPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroudColor,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: widget.appLogo,
         centerTitle: true,
+        backgroundColor: widget.appBarColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

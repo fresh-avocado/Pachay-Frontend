@@ -24,6 +24,7 @@ dependencies:
 
   flutter:
     sdk: flutter
+
   http: ^0.12.1
   json_serializable: ^3.3.0
   validators: ^2.0.0+1
@@ -43,6 +44,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - assets/pachaylogo/Pachay_palabra_bordeduro.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

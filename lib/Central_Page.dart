@@ -28,21 +28,36 @@ class CentralPage extends StatefulWidget {
 class _CentralPageState extends State<CentralPage> {
 
   /// PACHAY'S BACKGROUND COLOR
-  Color _backgroundColor = Colors.lightBlue[50];
-  Color _appBarColor = Colors.indigoAccent;
+  Color _backgroundColor = Color(0xFFE5F5DB);
+  Color _appBarColor = Color(0xFF587647);
+  Image appLogo = new Image.asset('pachaylogo/Pachay_palabra_bordeduro.png',
+    fit: BoxFit.contain,
+    height: 130,
+  );
 
   final Map<String, List<String>> topicsAndSubtopics = {
-    "Matemática" : ["Ecuaciones", "Geometría"],
+    "Matemática": ["Ecuaciones", "Geometría"],
     "Física": ["MRU", "Leyes de Newton"],
     "Química": ["Estequiometría", "Ácidos y Bases"],
     "Biología": ["Células", "Genética Mendeliana"]
   };
   final List<String> courses = ["Matemática", "Física", "Química", "Biología"];
-  final List<Icon> courseIcons = [Icon(Icons.all_inclusive), Icon(Icons.multiline_chart), Icon(Icons.device_hub), Icon(Icons.face)];
+  final List<Icon> courseIcons = [
+    Icon(Icons.all_inclusive),
+    Icon(Icons.multiline_chart),
+    Icon(Icons.device_hub),
+    Icon(Icons.face)
+  ];
+
   //final List<Color> courseColor = <Color>[Colors.purple[400], Colors.blue[400], Colors.lightGreen[400], Colors.amber[400]];
-  final List<int> hexcourseColor = <int>[0xFFFF4C2E, 0xFF17BFEB, 0xFFFF0CFF, 0xFF94EB17 ]; //lila, celeste. verdelima, amarillo
+  final List<int> hexcourseColor = <int>[
+    0xFFB00C37,
+    0xFF5F8FB9,
+    0xFF885DB1,
+    0xFF76B242
+  ]; //rojo, celeste, lila, verdelimon
   final Map<String, List<Icon>> subtopicIcons = {
-    "Matemática" : [Icon(Icons.add), Icon(IconData(58740))],
+    "Matemática": [Icon(Icons.add), Icon(IconData(58740))],
     "Física": [Icon(Icons.directions_car), Icon(Icons.compare_arrows)],
     "Química": [Icon(Icons.print), Icon(Icons.title)],
     "Biología": [Icon(Icons.announcement), Icon(Icons.android)]
@@ -53,18 +68,18 @@ class _CentralPageState extends State<CentralPage> {
 
     // profesor: role = 0
     getSharedPref("role").then(
-      (value) {
-        if (value == "0") { // profesor
-          widget.role = false;
-          widget.title = "Bienvenido Profesor";
-        } else if (value == "1") { // alumno
-          widget.role = true;
-          widget.title = "Bienvenido Alumno";
-        } else {
-          widget.title = "PACHAY";
-        }
-        setState(() {});
-    });
+            (value) {
+          if (value == "0") { // profesor
+            widget.role = false;
+            widget.title = "Bienvenido Profesor";
+          } else if (value == "1") { // alumno
+            widget.role = true;
+            widget.title = "Bienvenido Alumno";
+          } else {
+            widget.title = "PACHAY";
+          }
+          setState(() {});
+        });
     setState(() {});
   }
 
@@ -81,12 +96,13 @@ class _CentralPageState extends State<CentralPage> {
     }
   }
 
-  _navigateAndDisplaySelection(BuildContext context, String title, String where) async {
+  _navigateAndDisplaySelection(BuildContext context, String title,
+      String where) async {
     // a little bit of repeated code
     if (where == "login") {
       final didLogIn = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage(title: title,)),
+        MaterialPageRoute(builder: (context) => LoginPage(title: title, appBarColor: _appBarColor, backgroudColor: _backgroundColor, appLogo: appLogo,)),
       );
       if (didLogIn) {
         render(true);
@@ -94,7 +110,7 @@ class _CentralPageState extends State<CentralPage> {
     } else if (where == "register") {
       final didRegister = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RegisterPage(title: title,)),
+        MaterialPageRoute(builder: (context) => RegisterPage(title: title, appBarColor: _appBarColor, backgroundColor: _backgroundColor, appLogo: appLogo,)),
       );
       if (didRegister) {
         render(true);
@@ -107,117 +123,136 @@ class _CentralPageState extends State<CentralPage> {
     return Scaffold(
         backgroundColor: _backgroundColor,
         appBar: AppBar(
-        backgroundColor: _appBarColor,
-        title: Text(widget.title),
-        centerTitle: true,
-        actions: <Widget>[
-          MaterialButton(
+          backgroundColor: _appBarColor,
+          title: appLogo,
+          centerTitle: true,
+          actions: <Widget>[
+            MaterialButton(
+                height: 70,
+                splashColor: Colors.orangeAccent[100],
+                color: Color(0xFF587647),
+                elevation: 0.0,
+                onPressed: () {
+                  if (widget.isLoggedIn) {
+                    // FIXME: repeated code
+                    if (widget.role == false) { // perfil del profesor
+                      print("El profesor quiere ver su perfil");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProfilePage(title: "Perfil",
+                                  role: widget.role,
+                                  backgroundColor: _backgroundColor,
+                                  appBarColor: _appBarColor),
+                        ),
+                      );
+                    } else if (widget.role == true) { // perfil del alumno
+                      print("El alumno quiere ver su perfil");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProfilePage(title: "Perfil",
+                                  role: widget.role,
+                                  backgroundColor: _backgroundColor,
+                                  appBarColor: _appBarColor),
+                        ),
+                      );
+                    }
+                  } else {
+                    _navigateAndDisplaySelection(
+                        context, widget.title, "login");
+                  }
+                },
+                child: Text(
+                  widget.isLoggedIn ? "Mi Perfil" : "Inicia Sesión",
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
+                )
+            ),
+            FutureBuilder<String>(
+              future: getButtonMessage(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                Widget homePage;
+                var buttonColor = _appBarColor;
+                if (widget.isLoggedIn) {
+                  buttonColor = _appBarColor;
+                }
+                if (snapshot.hasData) {
+                  homePage = MaterialButton(
+                    height: 70,
+                    minWidth: 50,
+                    splashColor: Colors.orangeAccent[100],
+                    color: buttonColor,
+                    elevation: 0.0,
+                    onPressed: () {
+                      if (buttonColor == _appBarColor && widget.role == false) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NewPostPage(
+                                      title: widget.title,
+                                      topicsAndSubtopics: topicsAndSubtopics,
+                                      backgroundColor: _backgroundColor,
+                                      appBarColor: _appBarColor,
+                                  )
+                          ),
+                        );
+                      } else
+                      if (buttonColor == _appBarColor && widget.role == true) {
+                        // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
+                      }
+                    },
+                    child: Text(
+                      snapshot.data,
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Raleway'),
+                    ),
+                  );
+                } else {
+                  homePage = Text("");
+                }
+                return homePage;
+              },
+            ),
+            MaterialButton(
               height: 70,
+              minWidth: 50,
               splashColor: Colors.orangeAccent[100],
               color: _appBarColor,
               elevation: 0.0,
               onPressed: () {
                 if (widget.isLoggedIn) {
-                  // FIXME: repeated code
-                  if (widget.role == false) { // perfil del profesor
-                    print("El profesor quiere ver su perfil");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfilePage(title: "Perfil", role: widget.role, backgroundColor: _backgroundColor, appBarColor: _appBarColor),
-                        ),
-                    );
-
-                  } else if (widget.role == true) { // perfil del alumno
-                    print("El alumno quiere ver su perfil");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(title: "Perfil", role: widget.role, backgroundColor: _backgroundColor, appBarColor: _appBarColor),
-                      ),
-                    );
-                  }
+                  deleteAuthToken();
+                  saveRole("");
+                  saveLastName("");
+                  saveFirstName("");
+                  saveEmail("");
+                  saveUserId("");
+                  render(false);
                 } else {
-                  _navigateAndDisplaySelection(context, widget.title, "login");
+                  _navigateAndDisplaySelection(
+                      context, widget.title, "register");
                 }
               },
               child: Text(
-                widget.isLoggedIn ? "Mi Perfil" : "Inicia Sesión",
-                style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
-              )
-          ),
-          FutureBuilder<String>(
-            future: getButtonMessage(),
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              Widget homePage;
-              var buttonColor = _appBarColor;
-              if (widget.isLoggedIn) {
-                buttonColor = _appBarColor;
-              }
-              if (snapshot.hasData) {
-                homePage = MaterialButton(
-                  height: 70,
-                  minWidth: 50,
-                  splashColor: Colors.orangeAccent[100],
-                  color: buttonColor,
-                  elevation: 0.0,
-                  onPressed: () {
-                      if (buttonColor == _appBarColor && widget.role == false) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NewPostPage(title: widget.title, topicsAndSubtopics: topicsAndSubtopics, backgroundColor: _backgroundColor)
-                          ),
-                        );
-                      } else if (buttonColor == _appBarColor && widget.role == true) {
-                        // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
-                      }
-                  },
-                  child: Text(
-                    snapshot.data,
-                    style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
-                  ),
-                );
-              } else {
-                homePage = Text("");
-              }
-              return homePage;
-            },
-          ),
-          MaterialButton(
-            height: 70,
-            minWidth: 50,
-            splashColor: Colors.orangeAccent[100],
-            color: _appBarColor,
-            elevation: 0.0,
-            onPressed: () {
-              if (widget.isLoggedIn) {
-                deleteAuthToken();
-                saveRole("");
-                saveLastName("");
-                saveFirstName("");
-                saveEmail("");
-                saveUserId("");
-                render(false);
-              } else {
-                _navigateAndDisplaySelection(context, widget.title, "register");
-              }
-            },
-            child: Text(
-              widget.isLoggedIn ? "Cerrar Sesión" : "Regístrate",
-              style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'Raleway'),
+                widget.isLoggedIn ? "Cerrar Sesión" : "Regístrate",
+                style: TextStyle  (
+                    color: Colors.white, fontSize: 15, fontFamily: 'Raleway'),
+              ),
             ),
-          ),
 
-        ],
-      ),
+          ],
+        ),
 
-      body: Row(
+        body: Row(
         children: [
           Expanded(
             flex: 2,
-            child:
-              Text(''),
+            child: Text(' ')
           ),
           Expanded(
             flex: 5,

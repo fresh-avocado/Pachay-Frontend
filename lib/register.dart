@@ -278,8 +278,11 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key, this.title}) : super(key: key);
+  RegisterPage({Key key, this.title, this.appBarColor, this.backgroundColor, this.appLogo }) : super(key: key);
   final String title;
+  final Color appBarColor;
+  final Color backgroundColor;
+  final Image appLogo;
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -313,9 +316,11 @@ class _RegisterPageState extends State<RegisterPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
         appBar: AppBar(
-            title: Text(widget.title),
+            title: widget.appLogo,
             centerTitle: true,
+            backgroundColor: widget.appBarColor,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
