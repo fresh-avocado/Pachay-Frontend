@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:async' show Future;
+import 'dart:convert' show jsonDecode, jsonEncode;
+import 'package:http/http.dart' as http show post, Response;
 import 'register.dart' show getSharedPref;
 import 'utilities.dart' show showAlertDialog;
-import 'dart:html' as html;
+import 'dart:html' as html show FileReader, InputElement, FileUploadInputElement;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
 
@@ -126,6 +126,8 @@ class _NewPostPageState extends State<NewPostPage> {
       print('Preloading file request failed.');
       return false;
     }
+
+    // TODO: el post debe tener un 'status': verified, unverified, rejected
 
     final http.Response response = await http.post(
       'http://localhost:8080/post',
@@ -367,7 +369,7 @@ class _NewPostPageState extends State<NewPostPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Topic:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                              Text("Tema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                               DropdownButton<String>(
                                 value: _topic,
                                 icon: Icon(Icons.arrow_downward),
@@ -392,7 +394,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                 }).toList(),
                               ),
                               Divider(thickness: 0,),
-                              Text("Subtopic:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                              Text("Subtema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                               DropdownButton<String>(
                                 value: _subtopic,
                                 icon: Icon(Icons.arrow_downward),
@@ -585,7 +587,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                       // FIXME: se demora cuando los archivos son muy grandes, mostrar un CircularProgressIndicator() mientras cargan
                                       postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
                                         if (success) {
-                                          showAlertDialog(context, "Éxito", "El Post fue subido exitósamente.", true);
+                                          showAlertDialog(context, "Éxito al subir el Post", "Espere a que uno de nuestros moderadores\nvalide su Post.", true);
                                         } else {
                                           showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
                                         }

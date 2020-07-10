@@ -39,6 +39,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       saveFirstName(responseBody['firstName']);
       saveLastName(responseBody['lastName']);
       saveRole(responseBody['role']);
+      // saveRole(responseBody['isModerator']);
       saveUserId(responseBody['userId']);
 
       return authToken;
@@ -107,7 +108,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                     color: Colors.blueAccent,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        /// FIXME: mandar data al servidor acá
                         String _email = email.text;
                         String _password = password.text;
                         print('Iniciando sesión de:\nEmail: $_email\nPassword: $_password');

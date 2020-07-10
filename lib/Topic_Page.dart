@@ -1,5 +1,4 @@
-import 'package:Pachay/Subtopic_Page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:Pachay/Subtopic_Page.dart' show SubtopicPage;
 import 'package:flutter/material.dart';
 
 class TopicPage extends StatefulWidget {

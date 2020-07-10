@@ -1,7 +1,7 @@
-import 'package:flutter/gestures.dart';
+import 'package:flutter/gestures.dart' show TapGestureRecognizer;
 import 'package:flutter/material.dart';
-import 'Post.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'Post.dart' show Post;
+import 'package:url_launcher/url_launcher.dart' show launch;
 import 'register.dart' show getSharedPref;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show jsonDecode;

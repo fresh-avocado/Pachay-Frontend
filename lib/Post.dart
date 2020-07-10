@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'utilities.dart' show showAlertDialog;
 import 'register.dart' show getSharedPref;
 
-/// FIXME:
-/// to avoid
+/// TODO: añadir un flag que añade dos botones: 'aceptar' y 'rechazar'
+/// este flag solo esta para los moderadores
 
 class Post {
   final String title;
@@ -23,8 +23,24 @@ class Post {
   final List<String> ejercicios;
   final List<String> solucionario;
   final List<String> material;
+  bool markedAsFavorite;
 
-  Post({Key key, this.title, this.desc, this.postId, this.author, this.datePublished, this.topic, this.subtopic, this.rating, this.youtubeLinks, this.hasRated, this.hasLiked, this.hasDisliked, this.ejercicios, this.solucionario, this.material});
+  Post({Key key,  this.title,
+                  this.desc,
+                  this.postId,
+                  this.author,
+                  this.datePublished,
+                  this.topic,
+                  this.subtopic,
+                  this.rating,
+                  this.youtubeLinks,
+                  this.hasRated,
+                  this.hasLiked,
+                  this.hasDisliked,
+                  this.ejercicios,
+                  this.solucionario,
+                  this.material,
+                  this.markedAsFavorite});
 
   factory Post.fromJson(Map<String, dynamic> body, String userId) {
     String author = "${body['author']['firstName']} ${body['author']['lastName']}";
@@ -51,6 +67,8 @@ class Post {
         ejercicios: (body['ejercicios'] == null) ? [] : body['ejercicios'].cast<String>(),
         solucionario: (body['solucionario'] == null) ? [] : body['solucionario'].cast<String>(),
         material: (body['soporte'] == null) ? [] : body['soporte'].cast<String>(),
+        markedAsFavorite: false
+        // TODO: agarrar markedAsFavorite del body
     );
   }
 }
@@ -60,9 +78,13 @@ class PostList extends StatefulWidget {
   final Color appBarColor;
   final bool inTeacherProfilePage;
   final context;
-  Color backgroundColor;
+  final Color backgroundColor;
+  final bool canDelete;
+  String cachedToken = "";
+  String cachedUserId = "";
+  final bool inModeradorProfilePage;
 
-  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context, this.backgroundColor}) : super(key: key);
+  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context, this.backgroundColor, @required this.canDelete, this.inModeradorProfilePage = false}) : super(key: key);
 
   @override
   _PostListState createState() => _PostListState();
@@ -79,11 +101,13 @@ class _PostListState extends State<PostList> {
   }
 
   Future<bool> deletePost(String id) async {
-    String token = await getSharedPref("authToken");
+    if (widget.cachedToken == "") {
+      widget.cachedToken = await getSharedPref("authToken");
+    }
     final http.Response response = await http.delete(
         'http://localhost:8080/post/$id',
         headers: <String, String>{
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer ${widget.cachedToken}",
           "Content-Type": "application/json"
     });
     if (response.statusCode == 200) {
@@ -91,6 +115,29 @@ class _PostListState extends State<PostList> {
     } else {
       return false;
     }
+  }
+
+  Future<String> markFavoritePost(String id, String action) async {
+    // FIXME: le mando el userId y el postId, o el postId me lo saca del token?
+//    if (widget.cachedUserId.isEmpty) {
+//      widget.cachedUserId = await getSharedPref("userId");
+//    }
+//    if (widget.cachedToken == "") {
+//      widget.cachedToken = await getSharedPref("authToken");
+//    }
+//    final http.Response response = await http.post(
+//        'http://localhost:8080/post/$action/$id',
+//        headers: <String, String>{
+//          "Authorization": "Bearer ${widget.cachedToken}",
+//        });
+//
+//    if (response.statusCode == 200) {
+//      Map<String, dynamic> responseBody = jsonDecode(response.body);
+//      return responseBody['favorite'].toString(); // 1 or 0 // FIXME: is this name ok?
+//    } else {
+//      print("Bad request");
+//      return "e";
+//    }
   }
 
   @override
@@ -109,6 +156,33 @@ class _PostListState extends State<PostList> {
                   ListTile(
                     leading: Icon(Icons.note),
                     title: Text(post.title),
+                    trailing: !widget.inTeacherProfilePage ? IconButton(
+                      icon: Icon( post.markedAsFavorite ? Icons.star : Icons.star_border ),
+                      onPressed: () {
+//                        markFavoritePost(post.postId, "favorite").then( (isFavorite) {
+//                          if (isFavorite != "e") {
+//                            post.markedAsFavorite = isFavorite == "1" ? true : false;
+//                            if (post.markedAsFavorite) {
+//                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como Favorito"), duration: Duration(seconds: 1),));
+//                            } else {
+//                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como No Favorito"), duration: Duration(seconds: 1),));
+//                            }
+//                            setState(() {});
+//                          } else {
+//                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Ocurrió un error"), duration: Duration(seconds: 1),));
+//                          }
+//                        });
+                          if (post.markedAsFavorite) {
+                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como No Favorito"), duration: Duration(seconds: 1),));
+                            post.markedAsFavorite = false;
+                            setState(() {});
+                          } else {
+                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como Favorito"), duration: Duration(seconds: 1),));
+                            post.markedAsFavorite = true;
+                            setState(() {});
+                          }
+                      },
+                    ) : Text(""),
                   ),
                   ListTile(
                     title: Text(post.desc),
@@ -129,7 +203,7 @@ class _PostListState extends State<PostList> {
                       ],
                     ),
                   ),
-                  if (widget.inTeacherProfilePage) IconButton(
+                  if (widget.inTeacherProfilePage && widget.canDelete) IconButton(
                     icon: Icon(Icons.delete),
                     color: Colors.redAccent,
                     onPressed: () {
@@ -175,6 +249,30 @@ class _PostListState extends State<PostList> {
                         },
                       );
                     },
+                  ),
+                  // FIXME: should be inModeratorProfilePage
+                  if (widget.inTeacherProfilePage) Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RaisedButton(
+                          color: Colors.green,
+                          child: Text("Aceptar"),
+                          onPressed: () {
+                            print("El post ha sido verificado");
+                          },
+                        ),
+                        RaisedButton(
+                          color: Colors.redAccent,
+                          child: Text("Rechazar"),
+                          onPressed: () {
+                            print("El post ha sido rechazado");
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

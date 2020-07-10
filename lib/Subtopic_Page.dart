@@ -1,8 +1,8 @@
-import 'package:Pachay/register.dart';
+import 'package:Pachay/register.dart' show getSharedPref;
 import 'package:flutter/material.dart';
-import 'package:Pachay/Post.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:Pachay/Post.dart' show Post, PostList;
+import 'package:http/http.dart' as http show Response, post;
+import 'dart:convert' show jsonDecode, jsonEncode;
 
 class SubtopicPage extends StatefulWidget {
   SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor, this.backgroundColor}) : super(key: key);
@@ -11,6 +11,8 @@ class SubtopicPage extends StatefulWidget {
   final Color appBarColor;
   String cachedUserId = "";
   Color backgroundColor;
+  String cachedToken = "";
+  bool orderByRating = false;
 
   @override
   _SubtopicPageState createState() => _SubtopicPageState();
@@ -45,12 +47,42 @@ class _SubtopicPageState extends State<SubtopicPage>{
     return parsePosts(response.body, widget.cachedUserId);
   }
 
+  Future<List<Post>> fetchPostsByTopicAndSubtopicOrderedByRating() async {
+    if (widget.cachedUserId.isEmpty) {
+      widget.cachedUserId = await getSharedPref("userId");
+    }
+    final http.Response response = await http.post(
+      'http://localhost:8080/post/topic/subtopic', // FIXME: change endpoint to order by rating
+      headers: <String, String>{
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(<String, String>{
+        "subtopic": widget.subtopic,
+      }),
+    );
+    return parsePosts(response.body, widget.cachedUserId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: widget.backgroundColor,
         appBar: AppBar(
             backgroundColor: widget.appBarColor,
+            actions: [
+              MaterialButton(
+                color: Color(0xFFE5F5DB),
+                child: Text(!widget.orderByRating ? "Ordenar por Rating" : "Ordenar por Fecha"),
+                onPressed: () {
+                  if (!widget.orderByRating) {
+                    widget.orderByRating = true;
+                  } else {
+                    widget.orderByRating = false;
+                  }
+                  setState(() {});
+                },
+              )
+            ],
             title: Text(widget.subtopic),
             centerTitle: true,
             leading: IconButton(
@@ -67,10 +99,12 @@ class _SubtopicPageState extends State<SubtopicPage>{
             Expanded(
               flex: 4,
               child: FutureBuilder<List<Post>>(
+                // FIXME: uncomment this when endpoint and backend funtionality are done
+//                future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
                 future: fetchPostsByTopicAndSubtopic(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor) : Center(child: CircularProgressIndicator());
+                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor, canDelete: false,) : Center(child: CircularProgressIndicator());
                 },
               ),
             ),

@@ -1,9 +1,9 @@
-import 'dart:convert';
+import 'dart:convert' show jsonEncode, jsonDecode;
 import 'package:flutter/material.dart';
-import 'package:validators/validators.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
+import 'package:validators/validators.dart' show isUppercase;
+import 'package:shared_preferences/shared_preferences.dart' show SharedPreferences;
+import 'package:http/http.dart' as http show post, Response;
+import 'dart:async' show Future;
 import 'utilities.dart' show showAlertDialog;
 
 class MyCustomForm extends StatefulWidget {
@@ -14,6 +14,16 @@ class MyCustomForm extends StatefulWidget {
   MyCustomFormState createState() {
     return MyCustomFormState();
   }
+}
+
+Future<void> saveHasBeenCongratulated(String what) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("hasBeenCongratulated", what);
+}
+
+Future<void> saveIsModerator(String what) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("isModerator", what);
 }
 
 Future<void> saveFirstName(String what) async {

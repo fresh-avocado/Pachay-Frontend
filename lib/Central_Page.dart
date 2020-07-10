@@ -18,8 +18,10 @@ class CentralPage extends StatefulWidget {
   String rolee;
   bool isLoggedIn;
   bool role = true; // alumno
+  bool isModerator;
+  bool hasBeenCongratulated;
 
-  CentralPage({Key key, this.title, this.isLoggedIn, this.rolee}) : super(key: key);
+  CentralPage({Key key, this.title, this.isLoggedIn, this.rolee, this.isModerator, this.hasBeenCongratulated}) : super(key: key);
 
   @override
   _CentralPageState createState() => _CentralPageState();
@@ -65,10 +67,8 @@ class _CentralPageState extends State<CentralPage> {
 
   void render(bool ak) {
     widget.isLoggedIn = ak;
-
     // profesor: role = 0
-    getSharedPref("role").then(
-            (value) {
+    getSharedPref("role").then( (value) {
           if (value == "0") { // profesor
             widget.role = false;
             widget.title = "Bienvenido Profesor";
@@ -80,17 +80,18 @@ class _CentralPageState extends State<CentralPage> {
           }
           setState(() {});
         });
-    setState(() {});
   }
 
   Future<String> getButtonMessage() async {
     String role = await getSharedPref("role");
+    // String _isModerator = await getSharedPref("isModerator");
     if (role == "0") {
       widget.role = false;
       return "Crear Post";
     } else if (role == "1") {
       widget.role = true;
       return "Buscar Post";
+      // TODO: si es moderador, retornar "Moderar Posts"
     } else {
       return "";
     }
@@ -127,6 +128,7 @@ class _CentralPageState extends State<CentralPage> {
           title: appLogo,
           centerTitle: true,
           actions: <Widget>[
+            // FIXME: si no esta loggeado se muestra un boton vacío
             MaterialButton(
                 height: 70,
                 splashColor: Colors.orangeAccent[100],
@@ -155,6 +157,7 @@ class _CentralPageState extends State<CentralPage> {
                           builder: (context) =>
                               ProfilePage(title: "Perfil",
                                   role: widget.role,
+                                  isModerator: widget.isModerator,
                                   backgroundColor: _backgroundColor,
                                   appBarColor: _appBarColor),
                         ),
@@ -179,7 +182,7 @@ class _CentralPageState extends State<CentralPage> {
                 if (widget.isLoggedIn) {
                   buttonColor = _appBarColor;
                 }
-                if (snapshot.hasData) {
+                if (snapshot.hasData && widget.isLoggedIn) {
                   homePage = MaterialButton(
                     height: 70,
                     minWidth: 50,
@@ -213,7 +216,7 @@ class _CentralPageState extends State<CentralPage> {
                     ),
                   );
                 } else {
-                  homePage = Text("");
+                  homePage = Container();
                 }
                 return homePage;
               },
@@ -232,10 +235,11 @@ class _CentralPageState extends State<CentralPage> {
                   saveFirstName("");
                   saveEmail("");
                   saveUserId("");
+                  // TODO: eliminate 'isModerator'
                   render(false);
+                  print("User logged out.");
                 } else {
-                  _navigateAndDisplaySelection(
-                      context, widget.title, "register");
+                  _navigateAndDisplaySelection(context, widget.title, "register");
                 }
               },
               child: Text(
@@ -287,7 +291,12 @@ class _CentralPageState extends State<CentralPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index], subtopics: topicsAndSubtopics[courses[index]], appBarColor: Color(hexcourseColor[index]), subtopicIcons: subtopicIcons[courses[index]], backgroundColor: _backgroundColor)),
+                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index],
+                                                                            subtopics: topicsAndSubtopics[courses[index]],
+                                                                            appBarColor: Color(hexcourseColor[index]),
+                                                                            subtopicIcons: subtopicIcons[courses[index]],
+                                                                            backgroundColor: _backgroundColor)
+                          ),
                         );
                       },
                     ),
