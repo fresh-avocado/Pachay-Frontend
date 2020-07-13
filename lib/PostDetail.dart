@@ -6,6 +6,8 @@ import 'register.dart' show getSharedPref;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show jsonDecode;
 
+// cristian flores
+
 class PostDetail extends StatefulWidget {
   PostDetail({Key key, this.post, this.appBarColor, this.backgroundColor}) : super(key: key) {
     if (post.hasRated) {
@@ -156,24 +158,51 @@ class _PostDetailState extends State<PostDetail> {
                       ),
                       margin: EdgeInsets.all(10),
                       child: Align(
-                        alignment: Alignment.topLeft,
+                        alignment: Alignment.topCenter,
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                           child: Column(
                             children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  widget.post.title,
-                                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.left
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: widget.appBarColor,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(10),
+                                child: Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      widget.post.title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
                                 ),
                               ),
+                              Padding(padding: EdgeInsets.all(5),),
                               Expanded(
                                 flex: 7,
                                 child: Text(
                                     widget.post.desc,
-                                    style: TextStyle(fontSize: 14),
+                                    style: TextStyle(fontSize: 17),
                                     textAlign: TextAlign.justify
                                 ),
                               ),
@@ -215,38 +244,65 @@ class _PostDetailState extends State<PostDetail> {
                         ],
                       ),
                       margin: EdgeInsets.all(10),
-//                      transform: Matrix4.rotationZ(0.1),
                       child: Center(
                         child: Column(
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Videos",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: widget.appBarColor, // FIXME: este color esta bien?
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ],
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
+                                margin: EdgeInsets.all(10),
+                                child: Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      "Videos",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                ),
                             ),
+                            Padding(padding: EdgeInsets.all(5),),
                             Expanded(
-                              flex: 1,
+                              flex: 3,
                               child: Center(
                                 child: ListView.separated(
                                   itemCount: widget.post.youtubeLinks.length,
                                   separatorBuilder: (BuildContext context, int index) => Divider(),
                                   itemBuilder: (BuildContext ctx, int idx) {
                                     return Align(
-                                      alignment: Alignment.topCenter,
+                                      alignment: Alignment.center,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           RichText(
                                             text: TextSpan(
-                                                text: "Link $idx",
-                                                style: TextStyle(color: Colors.blueAccent),
+                                              // TODO: HACER EL EMBED DE YOUTUBE
+                                                text: "Link ${idx+1}",
+                                                style: TextStyle(
+                                                    color: Colors.blueAccent,
+                                                    fontSize: 15
+                                                ),
                                                 recognizer: TapGestureRecognizer()
                                                   ..onTap = () {
                                                     // TODO: hacer el embed de los videos de youtube
@@ -283,31 +339,55 @@ class _PostDetailState extends State<PostDetail> {
                             spreadRadius: 5,
                             blurRadius: 7,
                             offset: Offset(0, 3), // changes position of shadow
+
                           ),
                         ],
                       ),
                       margin: EdgeInsets.all(10),
-//                      transform: Matrix4.rotationZ(0.1),
                       child: Column(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              "Archivos Adjuntos",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
+                          Container(
+                            decoration: BoxDecoration(
+                              color: widget.appBarColor, // FIXME: este color esta bien?
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)
                               ),
-                              textAlign: TextAlign.center,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            margin: EdgeInsets.all(10),
+                            child: Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Archivos Adjuntos",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
                             ),
                           ),
+                          Padding(padding: EdgeInsets.all(5),),
                           Expanded(
-                            flex: 1,
+                            flex: 3,
                             child: Text(
                               "Material de Soporte",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontSize: 25,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -324,8 +404,11 @@ class _PostDetailState extends State<PostDetail> {
                                     children: [
                                       RichText(
                                         text: TextSpan(
-                                            text: "Material de Soporte $idx",
-                                            style: TextStyle(color: Colors.blueAccent),
+                                            text: "Material de Soporte ${idx+1}",
+                                            style: TextStyle(
+                                                color: Colors.blueAccent,
+                                                fontSize: 15
+                                            ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
@@ -339,12 +422,12 @@ class _PostDetailState extends State<PostDetail> {
                             ),
                           ),
                           Expanded(
-                            flex: 1,
+                            flex: 3,
                             child: Text(
                               "Ejercicios",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontSize: 25,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -361,8 +444,11 @@ class _PostDetailState extends State<PostDetail> {
                                     children: [
                                       RichText(
                                         text: TextSpan(
-                                            text: "Ejercicio $idx",
-                                            style: TextStyle(color: Colors.blueAccent),
+                                            text: "Ejercicio ${idx+1}",
+                                            style: TextStyle(
+                                                color: Colors.blueAccent,
+                                                fontSize: 15
+                                            ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
@@ -376,12 +462,12 @@ class _PostDetailState extends State<PostDetail> {
                             ),
                           ),
                           Expanded(
-                            flex: 1,
+                            flex: 3,
                             child: Text(
                               "Solucionarios",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontSize: 25,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -398,8 +484,11 @@ class _PostDetailState extends State<PostDetail> {
                                     children: [
                                       RichText(
                                         text: TextSpan(
-                                            text: "Solucionario $idx",
-                                            style: TextStyle(color: Colors.blueAccent),
+                                            text: "Solucionario ${idx+1}",
+                                            style: TextStyle(
+                                                color: Colors.blueAccent,
+                                                fontSize: 15
+                                            ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
@@ -423,7 +512,7 @@ class _PostDetailState extends State<PostDetail> {
               flex: 2,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.orange,
+                  color: widget.appBarColor, // FIXME: este color esta bien?
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
@@ -446,7 +535,13 @@ class _PostDetailState extends State<PostDetail> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Nos gustaria saber tu opinión de este post:   "),
+                        Text(
+                            "Nos gustaria saber tu opinión de este post:   ",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                            ),
+                        ),
                         IconButton(
                             icon: Icon(Icons.tag_faces),
                             color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
@@ -457,7 +552,13 @@ class _PostDetailState extends State<PostDetail> {
                                 }
                               });
                             }),
-                        Text("${widget.post.rating}"),
+                        Text(
+                            "${widget.post.rating}",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold
+                            ),
+                        ),
                         IconButton(
                             color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
                             icon: Icon(Icons.face),
@@ -467,7 +568,7 @@ class _PostDetailState extends State<PostDetail> {
                                   rated(false, newRating);
                                 }
                               });
-                            }),
+                        }),
                       ],
                     ),
                   ),

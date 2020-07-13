@@ -19,10 +19,9 @@ class FavoritePosts extends StatefulWidget {
 class FavoritePostsState extends State<FavoritePosts> {
 
   Future<List<Post>> fetchFavoritePosts() async {
-    //FIXME: actualizar el request
     final String userId = await getSharedPref("userId");
     final token = await getSharedPref("authToken");
-    final response = await http.get("http://localhost:8080/post/", headers: {"Authorization": "Bearer $token"});
+    final response = await http.get("http://localhost:8080/post/favorites", headers: {"Authorization": "Bearer $token"});
     return parsePosts(response.body, userId);
   }
 
@@ -62,8 +61,6 @@ class FavoritePostsState extends State<FavoritePosts> {
             Expanded(
               flex: 30,
               child: FutureBuilder<List<Post>>(
-                // FIXME: uncomment this when endpoint and backend funtionality are done
-//                future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
                 future: fetchFavoritePosts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);

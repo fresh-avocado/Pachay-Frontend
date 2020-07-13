@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken, saveUserId;
+import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken, saveUserId, saveIsModerator;
 import 'utilities.dart' show showAlertDialog;
 
 class MyCustomForm extends StatefulWidget {
@@ -39,7 +39,9 @@ class MyCustomFormState extends State<MyCustomForm> {
       saveFirstName(responseBody['firstName']);
       saveLastName(responseBody['lastName']);
       saveRole(responseBody['role']);
+      // FIXME: corregir la linea de abajo
       // saveRole(responseBody['isModerator']);
+      // FIXME: cambiar lo de abajo, solo estoy probando
       saveUserId(responseBody['userId']);
 
       return authToken;

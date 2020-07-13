@@ -7,10 +7,11 @@ import 'package:http/http.dart' as http show get;
 // TODO: embellecer y mostrarle información relevante al usuario
 
 class RejectedPosts extends StatefulWidget {
-  RejectedPosts({Key key, this.title, this.backgroundColor, this.appBarColor}) : super(key: key);
+  RejectedPosts({Key key, this.title, this.backgroundColor, this.appBarColor, @required this.inModeratorView}) : super(key: key);
   final String title;
   Color backgroundColor;
   Color appBarColor;
+  final bool inModeratorView;
 
   @override
   RejectedPostsState createState() => RejectedPostsState();
@@ -47,21 +48,6 @@ class RejectedPostsState extends State<RejectedPosts> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Expanded(
-              flex: 3,
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  "Posts Rechazados",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 40,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
               flex: 30,
               child: FutureBuilder<List<Post>>(
                 future: fetchPostsByAuthor(),
@@ -69,7 +55,7 @@ class RejectedPostsState extends State<RejectedPosts> {
                   if (snapshot.hasError) print(snapshot.error);
                   return Padding(
                     padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
-                    child: snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true, context: context, canDelete: true,) : Center(child: CircularProgressIndicator()),
+                    child: snapshot.hasData ? PostList(posts: snapshot.data, inTeacherProfilePage: true, context: context, canDelete: true, inModeradorProfilePage: widget.inModeratorView,) : Center(child: CircularProgressIndicator()),
                   );
                 },
               ),

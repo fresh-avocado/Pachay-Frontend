@@ -3,6 +3,7 @@ import 'PostDetail.dart' show PostDetail;
 import 'package:http/http.dart' as http;
 import 'utilities.dart' show showAlertDialog;
 import 'register.dart' show getSharedPref;
+import 'dart:convert' show jsonDecode;
 
 /// TODO: añadir un flag que añade dos botones: 'aceptar' y 'rechazar'
 /// este flag solo esta para los moderadores
@@ -67,11 +68,12 @@ class Post {
         ejercicios: (body['ejercicios'] == null) ? [] : body['ejercicios'].cast<String>(),
         solucionario: (body['solucionario'] == null) ? [] : body['solucionario'].cast<String>(),
         material: (body['soporte'] == null) ? [] : body['soporte'].cast<String>(),
-        markedAsFavorite: false
-        // TODO: agarrar markedAsFavorite del body
+        markedAsFavorite: body['favorited']['$userId'] != null && body['favorited']['$userId'] == 1
     );
   }
 }
+
+// FIXME: no mostrar los posts favoritos al profesor?
 
 class PostList extends StatefulWidget {
   final List<Post> posts;
@@ -119,25 +121,28 @@ class _PostListState extends State<PostList> {
 
   Future<String> markFavoritePost(String id, String action) async {
     // FIXME: le mando el userId y el postId, o el postId me lo saca del token?
-//    if (widget.cachedUserId.isEmpty) {
-//      widget.cachedUserId = await getSharedPref("userId");
-//    }
-//    if (widget.cachedToken == "") {
-//      widget.cachedToken = await getSharedPref("authToken");
-//    }
-//    final http.Response response = await http.post(
-//        'http://localhost:8080/post/$action/$id',
-//        headers: <String, String>{
-//          "Authorization": "Bearer ${widget.cachedToken}",
-//        });
-//
-//    if (response.statusCode == 200) {
-//      Map<String, dynamic> responseBody = jsonDecode(response.body);
-//      return responseBody['favorite'].toString(); // 1 or 0 // FIXME: is this name ok?
-//    } else {
-//      print("Bad request");
-//      return "e";
-//    }
+    if (widget.cachedUserId.isEmpty) {
+      widget.cachedUserId = await getSharedPref("userId");
+    }
+    if (widget.cachedToken == "") {
+      widget.cachedToken = await getSharedPref("authToken");
+    }
+    final http.Response response = await http.post(
+        'http://localhost:8080/post/$action/$id',
+        headers: <String, String>{
+          "Authorization": "Bearer ${widget.cachedToken}",
+        });
+
+    if (response.statusCode == 200) {
+      // FIXME: responseBody is just an int
+      dynamic responseBody = jsonDecode(response.body);
+      print(responseBody);
+      String markedAsFavorite = responseBody.toString();
+      return markedAsFavorite;
+    } else {
+      print("Bad request");
+      return "e";
+    }
   }
 
   @override
@@ -159,28 +164,23 @@ class _PostListState extends State<PostList> {
                     trailing: !widget.inTeacherProfilePage ? IconButton(
                       icon: Icon( post.markedAsFavorite ? Icons.star : Icons.star_border ),
                       onPressed: () {
-//                        markFavoritePost(post.postId, "favorite").then( (isFavorite) {
-//                          if (isFavorite != "e") {
-//                            post.markedAsFavorite = isFavorite == "1" ? true : false;
-//                            if (post.markedAsFavorite) {
-//                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como Favorito"), duration: Duration(seconds: 1),));
-//                            } else {
-//                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como No Favorito"), duration: Duration(seconds: 1),));
-//                            }
-//                            setState(() {});
-//                          } else {
-//                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Ocurrió un error"), duration: Duration(seconds: 1),));
-//                          }
-//                        });
-                          if (post.markedAsFavorite) {
-                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como No Favorito"), duration: Duration(seconds: 1),));
-                            post.markedAsFavorite = false;
-                            setState(() {});
+                        markFavoritePost(post.postId, "favorite").then( (isFavorite) {
+                          if (isFavorite != "e") {
+                            if (isFavorite == "1") {
+                              post.markedAsFavorite = true;
+                              setState(() {});
+                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post marcado como favorito"), duration: Duration(seconds: 1),));
+                            } else if (isFavorite == "0") {
+                              post.markedAsFavorite = false;
+                              setState(() {});
+                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post ya no marcado como favorito"), duration: Duration(seconds: 1),));
+                            } else {
+                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Ocurrió un error"), duration: Duration(seconds: 2),));
+                            }
                           } else {
-                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Post Marcado como Favorito"), duration: Duration(seconds: 1),));
-                            post.markedAsFavorite = true;
-                            setState(() {});
+                            Scaffold.of(context).showSnackBar(SnackBar(content: Text("Ocurrió un error"), duration: Duration(seconds: 2),));
                           }
+                        });
                       },
                     ) : Text(""),
                   ),
@@ -250,8 +250,7 @@ class _PostListState extends State<PostList> {
                       );
                     },
                   ),
-                  // FIXME: should be inModeratorProfilePage
-                  if (widget.inTeacherProfilePage) Padding(
+                  if (widget.inModeradorProfilePage) Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -284,6 +283,7 @@ class _PostListState extends State<PostList> {
         },
       );
     } else {
+      // FIXME: los mensajes no estan bien, agregar mensaje para el moderador y cuando el lumno esta buscando posts favoritos
       if (widget.inTeacherProfilePage) {
         return Padding(
           padding: EdgeInsets.all(20),

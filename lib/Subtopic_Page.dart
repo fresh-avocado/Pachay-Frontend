@@ -52,7 +52,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
       widget.cachedUserId = await getSharedPref("userId");
     }
     final http.Response response = await http.post(
-      'http://localhost:8080/post/topic/subtopic', // FIXME: change endpoint to order by rating
+      'http://localhost:8080/post/topic/subtopic/rating',
       headers: <String, String>{
         "Content-Type": "application/json",
       },
@@ -99,9 +99,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
             Expanded(
               flex: 4,
               child: FutureBuilder<List<Post>>(
-                // FIXME: uncomment this when endpoint and backend funtionality are done
-//                future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
-                future: fetchPostsByTopicAndSubtopic(),
+                future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
                   return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor, canDelete: false,) : Center(child: CircularProgressIndicator());

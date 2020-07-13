@@ -134,11 +134,11 @@ class MyCustomFormState extends State<MyCustomForm> {
         'role': role
       }),
     );
-    // TODO: save user id
     if (response.statusCode == 200) {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String authToken = responseBody['jwt'];
       saveUserId(responseBody['userId']);
+      // TODO: check if registered user is a moderator and if so, save the kay-value pair
       print(responseBody);
       return authToken;
     } else if (response.statusCode == 400) {

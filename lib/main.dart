@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
       String authToken = await getSharedPref("authToken");
       String role = await getSharedPref("role");
       String firstName = await getSharedPref("firstName");
+      String _isModerator = await getSharedPref("isModerator");
       //TODO: check is has been congratulated
       //TODO: check if is moderator
-
       if (authToken == "") {
         return "PACHAY";
       } else if (role == "0") {
@@ -30,6 +30,13 @@ class MyApp extends StatelessWidget {
         // TODO: mandar request al comienzo, para ver si el alumno ha sido ascendido a moderador
         // TODO: si el request dice que es moderador, entonces setear 'isModerator = true;'
         // TODO: ademas mostrar un mensaje de felicidades solo 1 vez (guardar un key-value)
+        if (_isModerator == "0") {
+          isModerator = false;
+        } else if (_isModerator == "1") {
+          isModerator = true;
+        } else {
+          //
+        }
 
         return "Bienvenido $firstName";
       } else {

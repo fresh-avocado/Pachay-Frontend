@@ -1,3 +1,4 @@
+import 'package:Pachay/ModeratorPage.dart';
 import 'package:flutter/material.dart';
 import 'register.dart';
 import 'Topic_Page.dart';
@@ -84,21 +85,25 @@ class _CentralPageState extends State<CentralPage> {
 
   Future<String> getButtonMessage() async {
     String role = await getSharedPref("role");
-    // String _isModerator = await getSharedPref("isModerator");
+    String _isModerator = await getSharedPref("isModerator");
+    /// String _isModerator = await getSharedPref("isModerator");
     if (role == "0") {
       widget.role = false;
       return "Crear Post";
     } else if (role == "1") {
       widget.role = true;
-      return "Buscar Post";
-      // TODO: si es moderador, retornar "Moderar Posts"
+      if (_isModerator == "1") {
+        widget.isModerator = true;
+        return "Moderar Posts";
+      } else {
+        return "Buscar Post";
+      }
     } else {
       return "";
     }
   }
 
-  _navigateAndDisplaySelection(BuildContext context, String title,
-      String where) async {
+  _navigateAndDisplaySelection(BuildContext context, String title, String where) async {
     // a little bit of repeated code
     if (where == "login") {
       final didLogIn = await Navigator.push(
@@ -204,7 +209,20 @@ class _CentralPageState extends State<CentralPage> {
                           ),
                         );
                       } else
-                      if (buttonColor == _appBarColor && widget.role == true) {
+                      if (buttonColor == _appBarColor && widget.isModerator) {
+                        // TODO: mandar al alumno a la pagina que muestra los posts que se tienen que moderar
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ModeratorPage(
+                                      title: "Moderar",
+                                      appBarColor: _appBarColor,
+                                      backgroundColor: _backgroundColor
+                                  )
+                          ),
+                        );
+                      } else if (buttonColor == _appBarColor && widget.role == true) {
                         // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
                       }
                     },
@@ -235,7 +253,8 @@ class _CentralPageState extends State<CentralPage> {
                   saveFirstName("");
                   saveEmail("");
                   saveUserId("");
-                  // TODO: eliminate 'isModerator'
+                  saveIsModerator("");
+                  widget.isModerator = false;
                   render(false);
                   print("User logged out.");
                 } else {
