@@ -38,18 +38,19 @@ class MyCustomFormState extends State<MyCustomForm> {
 
       saveFirstName(responseBody['firstName']);
       saveLastName(responseBody['lastName']);
-      saveRole(responseBody['role']);
-      // FIXME: corregir la linea de abajo
-      // saveRole(responseBody['isModerator']);
-      // FIXME: cambiar lo de abajo, solo estoy probando
-      saveUserId(responseBody['userId']);
+      if (responseBody['role'] == "2") {
+        saveRole("1");
+        saveIsModerator("1");
+      } else {
+        saveRole(responseBody['role']);
+      }
 
+      saveUserId(responseBody['userId']);
       return authToken;
     } else if (response.statusCode == 400) {
       print('Email o contraseña invalidas');
       return "e";
     } else {
-
       print("Unexpected error");
       return "";
     }

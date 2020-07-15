@@ -19,11 +19,11 @@ class UnverifiedPosts extends StatefulWidget {
 
 class UnverifiedPostsState extends State<UnverifiedPosts> {
 
-  Future<List<Post>> fetchPostsByAuthor() async {
-    // TODO: get all unverified posts
+  Future<List<Post>> fetchNotValidatedPosts() async {
+    // TODO: chongo en el backend
     final String userId = await getSharedPref("userId");
     final token = await getSharedPref("authToken");
-    final response = await http.get("http://localhost:8080/post/author", headers: {"Authorization": "Bearer $token"});
+    final response = await http.get("http://localhost:8080/post/validate", headers: {"Authorization": "Bearer $token"});
     return parsePosts(response.body, userId);
   }
 
@@ -50,7 +50,7 @@ class UnverifiedPostsState extends State<UnverifiedPosts> {
             Expanded(
               flex: 30,
               child: FutureBuilder<List<Post>>(
-                future: fetchPostsByAuthor(),
+                future: fetchNotValidatedPosts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
                   return Padding(

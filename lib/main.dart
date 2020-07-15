@@ -1,6 +1,6 @@
-import 'register.dart';
+import 'register.dart' show getSharedPref;
 import 'package:flutter/material.dart';
-import 'Central_Page.dart';
+import 'Central_Page.dart' show CentralPage;
 
 void main() => runApp(MyApp());
 
@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
       String role = await getSharedPref("role");
       String firstName = await getSharedPref("firstName");
       String _isModerator = await getSharedPref("isModerator");
-      //TODO: check is has been congratulated
-      //TODO: check if is moderator
       if (authToken == "") {
         return "PACHAY";
       } else if (role == "0") {
@@ -27,15 +25,12 @@ class MyApp extends StatelessWidget {
         return "Bienvenido Profesor";
       } else if (role == "1") {
         role = "1";
-        // TODO: mandar request al comienzo, para ver si el alumno ha sido ascendido a moderador
-        // TODO: si el request dice que es moderador, entonces setear 'isModerator = true;'
-        // TODO: ademas mostrar un mensaje de felicidades solo 1 vez (guardar un key-value)
         if (_isModerator == "0") {
-          isModerator = false;
+
         } else if (_isModerator == "1") {
           isModerator = true;
         } else {
-          //
+
         }
 
         return "Bienvenido $firstName";

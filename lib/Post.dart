@@ -145,6 +145,40 @@ class _PostListState extends State<PostList> {
     }
   }
 
+  Future<bool> acceptPost(String id) async {
+    if (widget.cachedToken == "") {
+      widget.cachedToken = await getSharedPref("authToken");
+    }
+    final http.Response response = await http.post(
+        'http://localhost:8080/post/validate/$id',
+        headers: <String, String>{
+          "Authorization": "Bearer ${widget.cachedToken}",
+          "Content-Type": "application/json"
+        });
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> rejectPost(String id) async {
+    if (widget.cachedToken == "") {
+      widget.cachedToken = await getSharedPref("authToken");
+    }
+    final http.Response response = await http.post(
+        'http://localhost:8080/post/reject/$id',
+        headers: <String, String>{
+          "Authorization": "Bearer ${widget.cachedToken}",
+          "Content-Type": "application/json"
+        });
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.posts.length > 0) {
@@ -203,7 +237,7 @@ class _PostListState extends State<PostList> {
                       ],
                     ),
                   ),
-                  if (widget.inTeacherProfilePage && widget.canDelete) IconButton(
+                  if ((widget.inModeradorProfilePage || widget.inTeacherProfilePage) && widget.canDelete) IconButton(
                     icon: Icon(Icons.delete),
                     color: Colors.redAccent,
                     onPressed: () {
@@ -260,14 +294,28 @@ class _PostListState extends State<PostList> {
                           color: Colors.green,
                           child: Text("Aceptar"),
                           onPressed: () {
-                            print("El post ha sido verificado");
+                            acceptPost(post.postId).then( (successfullyValidated) {
+                              if (successfullyValidated) {
+                                setState(() {}); // refresh the page in order to no longer see the accepted post
+                                showAlertDialog(widget.context, "Éxito", "El Post ha sido validado.", false);
+                              } else {
+                                showAlertDialog(widget.context, "Oops", "Ocurrió un error. Inténtalo de nuevo.", false);
+                              }
+                            });
                           },
                         ),
                         RaisedButton(
                           color: Colors.redAccent,
                           child: Text("Rechazar"),
                           onPressed: () {
-                            print("El post ha sido rechazado");
+                            rejectPost(post.postId).then( (successfullyRejected) {
+                              if (successfullyRejected) {
+                                setState(() {}); // refresh the page in order to no longer see the accepted post
+                                showAlertDialog(widget.context, "Éxito", "El Post ha sido rechazado.", false);
+                              } else {
+                                showAlertDialog(widget.context, "Oops", "Ocurrió un error. Inténtalo de nuevo.", false);
+                              }
+                            });
                           },
                         ),
                       ],

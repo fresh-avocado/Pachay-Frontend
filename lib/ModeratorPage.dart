@@ -1,7 +1,4 @@
-import 'package:Pachay/RejectedPosts.dart' show RejectedPosts;
 import 'package:Pachay/UnverifiedPosts.dart' show UnverifiedPosts;
-import 'package:Pachay/VerifiedPosts.dart' show VerifiedPosts;
-import 'package:Pachay/FavoritePosts.dart' show FavoritePosts;
 import 'package:flutter/material.dart';
 import 'register.dart' show getSharedPref;
 
@@ -64,25 +61,6 @@ class ModeratorPageState extends State<ModeratorPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   RaisedButton(
-                    child: Text("Posts Verificados"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                VerifiedPosts(
-                                  title: "Posts Verificados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                  inModeratorView: true,
-                                )
-                        ),
-                      );
-                      print("Posts Verificados");
-                    },
-                  ),
-                  RaisedButton(
                     child: Text("Posts No Verificados"),
                     color: widget.appBarColor,
                     onPressed: () {
@@ -99,25 +77,6 @@ class ModeratorPageState extends State<ModeratorPage> {
                         ),
                       );
                       print("Posts No Verificados");
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text("Posts Rechazados"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                RejectedPosts(
-                                  title: "Posts Rechazados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                  inModeratorView: true,
-                                )
-                        ),
-                      );
-                      print("Posts Rechazados");
                     },
                   ),
                 ],

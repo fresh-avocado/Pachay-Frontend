@@ -1,7 +1,6 @@
-import 'package:Pachay/RejectedPosts.dart' show RejectedPosts;
 import 'package:Pachay/UnverifiedPosts.dart' show UnverifiedPosts;
-import 'package:Pachay/VerifiedPosts.dart' show VerifiedPosts;
 import 'package:Pachay/FavoritePosts.dart' show FavoritePosts;
+import 'package:Pachay/VerifiedPosts.dart';
 import 'package:flutter/material.dart';
 import 'register.dart' show getSharedPref;
 import 'package:Pachay/Post.dart' show Post;
@@ -103,25 +102,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   RaisedButton(
-                    child: Text("Posts Verificados"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                VerifiedPosts(
-                                  title: "Posts Verificados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                  inModeratorView: false,
-                                )
-                        ),
-                      );
-                      print("Posts Verificados");
-                    },
-                  ),
-                  RaisedButton(
                     child: Text("Posts No Verificados"),
                     color: widget.appBarColor,
                     onPressed: () {
@@ -140,23 +120,32 @@ class _ProfilePageState extends State<ProfilePage> {
                       print("Posts No Verificados");
                     },
                   ),
+                ],
+              ),
+            ),
+            if (!widget.role) Expanded(
+              flex: 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
                   RaisedButton(
-                    child: Text("Posts Rechazados"),
+                    child: Text("Posts Verificados"),
                     color: widget.appBarColor,
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                RejectedPosts(
-                                  title: "Posts Rechazados",
+                                VerifiedPosts(
+                                  title: "Posts Verificados",
                                   backgroundColor: widget.backgroundColor,
                                   appBarColor: widget.appBarColor,
                                   inModeratorView: false,
                                 )
                         ),
                       );
-                      print("Posts Rechazados");
+                      print("Posts No Verificados");
                     },
                   ),
                 ],

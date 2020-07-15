@@ -10,9 +10,6 @@ import 'Profile.dart';
 // TODO: mencionar que tambien funciona en iOS y Android
 // TODO: mencionar que lo hicimos desde cero sin ningun template
 
-/// IMPORTANTE:
-// TODO: mostar el logo de pachay en la top-left corner en el Main Page.
-
 class CentralPage extends StatefulWidget {
 
   String title;
@@ -210,7 +207,6 @@ class _CentralPageState extends State<CentralPage> {
                         );
                       } else
                       if (buttonColor == _appBarColor && widget.isModerator) {
-                        // TODO: mandar al alumno a la pagina que muestra los posts que se tienen que moderar
                         Navigator.push(
                           context,
                           MaterialPageRoute(

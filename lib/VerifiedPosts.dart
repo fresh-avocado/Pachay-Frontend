@@ -20,7 +20,6 @@ class VerifiedPosts extends StatefulWidget {
 class VerifiedPostsState extends State<VerifiedPosts> {
 
   Future<List<Post>> fetchPostsByAuthor() async {
-    // TODO: get all verified posts
     final String userId = await getSharedPref("userId");
     final token = await getSharedPref("authToken");
     final response = await http.get("http://localhost:8080/post/author", headers: {"Authorization": "Bearer $token"});

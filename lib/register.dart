@@ -131,14 +131,14 @@ class MyCustomFormState extends State<MyCustomForm> {
         'lastName': lastName,
         'email': email,
         'password': password,
-        'role': role
+        'role': role // FIXME: cambiarlo a 'role'
       }),
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       String authToken = responseBody['jwt'];
       saveUserId(responseBody['userId']);
-      // TODO: check if registered user is a moderator and if so, save the kay-value pair
+      // FIXME: setear el role desde aca
       print(responseBody);
       return authToken;
     } else if (response.statusCode == 400) {
@@ -173,7 +173,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                     if (value.isEmpty) {
                       return '¿Como te llamas?';
                     }
-                    /// TODO: validar nombres, que no contengan caracteres locos
                     return null;
                   },
                 ),
@@ -192,7 +191,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                     if (value.isEmpty) {
                       return 'Dinos tu apellido porfavor';
                     }
-                    /// TODO: validar apellidos, que no contengan caracteres locos
                     return null;
                   },
                 ),
