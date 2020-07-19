@@ -121,7 +121,7 @@ class _PostListState extends State<PostList> {
 
   Future<String> markFavoritePost(String id, String action) async {
     // FIXME: le mando el userId y el postId, o el postId me lo saca del token?
-    if (widget.cachedUserId.isEmpty) {
+    if (widget.cachedUserId == "") {
       widget.cachedUserId = await getSharedPref("userId");
     }
     if (widget.cachedToken == "") {

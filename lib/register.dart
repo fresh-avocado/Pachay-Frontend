@@ -131,7 +131,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         'lastName': lastName,
         'email': email,
         'password': password,
-        'role': role // FIXME: cambiarlo a 'role'
+        'role': role
       }),
     );
     if (response.statusCode == 200) {

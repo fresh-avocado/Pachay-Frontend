@@ -32,7 +32,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
   }
 
   Future<List<Post>> fetchPostsByTopicAndSubtopic() async {
-    if (widget.cachedUserId.isEmpty) {
+    if (widget.cachedUserId == "") {
       widget.cachedUserId = await getSharedPref("userId");
     }
     final http.Response response = await http.post(
@@ -48,7 +48,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
   }
 
   Future<List<Post>> fetchPostsByTopicAndSubtopicOrderedByRating() async {
-    if (widget.cachedUserId.isEmpty) {
+    if (widget.cachedUserId == "") {
       widget.cachedUserId = await getSharedPref("userId");
     }
     final http.Response response = await http.post(
