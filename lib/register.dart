@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart' show SharedPreferenc
 import 'package:http/http.dart' as http show post, Response;
 import 'dart:async' show Future;
 import 'utilities.dart' show showAlertDialog;
+import 'globals.dart' as globals;
 
 class MyCustomForm extends StatefulWidget {
   MyCustomForm({Key key, this.userRole}): super(key: key);
@@ -244,7 +245,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   width: 150.0,
                   height: 50.0,
                   child: RaisedButton(
-                    color: Colors.blueAccent,
+                    color: globals.appBarColor,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         String _email = email.text;
@@ -286,11 +287,8 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key key, this.title, this.appBarColor, this.backgroundColor, this.appLogo }) : super(key: key);
+  RegisterPage({Key key, this.title }) : super(key: key);
   final String title;
-  final Color appBarColor;
-  final Color backgroundColor;
-  final Image appLogo;
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -324,11 +322,11 @@ class _RegisterPageState extends State<RegisterPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: globals.backgroundColor,
         appBar: AppBar(
-            title: widget.appLogo,
+            title: globals.appLogo,
             centerTitle: true,
-            backgroundColor: widget.appBarColor,
+            backgroundColor: globals.appBarColor,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -336,110 +334,113 @@ class _RegisterPageState extends State<RegisterPage>{
               },
             )
         ),
-        body: Center(
-            child: Visibility(
-              visible: !_isVisible,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text('', textAlign: TextAlign.center,),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Divider(height: 20,),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "Regístrate",
-                            style: TextStyle(color: Colors.blue[900], fontSize: 50, fontFamily: 'Raleway'),
+        body: Container(
+          decoration: globals.decoBackground,
+          child: Center(
+              child: Visibility(
+                visible: !_isVisible,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text('', textAlign: TextAlign.center,),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Divider(height: 20,),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "Regístrate",
+                              style: TextStyle(color: globals.alterColor, fontSize: 50, fontFamily: 'Raleway'),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 8,
-                          child: MyCustomForm(userRole: userRole,),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text('', textAlign: TextAlign.center,),
-                  ),
-                ],
-              ),
-              replacement: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(padding: const EdgeInsets.only(top: 1),),
-                  ),
-                  Card(
-                    color: Colors.white,
-                    shadowColor: Colors.grey,
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                        userRole = 0;
-                        showReg();
-                      },
-                      child: Container(
-                          width: 250,
-                          height: 250,
-                          child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 20),
-                                ),
-                                Text('Soy Profesor', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                ),
-                                Icon(Icons.business_center, size: 150.0, color: Colors.grey,),
-                              ]
-                          )
+                          Expanded(
+                            flex: 8,
+                            child: MyCustomForm(userRole: userRole,),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(padding: const EdgeInsets.only(top: 1),),
-                  ),
-                  Card(
-                    color: Colors.white,
-                    shadowColor: Colors.grey,
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                        userRole = 1;
-                        showReg();
-                      },
-                      child: Container(
-                          width: 250,
-                          height: 250,
-                          child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 20),
-                                ),
-                                Text('Soy Estudiante', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                ),
-                                Icon(Icons.book, size: 150.0, color: Colors.grey,),
-                              ]
-                          )
+                    Expanded(
+                      flex: 2,
+                      child: Text('', textAlign: TextAlign.center,),
+                    ),
+                  ],
+                ),
+                replacement: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(padding: const EdgeInsets.only(top: 1),),
+                    ),
+                    Card(
+                      color: Colors.white,
+                      shadowColor: Colors.grey,
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(30),
+                        onTap: () {
+                          userRole = 0;
+                          showReg();
+                        },
+                        child: Container(
+                            width: 250,
+                            height: 250,
+                            child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                  ),
+                                  Text('Soy Profesor', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                  ),
+                                  Icon(Icons.business_center, size: 150.0, color: Colors.grey,),
+                                ]
+                            )
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(padding: const EdgeInsets.only(top: 1),),
-                  ),
-                ],
-              ),
-            )
+                    Expanded(
+                      child: Padding(padding: const EdgeInsets.only(top: 1),),
+                    ),
+                    Card(
+                      color: Colors.white,
+                      shadowColor: Colors.grey,
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(30),
+                        onTap: () {
+                          userRole = 1;
+                          showReg();
+                        },
+                        child: Container(
+                            width: 250,
+                            height: 250,
+                            child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                  ),
+                                  Text('Soy Estudiante', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                  ),
+                                  Icon(Icons.book, size: 150.0, color: Colors.grey,),
+                                ]
+                            )
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(padding: const EdgeInsets.only(top: 1),),
+                    ),
+                  ],
+                ),
+              )
+          ),
         ),
     );
   }

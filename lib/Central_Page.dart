@@ -1,10 +1,12 @@
 import 'package:Pachay/ModeratorPage.dart';
 import 'package:flutter/material.dart';
+//import 'package:bordered_text/bordered_text.dart';
 import 'register.dart';
 import 'Topic_Page.dart';
 import 'login.dart';
 import 'New_Post.dart';
 import 'Profile.dart';
+import 'globals.dart' as globals;
 
 // TODO: resolver TODO's
 // TODO: mencionar que tambien funciona en iOS y Android
@@ -26,14 +28,6 @@ class CentralPage extends StatefulWidget {
 }
 
 class _CentralPageState extends State<CentralPage> {
-
-  /// PACHAY'S BACKGROUND COLOR
-  Color _backgroundColor = Color(0xFFE5F5DB);
-  Color _appBarColor = Color(0xFF587647);
-  Image appLogo = new Image.asset('pachaylogo/Pachay_palabra_bordeduro.png',
-    fit: BoxFit.contain,
-    height: 130,
-  );
 
   final Map<String, List<String>> topicsAndSubtopics = {
     "Matemática": ["Ecuaciones", "Geometría"],
@@ -105,7 +99,7 @@ class _CentralPageState extends State<CentralPage> {
     if (where == "login") {
       final didLogIn = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage(title: title, appBarColor: _appBarColor, backgroudColor: _backgroundColor, appLogo: appLogo,)),
+        MaterialPageRoute(builder: (context) => LoginPage(title: title,)),
       );
       if (didLogIn) {
         render(true);
@@ -113,7 +107,7 @@ class _CentralPageState extends State<CentralPage> {
     } else if (where == "register") {
       final didRegister = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RegisterPage(title: title, appBarColor: _appBarColor, backgroundColor: _backgroundColor, appLogo: appLogo,)),
+        MaterialPageRoute(builder: (context) => RegisterPage(title: title,)),
       );
       if (didRegister) {
         render(true);
@@ -124,17 +118,17 @@ class _CentralPageState extends State<CentralPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: _backgroundColor,
+        backgroundColor: globals.backgroundColor,
         appBar: AppBar(
-          backgroundColor: _appBarColor,
-          title: appLogo,
+          backgroundColor: globals.appBarColor,
+          title: globals.appLogo,
           centerTitle: true,
           actions: <Widget>[
             // FIXME: si no esta loggeado se muestra un boton vacío
             MaterialButton(
                 height: 70,
                 splashColor: Colors.orangeAccent[100],
-                color: Color(0xFF587647),
+                color: globals.appBarColor,
                 elevation: 0.0,
                 onPressed: () {
                   if (widget.isLoggedIn) {
@@ -146,9 +140,7 @@ class _CentralPageState extends State<CentralPage> {
                         MaterialPageRoute(
                           builder: (context) =>
                               ProfilePage(title: "Perfil",
-                                  role: widget.role,
-                                  backgroundColor: _backgroundColor,
-                                  appBarColor: _appBarColor),
+                                  role: widget.role,)
                         ),
                       );
                     } else if (widget.role == true) { // perfil del alumno
@@ -159,9 +151,7 @@ class _CentralPageState extends State<CentralPage> {
                           builder: (context) =>
                               ProfilePage(title: "Perfil",
                                   role: widget.role,
-                                  isModerator: widget.isModerator,
-                                  backgroundColor: _backgroundColor,
-                                  appBarColor: _appBarColor),
+                                  isModerator: widget.isModerator,),
                         ),
                       );
                     }
@@ -180,9 +170,9 @@ class _CentralPageState extends State<CentralPage> {
               future: getButtonMessage(),
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 Widget homePage;
-                var buttonColor = _appBarColor;
+                var buttonColor = globals.appBarColor;
                 if (widget.isLoggedIn) {
-                  buttonColor = _appBarColor;
+                  buttonColor = globals.appBarColor;
                 }
                 if (snapshot.hasData && widget.isLoggedIn) {
                   homePage = MaterialButton(
@@ -192,7 +182,7 @@ class _CentralPageState extends State<CentralPage> {
                     color: buttonColor,
                     elevation: 0.0,
                     onPressed: () {
-                      if (buttonColor == _appBarColor && widget.role == false) {
+                      if (buttonColor == globals.appBarColor && widget.role == false) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -200,25 +190,25 @@ class _CentralPageState extends State<CentralPage> {
                                   NewPostPage(
                                       title: widget.title,
                                       topicsAndSubtopics: topicsAndSubtopics,
-                                      backgroundColor: _backgroundColor,
-                                      appBarColor: _appBarColor,
+                                      backgroundColor: globals.backgroundColor,
+                                      appBarColor: globals.appBarColor,
                                   )
                           ),
                         );
                       } else
-                      if (buttonColor == _appBarColor && widget.isModerator) {
+                      if (buttonColor == globals.appBarColor && widget.isModerator) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   ModeratorPage(
                                       title: "Moderar",
-                                      appBarColor: _appBarColor,
-                                      backgroundColor: _backgroundColor
+                                      appBarColor: globals.appBarColor,
+                                      backgroundColor: globals.backgroundColor
                                   )
                           ),
                         );
-                      } else if (buttonColor == _appBarColor && widget.role == true) {
+                      } else if (buttonColor == globals.appBarColor && widget.role == true) {
                         // TODO: mandar al usuario a una pagina que permite hacer búsquedas de contenido mediante keyword
                       }
                     },
@@ -239,7 +229,7 @@ class _CentralPageState extends State<CentralPage> {
               height: 70,
               minWidth: 50,
               splashColor: Colors.orangeAccent[100],
-              color: _appBarColor,
+              color: globals.appBarColor,
               elevation: 0.0,
               onPressed: () {
                 if (widget.isLoggedIn) {
@@ -267,67 +257,70 @@ class _CentralPageState extends State<CentralPage> {
           ],
         ),
 
-        body: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(' ')
-          ),
-          Expanded(
-            flex: 5,
-            child: Padding(
-              padding: EdgeInsets.all(30.0),
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: topicsAndSubtopics.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    margin: EdgeInsets.all(15.0),
-                    elevation: 5,
-                    color: Color(hexcourseColor[index]),
-                    child: InkWell(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(""),
-                          ListTile(
-                            leading: courseIcons[index],
-                            title: Text(
-                              courses[index],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold
+        body: Container(
+          decoration: globals.decoBackground,
+          child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(' ')
+            ),
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: EdgeInsets.all(30.0),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: topicsAndSubtopics.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      margin: EdgeInsets.all(15.0),
+                      elevation: 5,
+                      color: Color(hexcourseColor[index]),
+                      child: InkWell(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(""),
+                            ListTile(
+                              leading: courseIcons[index],
+                              title: Text(
+                                courses[index],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
                               ),
+                              trailing: Icon(Icons.arrow_forward_ios),
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios),
-                          ),
-                          Text("")
-                        ],
+                            Text("")
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TopicPage(
+                                topic: courses[index],
+                                subtopics: topicsAndSubtopics[courses[index]],
+                                appBarColor: Color(hexcourseColor[index]),
+                                subtopicIcons: subtopicIcons[courses[index]],
+                            )
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TopicPage(topic: courses[index],
-                                                                            subtopics: topicsAndSubtopics[courses[index]],
-                                                                            appBarColor: Color(hexcourseColor[index]),
-                                                                            subtopicIcons: subtopicIcons[courses[index]],
-                                                                            backgroundColor: _backgroundColor)
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                scrollDirection: Axis.vertical,
+                    );
+                  },
+                  scrollDirection: Axis.vertical,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child:
-            Text(''),
-          ),
-        ],
+            Expanded(
+              flex: 2,
+              child: Text("")
+            ),
+          ],
       ),
+        ),
     );
   }
 }

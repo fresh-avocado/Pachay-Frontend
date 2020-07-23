@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http show post, Response;
 import 'register.dart' show getSharedPref;
 import 'utilities.dart' show showAlertDialog;
 import 'dart:html' as html show FileReader, InputElement, FileUploadInputElement;
+import 'globals.dart' as globals;
 
 // TODO: validar que los links sean links de youtbe BIEN ESCRITOS, si existen o no, es no nos concierne
 
@@ -184,240 +185,242 @@ class _NewPostPageState extends State<NewPostPage> {
               },
             )
           ),
-          body: SingleChildScrollView(
-            child: Center(
-              child: Form(
-                autovalidate: true,
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
+          body: Container(
+            decoration: globals.decoBackground,
+            child: SingleChildScrollView(
+              child: Center(
+                child: Form(
+                  autovalidate: true,
+                  key: _formKey,
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)
                             ),
-                          ],
-                        ),
-                        margin: EdgeInsets.all(10),
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 2,
-                                    child: TextFormField(
-                                      maxLength: 50,
-                                      decoration: InputDecoration(
-                                          labelText: "Título de Post",
-                                          fillColor: Colors.white
-                                      ),
-                                      controller: postTitle,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'El Post debe tener título.';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(30.0),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Divider(height: 20),
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 40),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: TextFormField(
-                                      maxLines: 5,
-                                      maxLength: 1000,
-                                      controller: postDesc,
-                                      decoration: InputDecoration(
-                                        labelText: 'Descripción del Post',
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'El Post debe tener una breve descripción.';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(30.0),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Divider(height: 20),
-                              Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text("Links a videos de YouTube",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                children: List.generate(linkWidgets.length, (i) {
-                                  return linkWidgets[i];
-                                }),
-                              ),
-                              Divider(height: 20, color: Colors.transparent,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text("Añadir Link",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: FloatingActionButton(
-                                      heroTag: 1,
-                                      child: Text(
-                                        '+',
-                                        style: TextStyle(fontSize: 20.0),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          linkWidgets.add(Link());
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: FloatingActionButton(
-                                      heroTag: 2,
-                                      child: Text(
-                                        '-',
-                                        style: TextStyle(fontSize: 20.0),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          linkWidgets.removeLast();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Text("Eliminar Link",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
+                          margin: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: TextFormField(
+                                        maxLength: 50,
+                                        decoration: InputDecoration(
+                                            labelText: "Título de Post",
+                                            fillColor: Colors.white
+                                        ),
+                                        controller: postTitle,
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'El Post debe tener título.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(30.0),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Divider(height: 20),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10, bottom: 40),
+                                    ),
+                                    Expanded(
+                                      flex: 5,
+                                      child: TextFormField(
+                                        maxLines: 5,
+                                        maxLength: 1000,
+                                        controller: postDesc,
+                                        decoration: InputDecoration(
+                                          labelText: 'Descripción del Post',
+                                        ),
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'El Post debe tener una breve descripción.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(30.0),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Divider(height: 20),
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Text("Links a videos de YouTube",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  children: List.generate(linkWidgets.length, (i) {
+                                    return linkWidgets[i];
+                                  }),
+                                ),
+                                Divider(height: 20, color: Colors.transparent,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text("Añadir Link",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: FloatingActionButton(
+                                        heroTag: 1,
+                                        child: Text(
+                                          '+',
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            linkWidgets.add(Link());
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: FloatingActionButton(
+                                        heroTag: 2,
+                                        child: Text(
+                                          '-',
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            linkWidgets.removeLast();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Text("Eliminar Link",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                        margin: EdgeInsets.all(10),
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Tema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                              DropdownButton<String>(
-                                value: _topic,
-                                icon: Icon(Icons.arrow_downward),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String newValue) {
-                                  print("Topic: $newValue");
-                                  setState(() {
-                                    updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
-                                  });
-                                },
-                                items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
                               ),
-                              Divider(thickness: 0,),
-                              Text("Subtema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                              DropdownButton<String>(
-                                value: _subtopic,
-                                icon: Icon(Icons.arrow_downward),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
+                            ],
+                          ),
+                          margin: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Tema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                DropdownButton<String>(
+                                  value: _topic,
+                                  icon: Icon(Icons.arrow_downward),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    print("Topic: $newValue");
+                                    setState(() {
+                                      updateDropDown(newValue, widget.topicsAndSubtopics[newValue].first);
+                                    });
+                                  },
+                                  items: widget.topicsAndSubtopics.keys.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
-                                onChanged: (String newValue) {
-                                  print("Subtopic: $newValue");
-                                  setState(() {
-                                    updateDropDown(_topic, newValue);
-                                  });
-                                },
-                                items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
+                                Divider(thickness: 0,),
+                                Text("Subtema:  ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                DropdownButton<String>(
+                                  value: _subtopic,
+                                  icon: Icon(Icons.arrow_downward),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(color: Colors.deepPurple),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  onChanged: (String newValue) {
+                                    print("Subtopic: $newValue");
+                                    setState(() {
+                                      updateDropDown(_topic, newValue);
+                                    });
+                                  },
+                                  items: widget.topicsAndSubtopics[_topic].map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
 //                          Divider(thickness: 0,),
 //                          Text("Dificultad:  "),
 //                          DropdownButton<String>(
@@ -444,165 +447,166 @@ class _NewPostPageState extends State<NewPostPage> {
 //                                  );
 //                            }).toList(),
 //                          ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                        margin: EdgeInsets.all(10),
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  MaterialButton(
-                                    color: Colors.orange,
-                                    elevation: 8,
-                                    highlightElevation: 2,
-                                    child: Text('Seleccionar Ejercicio'),
-                                    enableFeedback: !ejerciciosButtonDisabled,
-                                    onPressed: () {
-                                      if (!ejerciciosButtonDisabled) {
-                                        chooseFiles("ejercicio");
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                  if(ejerciciosButtonDisabled) Text("  $ejerciciosName"),
-                                  if(ejerciciosButtonDisabled) IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      ejerciciosButtonDisabled = false;
-                                      ejercicios.clear();
-                                      setState(() {
-
-                                      });
-                                    },
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  MaterialButton(
-                                    color: Colors.orange,
-                                    elevation: 8,
-                                    highlightElevation: 2,
-                                    child: Text('Seleccionar Solucionario'),
-                                    onPressed: () {
-                                      if (!solucionariosButtonDisabled) {
-                                        chooseFiles("solucionario");
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                  if(solucionariosButtonDisabled) Text("  $solucionarioName"),
-                                  if(solucionariosButtonDisabled) IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      solucionariosButtonDisabled = false;
-                                      solucionarios.clear();
-                                      setState(() {
-
-                                      });
-                                    },
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  MaterialButton(
-                                    color: Colors.orange,
-                                    elevation: 8,
-                                    highlightElevation: 2,
-                                    child: Text('Seleccionar Material de Soporte'),
-                                    onPressed: () {
-                                      if (!materialButtonDisabled) {
-                                        chooseFiles("material");
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                  if(materialButtonDisabled) Text("  $materialName"),
-                                  if(materialButtonDisabled) IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      materialButtonDisabled = false;
-                                      materialDeSoporte.clear();
-                                      setState(() {
-
-                                      });
-                                    },
-                                  )
-                                ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 200,
-                          child: Row(
-                            children: [
-                              MaterialButton(
-                                  elevation: 8,
-                                  highlightElevation: 2,
-                                  child: Text("Publicar Post"),
-                                  color: Colors.orange,
-                                  onPressed: () {
-                                    print("Topic: $_topic\nSubtopic: $_subtopic");
-                                    if (_formKey.currentState.validate()) {
-                                      String _postTitle = postTitle.text;
-                                      String _postDesc = postDesc.text;
-                                      List<String> youtubeLinks = List<String>();
-                                      String _link;
-                                      print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
-                                      for (int i = 0; i < linkWidgets.length; i++) {
-                                        _link = (linkWidgets[i] as Link)._controller.text;
-                                        youtubeLinks.add(_link);
-                                      }
-                                      // FIXME: se demora cuando los archivos son muy grandes, mostrar un CircularProgressIndicator() mientras cargan
-                                      postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
-                                        if (success) {
-                                          showAlertDialog(context, "Éxito al subir el Post", "Espere a que uno de nuestros moderadores\nvalide su Post.", true);
+                          margin: EdgeInsets.all(10),
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      color: Colors.orange,
+                                      elevation: 8,
+                                      highlightElevation: 2,
+                                      child: Text('Seleccionar Ejercicio'),
+                                      enableFeedback: !ejerciciosButtonDisabled,
+                                      onPressed: () {
+                                        if (!ejerciciosButtonDisabled) {
+                                          chooseFiles("ejercicio");
                                         } else {
-                                          showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
+                                          return null;
                                         }
-                                      });
-                                    }
-                                  }
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(30.0),
-                              ),
-                            ],
+                                      },
+                                    ),
+                                    if(ejerciciosButtonDisabled) Text("  $ejerciciosName"),
+                                    if(ejerciciosButtonDisabled) IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        ejerciciosButtonDisabled = false;
+                                        ejercicios.clear();
+                                        setState(() {
+
+                                        });
+                                      },
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      color: Colors.orange,
+                                      elevation: 8,
+                                      highlightElevation: 2,
+                                      child: Text('Seleccionar Solucionario'),
+                                      onPressed: () {
+                                        if (!solucionariosButtonDisabled) {
+                                          chooseFiles("solucionario");
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                    if(solucionariosButtonDisabled) Text("  $solucionarioName"),
+                                    if(solucionariosButtonDisabled) IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        solucionariosButtonDisabled = false;
+                                        solucionarios.clear();
+                                        setState(() {
+
+                                        });
+                                      },
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      color: Colors.orange,
+                                      elevation: 8,
+                                      highlightElevation: 2,
+                                      child: Text('Seleccionar Material de Soporte'),
+                                      onPressed: () {
+                                        if (!materialButtonDisabled) {
+                                          chooseFiles("material");
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                    if(materialButtonDisabled) Text("  $materialName"),
+                                    if(materialButtonDisabled) IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        materialButtonDisabled = false;
+                                        materialDeSoporte.clear();
+                                        setState(() {
+
+                                        });
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 200,
+                            child: Row(
+                              children: [
+                                MaterialButton(
+                                    elevation: 8,
+                                    highlightElevation: 2,
+                                    child: Text("Publicar Post"),
+                                    color: Colors.orange,
+                                    onPressed: () {
+                                      print("Topic: $_topic\nSubtopic: $_subtopic");
+                                      if (_formKey.currentState.validate()) {
+                                        String _postTitle = postTitle.text;
+                                        String _postDesc = postDesc.text;
+                                        List<String> youtubeLinks = List<String>();
+                                        String _link;
+                                        print("Subiendo Post del Profesor:\nPost Title: $_postTitle\nPost Description: $_postDesc\nTopic: $_topic\nSubtopic: $_subtopic");
+                                        for (int i = 0; i < linkWidgets.length; i++) {
+                                          _link = (linkWidgets[i] as Link)._controller.text;
+                                          youtubeLinks.add(_link);
+                                        }
+                                        // FIXME: se demora cuando los archivos son muy grandes, mostrar un CircularProgressIndicator() mientras cargan
+                                        postPost(_postTitle, _postDesc, youtubeLinks).then( (success) {
+                                          if (success) {
+                                            showAlertDialog(context, "Éxito al subir el Post", "Espere a que uno de nuestros moderadores\nvalide su Post.", true);
+                                          } else {
+                                            showAlertDialog(context, "Uy No", "El Post no pudo ser subido.\nIntenta de nuevo.", false);
+                                          }
+                                        });
+                                      }
+                                    }
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(30.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

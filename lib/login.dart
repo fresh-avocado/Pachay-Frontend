@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'register.dart' show saveEmail, saveFirstName, saveLastName, saveRole, saveToken, saveUserId, saveIsModerator;
 import 'utilities.dart' show showAlertDialog;
+import 'globals.dart' as globals;
+
 
 class MyCustomForm extends StatefulWidget {
   @override
@@ -108,7 +110,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   width: 150.0,
                   height: 50.0,
                   child: RaisedButton(
-                    color: Colors.blueAccent,
+                    color: globals.appBarColor,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         String _email = email.text;
@@ -144,28 +146,24 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title, this.appBarColor, this.backgroudColor, this.appLogo}) : super(key: key);
-  final Color appBarColor;
-  final Color backgroudColor;
+  LoginPage({Key key, this.title,}) : super(key: key);
   final String title;
-  final Image appLogo;
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage>{
-
   var widthsize = 400.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.backgroudColor,
+      backgroundColor: globals.backgroundColor,
       appBar: AppBar(
-        title: widget.appLogo,
+        title: globals.appLogo,
         centerTitle: true,
-        backgroundColor: widget.appBarColor,
+        backgroundColor: globals.appBarColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -173,39 +171,42 @@ class _LoginPageState extends State<LoginPage>{
           },
         )
       ),
-      body: Center(
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text('', textAlign: TextAlign.center,),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Divider(height: 20,),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "Iniciar Sesión",
-                        style: TextStyle(color: Colors.brown[900], fontSize: 50, fontFamily: 'Raleway'),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: MyCustomForm(),
-                    ),
-                  ]
+      body: Container(
+        decoration: globals.decoBackground,
+        child: Center(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text('', textAlign: TextAlign.center,),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Text('', textAlign: TextAlign.center,),
-            )
-          ],
+              Expanded(
+                flex: 3,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Divider(height: 20,),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Iniciar Sesión",
+                          style: TextStyle(color: globals.alterColor, fontSize: 50, fontFamily: 'Raleway'),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: MyCustomForm(),
+                      ),
+                    ]
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text('', textAlign: TextAlign.center,),
+              )
+            ],
+          ),
         ),
       )
     );

@@ -80,13 +80,12 @@ class PostList extends StatefulWidget {
   final Color appBarColor;
   final bool inTeacherProfilePage;
   final context;
-  final Color backgroundColor;
   final bool canDelete;
   String cachedToken = "";
   String cachedUserId = "";
   final bool inModeradorProfilePage;
 
-  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context, this.backgroundColor, @required this.canDelete, this.inModeradorProfilePage = false}) : super(key: key);
+  PostList({Key key, this.posts, this.appBarColor, this.inTeacherProfilePage, this.context, @required this.canDelete, this.inModeradorProfilePage = false}) : super(key: key);
 
   @override
   _PostListState createState() => _PostListState();
@@ -97,7 +96,7 @@ class _PostListState extends State<PostList> {
   _navigateAndDisplaySelection(BuildContext context, Post post) async {
     final _ = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PostDetail(post: post, appBarColor: widget.appBarColor, backgroundColor: widget.backgroundColor)),
+      MaterialPageRoute(builder: (context) => PostDetail(post: post, appBarColor: widget.appBarColor)),
     );
     setState(() {});
   }
@@ -331,7 +330,7 @@ class _PostListState extends State<PostList> {
         },
       );
     } else {
-      // FIXME: los mensajes no estan bien, agregar mensaje para el moderador y cuando el lumno esta buscando posts favoritos
+      // FIXME: los mensajes no estan bien, agregar mensaje para el moderador y cuando el alumno esta buscando posts favoritos
       if (widget.inTeacherProfilePage) {
         return Padding(
           padding: EdgeInsets.all(20),

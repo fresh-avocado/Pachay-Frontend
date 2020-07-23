@@ -1,15 +1,17 @@
 import 'package:flutter/gestures.dart' show TapGestureRecognizer;
 import 'package:flutter/material.dart';
+import 'package:flutube/flutube.dart';
 import 'Post.dart' show Post;
 import 'package:url_launcher/url_launcher.dart' show launch;
 import 'register.dart' show getSharedPref;
 import 'package:http/http.dart' as http;
 import 'dart:convert' show jsonDecode;
+import 'globals.dart' as globals;
 
 // cristian flores
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.appBarColor, this.backgroundColor}) : super(key: key) {
+  PostDetail({Key key, this.post, this.appBarColor}) : super(key: key) {
     if (post.hasRated) {
       if (post.hasLiked) {
         postLiked = true;
@@ -28,7 +30,6 @@ class PostDetail extends StatefulWidget {
   }
   final Post post;
   final Color appBarColor;
-  final Color backgroundColor;
   bool postLiked;
   bool postDisliked;
   String cachedToken = "";
@@ -96,7 +97,7 @@ class _PostDetailState extends State<PostDetail> {
   Widget build(BuildContext context) {
     print("${widget.post.hasRated ? "Post has been rated." : "Post has not been rated"}");
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: globals.backgroundColor,
       appBar: AppBar(
           title: Text(widget.post.subtopic),
           backgroundColor: widget.appBarColor,
@@ -108,102 +109,228 @@ class _PostDetailState extends State<PostDetail> {
             },
           )
       ),
-      body: Column(
-          children: [
-            Expanded(
-              flex: 8,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(""),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              "${widget.post.author}\n${widget.post.datePublished}\n",
-                              style: TextStyle(color: Colors.black,),
-                              textAlign: TextAlign.center,
+      body: Container(
+        decoration: globals.decoBackground,
+        child: Column(
+            children: [
+              Expanded(
+                flex: 8,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(""),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                "${widget.post.author}\n${widget.post.datePublished}\n",
+                                style: TextStyle(color: Colors.black,),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 9,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                    Expanded(
+                      flex: 9,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
                           ),
-                        ],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: widget.appBarColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.all(10),
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        widget.post.title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.all(5),),
+                                Expanded(
+                                  flex: 7,
+                                  child: Text(
+                                      widget.post.desc,
+                                      style: TextStyle(fontSize: 17),
+                                      textAlign: TextAlign.justify
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      margin: EdgeInsets.all(10),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text("")
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 12,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
+                        child: Center(
                           child: Column(
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                  color: widget.appBarColor,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0, 3), // changes position of shadow
+                                  decoration: BoxDecoration(
+                                    color: widget.appBarColor, // FIXME: este color esta bien?
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)
                                     ),
-                                  ],
-                                ),
-                                margin: EdgeInsets.all(10),
-                                child: Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.post.title,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 40,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3), // changes position of shadow
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ),
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.all(10),
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        "Videos",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ),
                               ),
                               Padding(padding: EdgeInsets.all(5),),
                               Expanded(
-                                flex: 7,
-                                child: Text(
-                                    widget.post.desc,
-                                    style: TextStyle(fontSize: 17),
-                                    textAlign: TextAlign.justify
+                                flex: 3,
+                                child: Center(
+                                  child: ListView.separated(
+                                    itemCount: widget.post.youtubeLinks.length,
+                                    separatorBuilder: (BuildContext context, int index) => Divider(),
+                                    itemBuilder: (BuildContext ctx, int idx) {
+                                      return Align(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                // TODO: HACER EL EMBED DE YOUTUBE
+                                                  text: "Video ${idx+1}",
+                                                  style: TextStyle(
+                                                      color: Colors.blueAccent,
+                                                      fontSize: 15
+                                                  ),
+                                                  recognizer: TapGestureRecognizer()
+                                                    ..onTap = () {
+                                                      // TODO: hacer el embed de los videos de youtube
+                                                      launch(widget.post.youtubeLinks[idx]).then((value) => {});
+                                                    }
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: (){
+                                                launch(widget.post.youtubeLinks[idx]).then((value) => {});
+                                              },
+                                              child: FluTube(
+                                                widget.post.youtubeLinks[idx],
+                                                aspectRatio: 16 / 9,
+                                                autoPlay: false,
+                                                looping: false,
+                                                onVideoStart: () {},
+                                                onVideoEnd: () {},
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -211,107 +338,180 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text("")
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 12,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
                           ),
-                        ],
-                      ),
-                      margin: EdgeInsets.all(10),
-                      child: Center(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.all(10),
                         child: Column(
                           children: [
                             Container(
-                                decoration: BoxDecoration(
-                                  color: widget.appBarColor, // FIXME: este color esta bien?
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)
+                              decoration: BoxDecoration(
+                                color: widget.appBarColor, // FIXME: este color esta bien?
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 3), // changes position of shadow
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0, 3), // changes position of shadow
+                                ],
+                              ),
+                              margin: EdgeInsets.all(10),
+                              child: Expanded(
+                                flex: 2,
+                                child: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Text(
+                                    "Archivos Adjuntos",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40,
                                     ),
-                                  ],
-                                ),
-                                margin: EdgeInsets.all(10),
-                                child: Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      "Videos",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 40,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  )
-                                ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              ),
                             ),
                             Padding(padding: EdgeInsets.all(5),),
                             Expanded(
                               flex: 3,
+                              child: Text(
+                                "Material de Soporte",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            if (widget.post.material != null && widget.post.material.length > 0) Expanded(
+                              flex: 3,
                               child: Center(
                                 child: ListView.separated(
-                                  itemCount: widget.post.youtubeLinks.length,
+                                  itemCount: widget.post.material.length,
                                   separatorBuilder: (BuildContext context, int index) => Divider(),
                                   itemBuilder: (BuildContext ctx, int idx) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              // TODO: HACER EL EMBED DE YOUTUBE
-                                                text: "Link ${idx+1}",
-                                                style: TextStyle(
-                                                    color: Colors.blueAccent,
-                                                    fontSize: 15
-                                                ),
-                                                recognizer: TapGestureRecognizer()
-                                                  ..onTap = () {
-                                                    // TODO: hacer el embed de los videos de youtube
-                                                    launch(widget.post.youtubeLinks[idx]).then((value) => {});
-                                                  }
-                                            ),
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text: "Material de Soporte ${idx+1}",
+                                              style: TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 15
+                                              ),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
+                                                }
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Ejercicios",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            if (widget.post.ejercicios != null && widget.post.ejercicios.length > 0) Expanded(
+                              flex: 3,
+                              child: Center(
+                                child: ListView.separated(
+                                  itemCount: widget.post.ejercicios.length,
+                                  separatorBuilder: (BuildContext context, int index) => Divider(),
+                                  itemBuilder: (BuildContext ctx, int idx) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text: "Ejercicio ${idx+1}",
+                                              style: TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 15
+                                              ),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
+                                                }
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Solucionarios",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            if (widget.post.solucionario != null && widget.post.solucionario.length > 0) Expanded(
+                              flex: 3,
+                              child: Center(
+                                child: ListView.separated(
+                                  itemCount: widget.post.solucionario.length,
+                                  separatorBuilder: (BuildContext context, int index) => Divider(),
+                                  itemBuilder: (BuildContext ctx, int idx) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text: "Solucionario ${idx+1}",
+                                              style: TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 15
+                                              ),
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
+                                                }
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
                                 ),
@@ -321,262 +521,79 @@ class _PostDetailState extends State<PostDetail> {
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-
-                          ),
-                        ],
-                      ),
-                      margin: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: widget.appBarColor, // FIXME: este color esta bien?
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            margin: EdgeInsets.all(10),
-                            child: Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  "Archivos Adjuntos",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 40,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            ),
-                          ),
-                          Padding(padding: EdgeInsets.all(5),),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Material de Soporte",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          if (widget.post.material != null && widget.post.material.length > 0) Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: ListView.separated(
-                                itemCount: widget.post.material.length,
-                                separatorBuilder: (BuildContext context, int index) => Divider(),
-                                itemBuilder: (BuildContext ctx, int idx) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "Material de Soporte ${idx+1}",
-                                            style: TextStyle(
-                                                color: Colors.blueAccent,
-                                                fontSize: 15
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                launch('http://localhost:8080/files/download/${widget.post.material[idx]}').then((value) => {});
-                                              }
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Ejercicios",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          if (widget.post.ejercicios != null && widget.post.ejercicios.length > 0) Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: ListView.separated(
-                                itemCount: widget.post.ejercicios.length,
-                                separatorBuilder: (BuildContext context, int index) => Divider(),
-                                itemBuilder: (BuildContext ctx, int idx) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "Ejercicio ${idx+1}",
-                                            style: TextStyle(
-                                                color: Colors.blueAccent,
-                                                fontSize: 15
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                launch('http://localhost:8080/files/download/${widget.post.ejercicios[idx]}').then((value) => {});
-                                              }
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Solucionarios",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          if (widget.post.solucionario != null && widget.post.solucionario.length > 0) Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: ListView.separated(
-                                itemCount: widget.post.solucionario.length,
-                                separatorBuilder: (BuildContext context, int index) => Divider(),
-                                itemBuilder: (BuildContext ctx, int idx) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "Solucionario ${idx+1}",
-                                            style: TextStyle(
-                                                color: Colors.blueAccent,
-                                                fontSize: 15
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                launch('http://localhost:8080/files/download/${widget.post.solucionario[idx]}').then((value) => {});
-                                              }
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: widget.appBarColor, // FIXME: este color esta bien?
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
                   ],
                 ),
-                margin: EdgeInsets.all(10),
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                            "Nos gustaria saber tu opinión de este post:   ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                            ),
-                        ),
-                        IconButton(
-                            icon: Icon(Icons.tag_faces),
-                            color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
-                            onPressed: () {
-                              ratePost(widget.post.postId, "like").then( (newRating) {
-                                if (newRating != "error") {
-                                  rated(true, newRating);
-                                }
-                              });
-                            }),
-                        Text(
-                            "${widget.post.rating}",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
-                            ),
-                        ),
-                        IconButton(
-                            color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
-                            icon: Icon(Icons.face),
-                            onPressed: () {
-                              ratePost(widget.post.postId, "dislike").then( (newRating) {
-                                if (newRating != "error") {
-                                  rated(false, newRating);
-                                }
-                              });
-                        }),
-                      ],
+              ),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: widget.appBarColor, // FIXME: este color esta bien?
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  margin: EdgeInsets.all(10),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                              "Nos gustaria saber tu opinión de este post:   ",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
+                              ),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.tag_faces),
+                              color: widget.post.hasRated && widget.post.hasLiked ? Colors.blueAccent : Colors.grey,
+                              onPressed: () {
+                                ratePost(widget.post.postId, "like").then( (newRating) {
+                                  if (newRating != "error") {
+                                    rated(true, newRating);
+                                  }
+                                });
+                              }),
+                          Text(
+                              "${widget.post.rating}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                              ),
+                          ),
+                          IconButton(
+                              color: widget.post.hasRated && widget.post.hasDisliked ? Colors.blueAccent : Colors.grey,
+                              icon: Icon(Icons.face),
+                              onPressed: () {
+                                ratePost(widget.post.postId, "dislike").then( (newRating) {
+                                  if (newRating != "error") {
+                                    rated(false, newRating);
+                                  }
+                                });
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+      ),
     );
   }
 

@@ -6,15 +6,14 @@ import 'register.dart' show getSharedPref;
 import 'package:Pachay/Post.dart' show Post;
 import 'utilities.dart' show parsePosts;
 import 'package:http/http.dart' as http;
+import 'globals.dart' as globals;
 
 // TODO: embellecer y mostrarle información relevante al usuario
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.title, this.role, this.backgroundColor, this.appBarColor, this.isModerator}) : super(key: key);
+  ProfilePage({Key key, this.title, this.role, this.isModerator}) : super(key: key);
   final String title;
   final bool role;
-  Color backgroundColor;
-  Color appBarColor;
   final bool isModerator;
 
   @override
@@ -51,10 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: globals.backgroundColor,
       appBar: AppBar(
         title: Text(widget.title,),
-        backgroundColor: widget.appBarColor,
+        backgroundColor: globals.appBarColor,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -63,123 +62,122 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         )
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: FutureBuilder<String>(
-                future: getNames(),
-                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  Widget homePage;
-                  if (snapshot.hasData) {
-                    homePage = Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        widget.role == false ? "Profesor(a) ${snapshot.data}" : "Alumno ${snapshot.data}",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 40,
-                        ),
-                      ),
-                    );
-                  } else {
-                    homePage = CircularProgressIndicator();
-                  }
-                  return homePage;
-                },
-              ),
-            ),
-            /// Vista del profesor
-            if (!widget.role) Expanded(
-              flex: 2,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RaisedButton(
-                    child: Text("Posts No Verificados"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                UnverifiedPosts(
-                                  title: "Posts No Verificados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                  inModeratorView: false,
-                                )
+      body: Container(
+        decoration: globals.decoBackground,
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: FutureBuilder<String>(
+                  future: getNames(),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    Widget homePage;
+                    if (snapshot.hasData) {
+                      homePage = Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Text(
+                          widget.role == false ? "Profesor(a) ${snapshot.data}" : "Alumno ${snapshot.data}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 40,
+                          ),
                         ),
                       );
-                      print("Posts No Verificados");
-                    },
-                  ),
-                ],
+                    } else {
+                      homePage = CircularProgressIndicator();
+                    }
+                    return homePage;
+                  },
+                ),
               ),
-            ),
-            if (!widget.role) Expanded(
-              flex: 2,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RaisedButton(
-                    child: Text("Posts Verificados"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                VerifiedPosts(
-                                  title: "Posts Verificados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                  inModeratorView: false,
-                                )
-                        ),
-                      );
-                      print("Posts No Verificados");
-                    },
-                  ),
-                ],
+              /// Vista del profesor
+              if (!widget.role) Expanded(
+                flex: 2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      child: Text("Posts No Verificados"),
+                      color: globals.appBarColor,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UnverifiedPosts(
+                                    title: "Posts No Verificados",
+                                    inModeratorView: false,
+                                  )
+                          ),
+                        );
+                        print("Posts No Verificados");
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            /// Vista del Alumno que no es moderador
-            if (widget.role) Expanded(
-              flex: 2,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RaisedButton(
-                    child: Text("Posts Favoritos"),
-                    color: widget.appBarColor,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                FavoritePosts(
-                                  title: widget.title,
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
-                                )
-                        ),
-                      );
-                      print("Posts Favoritos");
-                    },
-                  ),
-                ],
+              if (!widget.role) Expanded(
+                flex: 2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      child: Text("Posts Verificados"),
+                      color: globals.appBarColor,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  VerifiedPosts(
+                                    title: "Posts Verificados",
+                                    inModeratorView: false,
+                                  )
+                          ),
+                        );
+                        print("Posts No Verificados");
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              /// Vista del Alumno que no es moderador
+              if (widget.role) Expanded(
+                flex: 2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      child: Text("Posts Favoritos"),
+                      color: globals.appBarColor,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FavoritePosts(
+                                    title: widget.title,
+                                    backgroundColor: globals.backgroundColor,
+                                    appBarColor: globals.appBarColor,
+                                  )
+                          ),
+                        );
+                        print("Posts Favoritos");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

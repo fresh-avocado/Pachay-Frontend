@@ -3,6 +3,7 @@ import 'register.dart' show getSharedPref;
 import 'package:Pachay/Post.dart' show Post;
 import 'utilities.dart' show parsePosts;
 import 'package:http/http.dart' as http show get;
+import 'globals.dart' as globals;
 
 // TODO: embellecer y mostrarle información relevante al usuario
 
@@ -42,29 +43,32 @@ class RecommendedMaterialState extends State<RecommendedMaterial> {
             },
           )
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  "Material Recomendado por Pachay",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 40,
+      body: Container(
+        decoration: globals.decoBackground,
+        child: Center(
+          child: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Material Recomendado por Pachay",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 40,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 30,
-              child: Text(""),
-            ),
-          ],
+              Expanded(
+                flex: 30,
+                child: Text(""),
+              ),
+            ],
+          ),
         ),
       ),
     );

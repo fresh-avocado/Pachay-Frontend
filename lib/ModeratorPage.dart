@@ -70,8 +70,6 @@ class ModeratorPageState extends State<ModeratorPage> {
                             builder: (context) =>
                                 UnverifiedPosts(
                                   title: "Posts No Verificados",
-                                  backgroundColor: widget.backgroundColor,
-                                  appBarColor: widget.appBarColor,
                                   inModeratorView: true,
                                 )
                         ),

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:Pachay/Post.dart' show Post, PostList;
 import 'package:http/http.dart' as http show Response, post;
 import 'dart:convert' show jsonDecode, jsonEncode;
+import 'globals.dart' as globals;
 
 class SubtopicPage extends StatefulWidget {
-  SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor, this.backgroundColor}) : super(key: key);
+  SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor}) : super(key: key);
   final String topic;
   final String subtopic;
   final Color appBarColor;
   String cachedUserId = "";
-  Color backgroundColor;
   String cachedToken = "";
   bool orderByRating = false;
 
@@ -66,12 +66,12 @@ class _SubtopicPageState extends State<SubtopicPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: globals.backgroundColor,
         appBar: AppBar(
             backgroundColor: widget.appBarColor,
             actions: [
               MaterialButton(
-                color: Color(0xFFE5F5DB),
+                color: widget.appBarColor,
                 child: Text(!widget.orderByRating ? "Ordenar por Rating" : "Ordenar por Fecha"),
                 onPressed: () {
                   if (!widget.orderByRating) {
@@ -92,22 +92,25 @@ class _SubtopicPageState extends State<SubtopicPage>{
               },
             )
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(flex: 1, child: Text(''),),
-            Expanded(
-              flex: 4,
-              child: FutureBuilder<List<Post>>(
-                future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor, canDelete: false,) : Center(child: CircularProgressIndicator());
-                },
+        body: Container(
+          decoration: globals.decoBackground,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(flex: 1, child: Text(''),),
+              Expanded(
+                flex: 4,
+                child: FutureBuilder<List<Post>>(
+                  future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) print(snapshot.error);
+                    return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, canDelete: false,) : Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
-            ),
-            Expanded(flex: 1, child: Text(''),),
-          ],
+              Expanded(flex: 1, child: Text(''),),
+            ],
+          ),
         )
     );
   }

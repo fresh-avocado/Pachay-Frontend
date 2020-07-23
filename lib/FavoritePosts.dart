@@ -64,7 +64,7 @@ class FavoritePostsState extends State<FavoritePosts> {
                 future: fetchFavoritePosts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, backgroundColor: widget.backgroundColor, canDelete: false,) : Center(child: CircularProgressIndicator());
+                  return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, canDelete: false,) : Center(child: CircularProgressIndicator());
                 },
               ),
             ),
