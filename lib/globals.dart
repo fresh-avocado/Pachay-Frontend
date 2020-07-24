@@ -1,6 +1,8 @@
 library my_prj.globals;
 import 'package:flutter/material.dart';
 
+//bool isStudent = true;
+
 Color backgroundColor = Color(0xFFE5F5DB);
 Color appBarColor = Color(0xFF468F59);
 Color alterColor = Colors.brown[800];
@@ -15,3 +17,5 @@ BoxDecoration decoBackground = BoxDecoration(
     fit: BoxFit.cover,
   ),
 );
+
+//void updateIsStudent(bool x) {isStudent = x;}

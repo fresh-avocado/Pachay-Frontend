@@ -6,8 +6,8 @@ import 'dart:convert' show jsonDecode, jsonEncode;
 import 'globals.dart' as globals;
 
 class SubtopicPage extends StatefulWidget {
-  SubtopicPage({Key key, this.topic, this.subtopic, this.appBarColor}) : super(key: key);
-  final String topic;
+  SubtopicPage({Key key, this.subtopicImage, this.subtopic, this.appBarColor}) : super(key: key);
+  final Image subtopicImage;
   final String subtopic;
   final Color appBarColor;
   String cachedUserId = "";
@@ -83,7 +83,7 @@ class _SubtopicPageState extends State<SubtopicPage>{
                 },
               )
             ],
-            title: Text(widget.subtopic),
+            title: widget.subtopicImage,
             centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -94,22 +94,28 @@ class _SubtopicPageState extends State<SubtopicPage>{
         ),
         body: Container(
           decoration: globals.decoBackground,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(flex: 1, child: Text(''),),
-              Expanded(
-                flex: 4,
-                child: FutureBuilder<List<Post>>(
-                  future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
-                    return snapshot.hasData ? PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, canDelete: false,) : Center(child: CircularProgressIndicator());
-                  },
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //Expanded(flex: 1, child: Text(''),),
+                Expanded(
+                  flex: 4,
+                  child: FutureBuilder<List<Post>>(
+                    future: !widget.orderByRating ? fetchPostsByTopicAndSubtopic() : fetchPostsByTopicAndSubtopicOrderedByRating(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) print(snapshot.error);
+                      return snapshot.hasData ? Padding(
+                        padding: EdgeInsets.only(right: MediaQuery.of(context).size.width/5, left: MediaQuery.of(context).size.width/5),
+                        child: PostList(posts: snapshot.data, appBarColor: widget.appBarColor, inTeacherProfilePage: false, canDelete: false,),
+                      ) : Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ),
-              ),
-              Expanded(flex: 1, child: Text(''),),
-            ],
+                //Expanded(flex: 1, child: Text(''),),
+              ],
+            ),
           ),
         )
     );

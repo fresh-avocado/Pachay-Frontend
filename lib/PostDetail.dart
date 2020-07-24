@@ -525,7 +525,7 @@ class _PostDetailState extends State<PostDetail> {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
                   decoration: BoxDecoration(
                     color: widget.appBarColor, // FIXME: este color esta bien?

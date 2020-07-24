@@ -36,6 +36,7 @@ class _CentralPageState extends State<CentralPage> {
     "Biología": ["Células", "Genética Mendeliana"]
   };
   final List<String> courses = ["Matemática", "Física", "Química", "Biología"];
+  final List<String> courseslinks = ["math.png", "fisica.png", "quimica.png", "bio.png"];
   final List<Icon> courseIcons = [
     Icon(Icons.all_inclusive),
     Icon(Icons.multiline_chart),
@@ -47,8 +48,8 @@ class _CentralPageState extends State<CentralPage> {
   final List<int> hexcourseColor = <int>[
     0xFFD13F37,
     0xFF63CAEC,
-    0xFFC564D2,
-    0xFFBEE131
+    0xFF6B8E23,
+    0xFFFFA500
   ]; //rojo, celeste, lila, verdelimon
   final Map<String, List<Icon>> subtopicIcons = {
     "Matemática": [Icon(Icons.add), Icon(IconData(58740))],
@@ -56,9 +57,16 @@ class _CentralPageState extends State<CentralPage> {
     "Química": [Icon(Icons.print), Icon(Icons.title)],
     "Biología": [Icon(Icons.announcement), Icon(Icons.android)]
   };
+  final Map<String, List<String>> subtopicsImages = {
+    "Matemática": ["ecuaciones.png", "geome.png"],
+    "Física": ["mru.png", "leyes.png"],
+    "Química": ["estequio.png", "acidos.png"],
+    "Biología": ["celulas.png", "gené.png"]
+  };
 
   void render(bool ak) {
     widget.isLoggedIn = ak;
+    //globals.updateIsStudent(widget.role);
     // profesor: role = 0
     getSharedPref("role").then( (value) {
           if (value == "0") { // profesor
@@ -284,11 +292,9 @@ class _CentralPageState extends State<CentralPage> {
                             Text(""),
                             ListTile(
                               leading: courseIcons[index],
-                              title: Text(
-                                courses[index],
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                ),
+                              title: Image.asset('pachaylogo/'+courseslinks[index],
+                                fit: BoxFit.contain,
+                                height: 30,
                               ),
                               trailing: Icon(Icons.arrow_forward_ios),
                             ),
@@ -303,6 +309,11 @@ class _CentralPageState extends State<CentralPage> {
                                 subtopics: topicsAndSubtopics[courses[index]],
                                 appBarColor: Color(hexcourseColor[index]),
                                 subtopicIcons: subtopicIcons[courses[index]],
+                                subtopicImages: subtopicsImages[courses[index]],
+                                titleImage: Image.asset(
+                                  'pachaylogo/'+courseslinks[index],
+                                  fit: BoxFit.contain,
+                                  height: 60,),
                             )
                             ),
                           );

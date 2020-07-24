@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'utilities.dart' show showAlertDialog;
 import 'register.dart' show getSharedPref;
 import 'dart:convert' show jsonDecode;
+//import 'globals.dart' as globals;
 
 /// TODO: añadir un flag que añade dos botones: 'aceptar' y 'rechazar'
 /// este flag solo esta para los moderadores
@@ -184,7 +185,7 @@ class _PostListState extends State<PostList> {
       return ListView.builder(
         itemCount: widget.posts.length,
         itemBuilder: (context, index) {
-        Post post = widget.posts[index];
+          Post post = widget.posts[index];
           return Expanded(
             child: Card(
               child: Column(

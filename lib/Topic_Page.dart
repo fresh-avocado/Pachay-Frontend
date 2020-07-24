@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
 
 class TopicPage extends StatefulWidget {
-  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor, this.subtopicIcons}) : super(key: key);
+  TopicPage({Key key, this.topic, this.subtopics, this.appBarColor, this.subtopicIcons, this.titleImage, this.subtopicImages}) : super(key: key);
   final String topic;
   final Color appBarColor;
   final List<String> subtopics;
+  final List<String> subtopicImages;
   final List<Icon> subtopicIcons;
+  final Image titleImage;
 
   @override
   _TopicPageState createState() => _TopicPageState();
@@ -21,7 +23,7 @@ class _TopicPageState extends State<TopicPage> {
         backgroundColor: globals.backgroundColor,
         appBar: AppBar(
             backgroundColor: widget.appBarColor,
-            title: Text(widget.topic),
+            title: widget.titleImage,
             centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -35,9 +37,9 @@ class _TopicPageState extends State<TopicPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(flex: 1, child: Text(''),),
+              Expanded(flex: 2, child: Text(''),),
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: Padding(
                   padding: EdgeInsets.all(30.0),
                   child: ListView.builder(
@@ -55,12 +57,10 @@ class _TopicPageState extends State<TopicPage> {
                               Text(""),
                               ListTile(
                                 leading: widget.subtopicIcons[index],
-                                title: Text(
-                                  widget.subtopics[index],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
+                                title: Image.asset(
+                                  'pachaylogo/'+widget.subtopicImages[index],
+                                  fit: BoxFit.contain,
+                                  height: 30,),
                                 trailing: Icon(Icons.arrow_forward_ios),
                               ),
                               Text(""),
@@ -69,7 +69,14 @@ class _TopicPageState extends State<TopicPage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SubtopicPage(topic: widget.topic, subtopic: widget.subtopics[index], appBarColor: widget.appBarColor)),
+                              MaterialPageRoute(builder: (context) => SubtopicPage(
+                                  subtopicImage: Image.asset(
+                                    'pachaylogo/'+widget.subtopicImages[index],
+                                    fit: BoxFit.contain,
+                                    height: 60,
+                                  ),
+                                  subtopic: widget.subtopics[index],
+                                  appBarColor: widget.appBarColor)),
                             );
                           },
                         ),
@@ -79,7 +86,7 @@ class _TopicPageState extends State<TopicPage> {
                   ),
                 ),
               ),
-              Expanded(flex: 1, child: Text(''),),
+              Expanded(flex: 2, child: Text(''),),
             ],
           ),
         )

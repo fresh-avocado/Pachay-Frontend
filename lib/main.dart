@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
     }
 
     return MaterialApp(
-      title: 'Log In - Pachay',
+      title: 'Pachay',
       theme: new ThemeData(
           primarySwatch: Colors.orange,
           primaryTextTheme: TextTheme(
